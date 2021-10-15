@@ -1,0 +1,14 @@
+{
+
+  "method": "modify",
+  "log": true,
+  "params": {
+    "dn": "{{dn}}",
+    "changes":{
+
+      "userPassword": ["MODIFY_REPLACE", ["{{password|ldap_password}}"]]
+    }
+  },
+  require('./common/manage.json')
+}
+

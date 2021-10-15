@@ -1,0 +1,15 @@
+.idea
+/.metadata
+/logs
+/.settings
+/temp
+/.idea
+/.locking
+/locking.pid
+*.pyc
+/*.log
+*.log
+build
+dist
+*.egg-info
+.venv

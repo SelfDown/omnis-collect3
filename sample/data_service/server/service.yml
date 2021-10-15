@@ -1,0 +1,13 @@
+service:
+  - name: "软件模块"
+    path: "server_install_soft/index.yml"
+  - name: "用户"
+    path: "user/index.yml"
+  - name: "服务器探针安装"
+    path: "install_monitor/index.yml"
+  - name: "服务器"
+    path: "server_instance/index.yml"
+  - name: "探针"
+    path: "monitor_agent/index.yml"
+  - name: "关联模板"
+    path: "link_template/index.yml"

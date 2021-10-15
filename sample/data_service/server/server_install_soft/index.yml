@@ -1,0 +1,129 @@
+service:
+  - key: soft2server
+    module: "mysql"
+    log: true
+    params:
+      install_soft_id:
+        check:
+          template: "{{install_soft_id|must}}"
+          err_msg: "软件不能为空"
+    sql_file: 'soft.sql'
+    result_handler:
+      - key: arr2obj
+
+  # 项目
+  - key: "soft"
+    module: 'mysql'# 执行mysql 查询
+    log: true
+    must_login: false
+    params:
+      test_type:
+        check:
+          template: "{{test_type|must}}"
+          err_msg: "测试类型不能为空"
+        name: "测试类型"
+      install_soft_id:
+        check:
+          template: "{{install_soft_id|must}}"
+          err_msg: 软件不能为空
+          name: 软件
+      test_sql_code:
+        check:
+          enable: "{{test_type=='3'}}"
+          template: "{{test_sql_code|must}}"
+          err_msg: SQL 编码不能为空
+        name: SQL编码
+      publication:
+        check:
+          enable: "{{test_type=='6'}}"
+          template: "{{test_proxy_param.publication|must}}"
+          err_msg: SQL 编码不能为空
+      soft_key:
+        switch:
+          - case: "{{test_type=='6'}}"
+            template: "{{test_proxy_param.publication|safe}}"
+          - case: "{{test_type=='3'}}"
+            template: "{{test_sql_code}}"
+    sql_file: 'soft.sql'
+    result_handler:
+      - key: arr2obj
+        params:
+          to_field:
+            - field: key
+              switch:
+                - case: "{{params_result.test_type=='3'}}"
+                  template: '{{"monitor_oracle_prefix"|get_key}}_{{server_ip|safe}}_{{params_result.soft_key}}'
+                - case: "{{params_result.test_type == '6'}}"
+                  template: '{{"monitor_sqlserver_prefix"|get_key}}_{{server_ip|safe}}_{{params_result.soft_key}}'
+            - field: active_test_target
+              switch:
+                - case: "{{params_result.test_type=='3'}}"
+                  template: "{{server_ip|safe}} oracle 数据库监控"
+                - case: "{{params_result.test_type == '6'}}"
+                  template: "{{server_ip|safe}} sql server 数据库监控"
+
+  # 项目
+  - key: "soft_list"
+    module: 'mysql'# 执行mysql 查询
+    log: true
+    must_login: false
+    params:
+      install_soft_id_list:
+        check:
+          template: "{{install_soft_id_list|must}}"
+          err_msg: 软件不能为空
+          name: 软件
+    sql_file: 'soft_list.sql'
+    result_handler:
+      - key: value_arr
+        params:
+          template: "{{'monitor_oracle_prefix'|get_key}}_{{server_ip}}"
+
+
+  - key: database_tree
+    module: 'mysql'# 执行mysql 查询
+    log: true
+    must_login: false
+    params:
+      soft_type:
+        check:
+          template: "{{soft_type|must_list}}"
+          err_msg: "软件类型不能为空"
+      project_code:
+        template: "{{'monitor_project_code'|get_key}}"
+    sql_file: 'database.sql'
+    result_handler:
+      - key: new_col
+        params:
+          to_field:
+            - field: id
+              template: "{{install_soft_id}}"
+            - field: pid
+              template: "{{sys_project_id}}"
+            - field: type
+              template: "soft"
+            - field: orginal
+              template: "{{db_info}}【{{env_info }}】"
+            - field: text
+              template: "{{db_info}}【{{env_info }}】"
+      - key: level_2
+        params:
+          template: '{{sys_project_id}}'
+          level_1_fields:
+            - field: project_name
+              template: "{{project_name}}"
+            - field: project_code
+              template: "{{project_code}}"
+            - field: sys_project_id
+              template: "{{sys_project_id}}"
+            - field: type
+              template: "project"
+            - field: id
+              template: "{{sys_project_id}}"
+            - field: pid
+              template: "0"
+            - field: orginal
+              template: "{{project_name}}"
+            - field: text
+              template: "{{project_name}}"
+          children_field: 'children'

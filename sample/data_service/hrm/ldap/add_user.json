@@ -1,0 +1,16 @@
+{
+
+  "method": "add",
+  "params": {
+    "dn": "{{dn}}",
+    "object_class":["top", "inetOrgPerson"],
+    "attributes":{
+      "cn": "{{username}}",
+      "sn": "{{nick}}",
+      "userpassword": "{{password|ldap_password}}",
+      "mobile": "18000000000",
+      "mail": "{{email}}"
+    }
+  },
+  require('./common/manage.json')
+}

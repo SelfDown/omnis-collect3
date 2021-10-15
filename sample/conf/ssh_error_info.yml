@@ -1,0 +1,27 @@
+info:
+  - key: Authentication failed
+    template: "【{{server_ip}}】 连接【{{user}}】，密码错误。详情：{{error_msg}}"
+
+  - key: getaddrinfo failed
+    template: "【{{server_ip}}】 不是有效的IP 地址。详情：{{error_msg}}。"
+
+
+  - key: timed out
+    template: "【{{server_ip}}】 连接超时。详情：{{error_msg}}。"
+
+  - key: No such file
+    template: "【{{server_ip}}】 {% if path|safe %}【{{path|safe}}】 {% endif %}文件不存在。详情：{{error_msg}}。"
+
+  - key: Permission denied
+    template: "【{{server_ip}}】 【{{user}}】没有权限。详情：{{error_msg}}。"
+
+  - key: size mismatch in put
+    template: "【{{server_ip}}】 文件上传失败。详情：{{error_msg}}。"
+
+  - key: No existing session
+    template: "【{{server_ip}}】 连接不上。详情：{{error_msg}}。"
+
+  - key: already exists
+    template: "【{{server_ip}}】 已经存在。详情：{{error_msg}}。"
+
+

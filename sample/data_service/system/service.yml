@@ -1,0 +1,5 @@
+service:
+  - name: "菜单栏模块"
+    path: "menu/index.yml"
+  - name: "码表模块"
+    path: "sys_code/index.yml"

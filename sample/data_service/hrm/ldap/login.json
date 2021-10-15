@@ -1,0 +1,7 @@
+{
+  "connection": {
+    "server": "{{ldap_host}}",
+    "user": "{{entry_dn}}",
+    "password": "{{password}}"
+  }
+}

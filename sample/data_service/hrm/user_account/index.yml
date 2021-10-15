@@ -1,0 +1,199 @@
+service:
+  # 项目
+  - key: "user_account_query"
+    name: 用户查询
+    params:
+      pagination:
+        default: true
+      page:
+        default: 1
+      size:
+        default: 20
+      start:
+        template: "{{(page|int-1) * size|int}}"
+    count_params:
+      pagination:
+        default: false
+    count_sql: user_account_acount.sql
+    module: 'sql'# 执行mysql 查询
+    sql_file: 'user_account.sql'
+    result_handler:
+      - key: split
+        params:
+          field: "role_id_list"
+          split: ","
+      - key: new_col
+        params:
+          to_field:
+            - field: 'password'
+              template: "******"
+
+  - key: "user_account_save"
+    name: 用户保存
+    module: 'model_save'
+    must_login: false
+
+    params:
+      user_id:
+        check:
+          template: "{{user_id|must}}"
+          err_msg: "用户不能为空"
+
+      nick:
+        check:
+          template: "{{nick|must}}"
+          err_msg: "昵称不能空"
+      username:
+        check:
+          service:
+            service: hrm.get_user
+            username: username
+          template: "{{service_result|length<=0}}"
+          err_msg: "【{{username}}】 用户名已经存在"
+      password:
+        check:
+          template: "{{password|must}}"
+          err_msg: "密码不能为空"
+        template: "{{password|md5}}"
+      user_status:
+        check:
+          template: "{{user_status|must}}"
+          err_msg: "用户状态不能为空"
+        default: "0"
+      create_user:
+        template: "{{session_user_id}}"
+
+      create_time:
+        template: "{{''|current_date_time}}"
+
+      modify_user:
+        template: "{{session_user_id}}"
+
+      modify_time:
+        template: "{{''|current_date_time}}"
+
+      create_ldap:
+        default: "0"
+
+      is_delete:
+        default: "0"
+    model: UserAccount
+    result_handler:
+
+      - key: new_col
+        params:
+          to_field:
+            - field: 'password'
+              template: "******"
+  - key: "user_account_password_update"
+    name: 用户修改
+    module: model_save
+    model: UserAccount
+    params:
+      user_id:
+        check:
+          template: "{{user_id|must}}"
+          err_msg: "用户不能为空"
+      password:
+        check:
+          template: "{{password|must}}"
+          err_msg: "密码不能为空"
+        template: "{{password|md5}}"
+    exclude_save_field:
+      - user_id
+      - username
+
+  - key: "user_account_update"
+    name: 用户修改
+    module: model_save
+    model: UserAccount
+    params:
+      user_id:
+        check:
+#          service:
+#            service: hrm.get_user
+#            user_id: user_id
+          template: "{{user_id|must}}"
+          err_msg: "用户不能为空"
+      username:
+        check:
+          service:
+            service: hrm.get_user
+            username: username
+            exclude_user_id: user_id
+          template: "{{service_result|length <=0}}"
+          err_msg: "【{{username}}】 已经存在"
+
+      modify_user:
+        template: "{{session_user_id}}"
+
+      modify_time:
+        template: "{{''|current_date_time}}"
+    exclude_save_field:
+      - user_id
+      - create_time
+      - password
+
+
+  - key: "user_account_delete"
+    name: 用户删除
+    module: model_delete
+    model: UserAccount
+    params:
+      user_id_list:
+        check:
+          template: "{{user_id_list|must_list}}"
+          err_msg: "用户列表不能为空"
+    filter:
+      user_id__in: user_id_list
+    operation: # 预留口子，做假删除
+      method: 'delete'
+  # 根据账号密码获取用户
+  - key: "get_user_by_password"
+    name: 根据密码获取用户信息
+
+    module: 'sql'# 执行mysql 查询
+    params:
+      username:
+        check:
+          template: "{{username|must}}"
+          err_msg: "用户名不能为空"
+      password:
+        check:
+          template: "{{password|must}}"
+          err_msg: "密码不能为空"
+      to_obj:
+        default: false
+    sql_file: get_user.sql
+    result_handler:
+      - key: arr2obj
+      - key: new_col
+        params:
+          to_field:
+            - field: password
+              template: "******"
+
+  # 获取用户信息
+  - key: "get_user"
+    name: 获取用户信息
+    must_login: false
+    module: 'sql'# 执行mysql 查询
+    params:
+      with_password:
+        default: false
+
+      to_obj:
+        default: false
+    sql_file: get_user.sql
+    log: true
+    result_handler:
+      - key: arr2obj
+        enable: "{{to_obj}}"
+      - key: new_col
+        enable: "{{not with_password}}"
+        params:
+          to_field:
+            - field: password
+              template: "******"
+
+

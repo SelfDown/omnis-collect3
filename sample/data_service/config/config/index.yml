@@ -1,0 +1,153 @@
+service:
+  - key: router
+    log: true
+    params:
+      to_tree:
+        default: true
+      group_icon:
+        default: "insight-file"
+      item_icon:
+        default: "insight-service"
+
+    must_login: false
+    module: 'config'
+    config:
+      services:
+        - key: start
+          type: start
+          name: 开始
+          next: config
+        - key: config
+          type: node
+          name: 获取配置
+          config_data:
+            group_icon: group_icon
+            item_icon: item_icon
+          save_field: config
+          next: end
+          fail: end
+        - key: end
+          type: end
+          name: 结束
+    result_handler:
+      - key: param2result
+        params:
+          field: config
+
+  - key: flow_nodes
+    module: config
+    must_login: false
+    log: true
+    params:
+      target:
+        default: "server.install_monitor"
+
+      height:
+        default: 80
+      width:
+        default: 120
+      start_x:
+        default: -600
+      start_y:
+        default: -200
+      x_distance:
+        default: 200
+      y_distance:
+        default: 140
+
+    config:
+      services:
+        - key: start
+          type: start
+          name: 开始
+          next: config
+        - key: config
+          type: node
+          name: 获取原始节点
+          node_data:
+            target: target
+          save_field: nodes
+          next: init_node
+          fail: end
+        - key: init_node
+          type: node
+          name: 初始化节点坐标
+          init_node:
+            node: nodes
+            height: height
+            width: width
+            start_x: start_x
+            start_y: start_y
+            x_distance: x_distance
+            y_distance: y_distance
+          save_field: node_links
+          next: end
+          fail: end
+        - key: end
+          type: end
+          name: 结束
+    result_handler:
+      - key: param2result
+        params:
+          field: node_links
+
+  - key: service_content
+    module: ssh
+    must_login: false
+    log: true
+    params:
+      path:
+        default: "project_manage/service.yml"
+      dir:
+        template: "{{'collect_file_path'|get_key|dirname}}"
+
+    shell:
+      services:
+        - key: start
+          type: start
+          name: 开始
+          next: file_content
+        - key: file_content
+          type: node
+          name: 获取文件
+          file_content:
+            file: "{{dir}}/{{path}}"
+          next: end
+          fail: end
+          save_field: content
+        - key: end
+          type: end
+          name: 结束
+    result_handler:
+      - key: param2result
+        params:
+          field: content
+
+  - key: dir_tree
+    module: ssh
+    must_login: false
+    params:
+      dir:
+        template: "{{'collect_file_path'|get_key|dirname}}"
+    shell:
+      services:
+        - key: start
+          type: start
+          name: 开始
+          next: dir_tree
+        - key: dir_tree
+          type: node
+          name: 生成文件树
+          dir_tree:
+            dir: "{{dir}}"
+          next: end
+          fail: end
+          save_field: tree
+        - key: end
+          type: end
+          name: 结束
+    result_handler:
+      - key: param2result
+        params:
+          field: tree
+

@@ -1,0 +1,5 @@
+  "connection": {
+    "server": "{{'ldap_host'|get_key}}",
+    "user": "cn={{'manager_username'|get_key}},{{'base_dn'|get_key}}",
+    "password": "{{'manager_password'|get_key}}"
+  }

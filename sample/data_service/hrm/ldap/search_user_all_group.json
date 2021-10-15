@@ -1,0 +1,21 @@
+{
+  "connection": {
+    "server": "{{ldap_host}}"
+  },
+  "method": "search",
+  "params": {
+    "search_base": "ou=groups,dc=weigao,dc=com",
+    "search_scope": "SUBTREE",
+    "search_filter": "(&(objectclass=groupOfUniqueNames)(uniqueMember=cn={{username}},{{'ou'|get_key}},{{'base_dn'|get_key}}))",
+    "attributes": "*"
+  },
+  "ignore_status": true,
+  "result": "entries_all",
+  "result_field": [
+    "cn",
+    "sn",
+    "givenName",
+    "mail",
+    "entry_dn"
+  ]
+}

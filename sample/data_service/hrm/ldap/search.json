@@ -1,0 +1,25 @@
+{
+  "connection": {
+    "server": "{{ldap_host}}"
+  },
+  "method": "search",
+  "params": {
+    "search_base": "dc=weigao,dc=com",
+    "search_filter": "(&(objectclass=person)(cn={{username}}))",
+    "attributes": [
+      "cn",
+      "sn",
+      "givenName",
+      "mail"
+    ]
+  },
+  "ignore_status": true,
+  "result": "entries_first",
+  "result_field": [
+    "cn",
+    "sn",
+    "givenName",
+    "mail",
+    "entry_dn"
+  ]
+}

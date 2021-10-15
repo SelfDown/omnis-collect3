@@ -1,0 +1,172 @@
+service:
+  - key: unlink_template
+    module: service_flow
+    must_login: false
+    log: true
+    params:
+      hostid_list:
+        check:
+          template: "{{hostid_list|must_list}}"
+          err_msg: "请选择主机列表"
+      templateid_list:
+        check:
+          template: "{{templateid_list|must_list}}"
+          err_msg: "请选择模板列表"
+    flow:
+      services:
+        - key: start
+          type: start
+          name: 开始
+          next: unlink
+        - key: unlink
+          type: node
+          name: 主机解绑模板
+          service:
+            service: monitor.host_unlink_template
+          next: end
+          fail: end
+          save_field: unlink
+        - key: end
+          type: end
+          name: 结束
+
+
+    result_handler:
+      - key: add_param
+        params:
+          from_field: unlink
+          to_field: unlink
+
+
+
+  - key: link_template
+    module: 'service_flow'
+    must_login: false
+    log: true
+    params:
+      hostid_list:
+        check:
+          service:
+            service: server.check_parent_link
+            hostid_list: hostid_list
+            templateid_list: templateid_list
+          template: "{{service_result|length <= 0}}"
+          err_msg: "{{service_result|foreach(template='【{{name}}】 该服务器其他模板已经继承，不能选择 ',join='\n')}}"
+      templateid_list:
+        check:
+          template: "{{templateid_list|must_list}}"
+          err_msg: "请选择模板列表"
+      has_jms_result:
+        default: ""
+    handler_params:
+      - key: arr2arrObj
+        foreach: hostid_list
+        obj:
+          hostid: "{{item}}"
+        save_field: host_list
+      - key: arr2arrObj
+        foreach: templateid_list
+        obj:
+          templateid: "{{item}}"
+        save_field: template_list
+      - key: service2field
+        service:
+          service: monitor.get_jmx_template
+          templateid_list: templateid_list
+        save_field: has_jms_result
+      - key: service2field
+        enable: "{{has_jms_result|length >0 }}"
+        service:
+          service: monitor.host_not_jmx_interface_query
+          hostid_list: hostid_list
+        save_field: no_jms_host
+      - key: arr2arrObj
+        enable: "{{has_jms_result|length >0 and no_jms_host|length >0 }}"
+        foreach: no_jms_host
+        obj:
+          hostid: "{{item}}"
+          dns: ""
+          ip: "127.0.0.1"
+          main: 1
+          port: "2900"
+          type: 4
+          useip: 1
+        save_field: new_jms_interface_list
+
+    flow:
+      services:
+        - key: start
+          type: start
+          name: 开始
+          next: "{% if no_jms_host and no_jms_host|length >0 %} create_jms_interface {% else %} link_template {% endif %}"
+        - key: create_jms_interface
+          type: node
+          name: 创建JMS 接口
+          service:
+            service: monitor.create_jms_interface
+          next: link_template
+          fail: end
+        - key: link_template
+          type: node
+          name: 主机关联模板
+          service:
+            service: monitor.link_template
+          save_field: link_result
+          next: end
+          fail: end
+        - key: end
+          type: end
+          name: 结束
+    result_handler:
+      - key: add_param
+        params:
+          from_field: host_list
+          to_field: host_list
+
+      - key: add_param
+        params:
+          from_field: template_list
+          to_field: template_list
+      - key: add_param
+        params:
+          from_field: jms_result
+          to_field: jms_result
+      - key: add_param
+        params:
+          from_field: no_jms_host
+          to_field: no_jms_host
+
+      - key: add_param
+        params:
+          from_field: new_jms_interface_list
+          to_field: new_jms_interface_list
+
+
+  - key: check_parent_link
+    module: 'empty'
+    must_login: false
+    log: true
+    params:
+      hostid_list:
+        check:
+          template: "{{hostid_list|must_list}}"
+          err_msg: 主机不能为空
+    handler_params:
+      - key: service2field # 获取天览拨测主机
+        service:
+          service: 'monitor.get_parent_templateid'
+          hostid_list: "hostid_list"
+        save_field: 'parent_templates'
+      - key: get_array_obj
+        params:
+          from_array: "templateid_list"
+          to_obj_array: "parent_templates"
+          template: "{{from_item==to_obj.templateid}}"
+          save_field: parent_orignal_templates
+    result_handler:
+      - key: param2result
+        params:
+          field: parent_orignal_templates
+
+
+

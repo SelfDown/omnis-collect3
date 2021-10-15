@@ -1,0 +1,13 @@
+service:
+  - name: "软件模块"
+    path: "user_account/index.yml"
+  - name: "登陆模块"
+    path: "login/index.yml"
+  - name: "ldap模块"
+    path: "ldap/index.yml"
+  - name: "user模块"
+    path: "user/index.yml"
+  - name: "role模块"
+    path: "role/index.yml"
+  - name: "menu模块"
+    path: "menu/index.yml"

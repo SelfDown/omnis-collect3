@@ -1,0 +1,42 @@
+service:
+  - key: root_user
+    module: mysql
+    log: true
+    params:
+      server_id:
+        check:
+          template: "{{server_id|must}}"
+          err_msg: "主机不能为空"
+    sql_file: root_user.sql
+    result_handler:
+      - key: arr2obj
+      - key: new_col
+        params:
+          to_field:
+            - field: 'password'
+              template: "{{user_pwd|safe|omnis_decrypt}}"
+            - field: 'user'
+              template: "{{user_name|safe}}"
+          remove:
+            - user_pwd
+            - user_name
+  - key: root_users
+    module: mysql
+    log: true
+    params:
+      server_id:
+        check:
+          template: "{{server_id_list|must_list}}"
+          err_msg: "主机列表不能为空"
+    sql_file: root_user.sql
+    result_handler:
+      - key: new_col
+        params:
+          to_field:
+            - field: 'password'
+              template: "{{user_pwd|safe|omnis_decrypt}}"
+            - field: 'user'
+              template: "{{user_name|safe}}"
+          remove:
+            - user_pwd
+            - user_name

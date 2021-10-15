@@ -1,0 +1,86 @@
+service:
+  # 项目
+  - key: "role_query"
+    name: 角色查询
+    module: 'sql'# 执行mysql 查询
+    sql_file: 'role.sql'
+    log: true
+
+  - key: ldap_user_2role_id_list
+    name: 根据ldap 分组转角色
+    module: "sql"
+    log: true
+    must_login: false
+    params:
+      username:
+        check:
+          template: "{{username|must}}"
+          err_msg: "用户名称不能为空"
+    handler_params:
+      - key: service2field
+        service:
+          service: hrm.ldap_search_user_all_group
+          username: username
+        save_field: ldap_name_list
+    sql_file: ldap_group2role_id.sql
+    result_handler:
+      - key: value_arr
+        params:
+          template: "{{role_id}}"
+
+
+  - key: get_ldap_group_names
+    name: 根据角色获取ldap分组
+    module: "sql"
+    params:
+      role_id_list:
+        default: []
+      user_id_list:
+        default: []
+    sql_file: ldap_group_names.sql
+
+  - key: user_role_delete_by_user_id
+    name: 根据用户删除角色
+    module: 'model_delete'
+    model: UserRole
+    params:
+      user_id:
+        check:
+          template: "{{user_id|must}}"
+          err_msg: "用户不能为空"
+    filter:
+      user_id: user_id
+    operation: # 预留口子，做假删除
+      method: 'delete'
+
+  - key: user_role_delete
+    name: 用户删除角色
+    module: 'model_delete'
+    model: UserRole
+    params:
+      user_id_list:
+        check:
+          template: "{{user_id_list|must_list}}"
+          err_msg: "用户不能为空"
+    filter:
+      user_id__in: user_id_list
+    operation: # 预留口子，做假删除
+      method: 'delete'
+
+
+  - key: "user_role_save"
+    name: 用户创建角色
+    must_login: false
+    module: 'model_save'
+    params:
+      user_role_id:
+        template: "{{user_role_id|uuid}}"
+      user_id:
+        check:
+          template: "{{user_id|must}}"
+          err_msg: 用户不能为空
+      role_id:
+        check:
+          template: "{{role_id|must}}"
+          err_msg: "角色不能为空"
+    model: UserRole

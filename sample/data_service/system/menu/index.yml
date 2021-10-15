@@ -1,0 +1,13 @@
+service:
+  # 项目
+  - key: "menu_query"
+    name: 菜单栏查询
+    module: 'sql'# 执行mysql 查询
+    sql_file: 'menu.sql'
+    log: true
+    result_handler:
+        - key: to_tree
+          params:
+              id_field: menu_id
+              parent_id_field: parent_id
+              children_field: children

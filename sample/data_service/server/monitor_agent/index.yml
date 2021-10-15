@@ -1,0 +1,108 @@
+service:
+  # 保存探针
+  - key: "monitor_agent_record_save"
+    module: 'model_save'# 执行监控 查询
+    must_login: false
+    params:
+      agent_id:
+        template: "{{''|uuid}}"
+      operate_user:
+        template: "{{session_user_id}}"
+      operate_time:
+        template: "{{''|current_date_time}}"
+      hostid:
+        check:
+          template: "{{hostid|must}}"
+          err_msg: 监控主机不能为空
+      monitor_agent_group:
+        check:
+          template: "{{monitor_agent_group|must}}"
+          err_msg: 监控分组不能为空
+      monitor_agent_id:
+        check:
+          template: "{{monitor_agent_id|must}}"
+          err_msg: 监控对象不能为空
+      create_time:
+        template: "{{''|current_date_time}}"
+    log: true
+    model: MonitorAgent
+  # 修改探针
+  - key: "monitor_agent_record_update"
+    module: 'model_save'# 执行监控 查询
+    must_login: false
+    extend_param: "server.monitor_agent_record_save"
+    params:
+      agent_id:
+        check:
+          template: "{{agent_id|must}}"
+          err_msg: "探针不能为空"
+    exclude_save_field:
+      - create_time
+      - agent_id
+    log: true
+    model: MonitorAgent
+  # 删除探针
+  - key: "monitor_agent_record_delete"
+    module: 'model_delete'# 执行监控 查询
+    must_login: false
+    params:
+      agent_id:
+        check:
+          template: "{{agent_id|must}}"
+          err_msg: "探针不能为空"
+    filter:
+      agent_id: agent_id
+    operation: # 预留口子，做假删除
+      method: 'delete'
+    log: true
+    model: MonitorAgent
+
+  - key: "monitor_agent_query"
+    module: 'mysql' # 执行mysql 查询
+    params:
+      server_id:
+        check:
+          template: "{{server_id|must}}"
+          err_msg: "主机不能为空"
+    log: true
+    sql_file: monitor_agent.sql
+    must_login: false
+    result_handler:
+      - key: arr2obj
+  # 探针保存
+  - key: "monitor_agent_save"
+    module: 'service_flow'
+    must_login: false
+    log: true
+    params:
+      server_id:
+        check:
+          template: "{{server_id|must}}"
+          err_msg: 主机不能为空
+        name: 主机
+    flow:
+      services:
+        - key: start
+          type: start
+          name: 开始
+          next: "{% if agent_id%} update_agent {%else%} create_agent {% endif %}"
+        - key: create_agent
+          type: node
+          name: 保存探针记录
+          service:
+            service: 'server.monitor_agent_record_save'
+          fail: end
+          next: end
+
+        - key: update_agent
+          type: node
+          name: 修改探针记录
+          service:
+            service: 'server.monitor_agent_record_update'
+            agent_id: "{{agent_id}}"
+          fail: end
+          next: end
+
+        - key: end
+          type: end
+          name: 结束

@@ -1,0 +1,59 @@
+service:
+  - key: "server_list"
+    module: 'mysql'
+    must_login: false
+    log: true
+    params:
+      server_env_id:
+        check:
+          template: "{{server_env_id|must}}"
+          err_msg: 环境不能为空
+    sql_file: server_list.sql
+    result_handler:
+      - key: val2param
+        params:
+          template: "{{hostid}}"
+          to_field: host_id_list
+      - key: combine_service
+        params:
+          service:
+            service: "server.panel_list"
+          from_field: "server_id"
+          to_field: 'server_id'
+          multiple: true
+          save_field: 'panel_list'
+      - key: combine_service
+        params:
+          service:
+            service: "monitor.host_info_query"
+          from_field: "hostid"
+          to_field: 'hostid'
+          save_field: 'monitor_item'
+      - key: new_col
+        params:
+          to_field:
+            - field: 'parentTemplates'
+              template: "{{monitor_item.parentTemplates|json_str}}"
+      - key: field2json
+        params:
+          field: parentTemplates
+
+  - key: "panel_list"
+    module: 'mysql'
+    must_login: false
+    log: true
+    params:
+      server_env_id:
+        check:
+          template: "{{server_env_id|must}}"
+          err_msg: 环境不能为空
+    sql_file: panel_list.sql
+
+  - key: "dish_server"
+    module: 'mysql'
+    must_login: false
+    log: true
+    sql_file: dish_server.sql
+
+
+

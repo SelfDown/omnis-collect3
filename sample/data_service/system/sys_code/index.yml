@@ -1,0 +1,6 @@
+service:
+  # 项目
+  - key: "sys_code_query"
+    name: 菜单栏查询
+    module: 'sql'# 执行mysql 查询
+    sql_file: 'sys_code.sql'

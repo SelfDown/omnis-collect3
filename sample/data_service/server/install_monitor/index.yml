@@ -1,0 +1,447 @@
+service:
+  # 安装探针
+  - key: "install_monitor"
+    module: 'service_flow'
+    must_login: false
+    log: true
+    params:
+      server_id:
+        check:
+          template: "{{server_id|must}}"
+          err_msg: 主机不能为空
+        name: 主机
+      server_ip:
+        check:
+          template: "{{server_ip|must}}"
+          err_msg: "【{{server_ip}}】 主机不能为空"
+        name: 主机
+      server_os:
+        check:
+          template: "{{server_os|must}}"
+          err_msg: "【{{server_ip}}】 操作系统不能为空"
+      user:
+        check:
+          enable: '{{is_windows=="False"}}'
+          template: "{{user|must}}"
+          err_msg: "【{{server_ip}}】 root 用户不能为空"
+        name: 主机
+      password:
+        check:
+          enable: '{{is_windows=="False"}}'
+          template: "{{password|must}}"
+          err_msg: "【{{server_ip}}】 root 密码不能为空"
+        name: 主机
+      server_busi_name:
+        check:
+          template: "{{server_busi_name|must}}"
+          err_msg: "【{{server_ip}}】 资源名称不能为空"
+        name: 主机
+
+    flow:
+      services:
+        - key: start
+          type: start
+          name: 开始
+          next: "{% if is_windows== 'True' %}get_host{% else %}agentd_soft_install{% endif %}"
+
+        - key: agentd_soft_install
+          type: node
+          name: 安装探针
+          service:
+            service: 'monitor.agentd_install'
+          fail: end
+          next: get_host
+
+        - key: get_host
+          type: node
+          name: 获取目标主机
+          service:
+            service: 'monitor.host_id'
+          save_field: 'host'
+          fail: end
+          next: agentd_save
+
+        - key: agentd_save
+          type: node
+          name: 探针保存
+          service:
+            service: 'server.monitor_agent_save'
+            monitor_agent_group: "{{host.monitor_agent_group}}"
+            monitor_agent_id: "{{host.monitor_agent_id}}"
+            hostid: "{{host.hostid}}"
+          fail: end
+          next: end
+
+        - key: end
+          type: end
+          name: 结束
+    result_handler:
+      - key: add_param
+        params:
+          from_field: 'host'
+          to_field: 'host'
+  # 卸载探针
+  - key: "uninstall_monitor"
+    module: 'service_flow'
+    must_login: false
+    log: true
+    params:
+      server_id:
+        check:
+          template: "{{server_id|must}}"
+          err_msg: 主机不能为空
+        name: 主机
+      server_ip:
+        check:
+          template: "{{server_ip|must}}"
+          err_msg: "【{{server_ip}}】 主机不能为空"
+        name: 主机
+      user:
+        check:
+          enable: '{{is_windows=="False"}}'
+          template: "{{user|must}}"
+          err_msg: "【{{server_ip}}】{{is_windows}} root 用户不能为空"
+        name: 用户
+      password:
+        check:
+          enable: '{{is_windows=="False"}}'
+          template: "{{password|must}}"
+          err_msg: "【{{server_ip}}】 root 密码不能为空"
+        name: 密码
+      server_busi_name:
+        check:
+          template: "{{server_busi_name|must}}"
+          err_msg: "【{{server_ip}}】 资源名称不能为空"
+        name: 资源名称
+      agent_id:
+        check:
+          template: "{{agent_id|must}}"
+          err_msg: "【{{server_ip}}】探针不能为空"
+        name: 探针
+    flow:
+      services:
+        - key: start
+          type: start
+          name: 开始
+          next: "{% if is_windows== 'True' %}host_delete{% else %}agentd_soft_uninstall{% endif %}"
+
+        - key: agentd_soft_uninstall
+          name: 探针卸载
+          type: node
+          service:
+            service: monitor.agentd_uninstall
+          next: host_delete
+          fail: end
+          ignore_error: true
+
+        - key: host_delete
+          name: 主机删除
+          type: node
+          service:
+            service: monitor.host_delete
+          next: monitor_agent_record_delete
+          fail: end
+          ignore_error: true
+
+        - key: monitor_agent_record_delete
+          name: 探针删除
+          type: node
+          service:
+            service: server.monitor_agent_record_delete
+          next: end
+          fail: end
+          ignore_error: true
+
+        - key: end
+          type: end
+          name: 结束
+
+
+  # 批量创建服务
+  - key: "bulk_install_monitor"
+    module: 'bulk_service'
+    must_login: false
+    log: true
+    params:
+      server_id_list:
+        check:
+          template: "{{server_id_list|must_list}}"
+          err_msg: 服务器列表不能为空
+    handler_params:
+      - key: service2field
+        service:
+          service: 'server.root_users'
+          server_id_list: "server_id_list"
+        save_field: 'monitor_server_list'
+      - key: service2field
+        service:
+          service: 'monitor.project_group_id'
+        save_field: 'group'
+
+      - key: service2field
+        enable: "{{'true' == 'monitor_proxy'|get_key}}"
+        service:
+          service: 'monitor.project_proxy'
+        save_field: 'proxy'
+
+    batch:
+      foreach: monitor_server_list
+      item: item
+      service:
+        service: "server.install_monitor"
+        server_id: "{{item.server_id}}"
+        project_name: "{{item.project_name}}"
+        server_busi_name: "{{item.server_busi_name}}"
+        user: "{{item.user}}"
+        server_ip: "{{item.server_ip}}"
+        password: "{{item.password}}"
+        agent_id: "{{item.agent_id|safe}}"
+        server_os: "{{item.server_os}}"
+        is_windows: "{{item.server_os == 'windows'}}"
+        proxyid: "{{proxy.proxyid}}"
+      save_field: 'bulk_result'
+    result_handler:
+      - key: param2result
+        params:
+          field: bulk_result
+
+
+
+  # 批量删除服务
+  - key: "bulk_uninstall_monitor"
+    module: 'bulk_service'
+    must_login: false
+    log: true
+    params:
+      server_id_list:
+        check:
+          template: "{{server_id_list|must_list}}"
+          err_msg: 服务器列表不能为空
+    handler_params:
+      - key: service2field
+        service:
+          service: 'server.root_users'
+          server_id_list: "server_id_list"
+        save_field: 'monitor_server_list'
+
+    batch:
+      foreach: monitor_server_list
+      item: item
+      service:
+        service: "server.uninstall_monitor"
+        server_id: "{{item.server_id}}"
+        project_name: "{{item.project_name}}"
+        server_busi_name: "{{item.server_busi_name}}"
+        user: "{{item.user}}"
+        server_ip: "{{item.server_ip}}"
+        password: "{{item.password}}"
+        agent_id: "{{item.agent_id|safe}}"
+        hostid: "{{item.hostid|safe}}"
+        server_os: "{{item.server_os}}"
+        is_windows: "{{item.server_os == 'windows'}}"
+      save_field: 'bulk_result'
+    result_handler:
+      - key: param2result
+        params:
+          field: bulk_result
+
+  - key: copy_files
+    module: "ssh"
+    must_login: false
+    log: true
+    ssh_connect: false
+    params:
+      folder:
+        check:
+          template: "{{folder|must}}"
+          err_msg: 文件夹不能为空
+        default: ""
+      win32_path:
+        template: "{{'omnis_tmp'|get_key}}/zabbix_template/windows/zabbix_agent-4.0.24-windows-i386-openssl.zip"
+      win64_path:
+        template: "{{'omnis_tmp'|get_key}}/zabbix_template/windows/zabbix_agent-4.0.24-windows-amd64-openssl.zip"
+
+    shell:
+      services:
+        - key: start
+          type: start
+          name: 开始
+          next: archive
+
+#        - key: copywin32
+#          name: 拷贝32位文件
+#          type: node
+#          server_copy:
+#            from: "{{win32_path}}"
+#            to: "{{folder}}"
+#          next: copywin64
+#          fail: end
+#        - key: copywin64
+#          name: 拷贝64位文件
+#          type: node
+#          server_copy:
+#            from: "{{win64_path}}"
+#            to: "{{folder}}"
+#          next: archive
+#          fail: end
+        - key: archive
+          name: 压缩
+          type: node
+          server_archive:
+            from: "{{folder}}"
+          save_field: dest
+          next: end
+          fail: end
+        - key: end
+          type: end
+          name: 结束
+    result_handler:
+      - key: param2result
+        params:
+          field: dest
+
+  - key: gen_template
+    module: "ssh"
+    must_login: false
+    log: true
+    ssh_connect: false
+    params:
+      server_ip:
+        check:
+          template: "{{server_ip|must}}"
+          err_msg: "服务器不能为空"
+      monitor_service_file_name:
+        default: "zabbix_agentd.conf"
+
+      log_file:
+        template: "{{'monitor_window_home'|get_key}}logs/zabbix_agentd.log"
+      pid_file:
+        template: "{{'monitor_window_home'|get_key}}zabbix_agentd.pid"
+      monitor_api_server:
+        template: "{{'monitor_api_server'|get_key}}"
+      monitor_host_name:
+        template: "{{server_ip}}.{{'monitor_project_code'|get_key}}"
+      folder:
+        default: ""
+      dir_from:
+        template: "{{'omnis_tmp'|get_key}}/zabbix_template/windows/sqlserver"
+      dir_to:
+        template: "{{folder}}/{{server_ip}}"
+      service_template_file_from:
+        template: "{{'omnis_tmp'|get_key}}/zabbix_template/windows/sqlserver/win64/conf/{{monitor_service_file_name}}"
+      service_template_file_to:
+        template: "{{folder}}/{{server_ip}}/win32/conf/{{monitor_service_file_name}}"
+      service_template_file_to2:
+        template: "{{folder}}/{{server_ip}}/win64/conf/{{monitor_service_file_name}}"
+    shell:
+      services:
+        - key: start
+          type: start
+          name: 开始
+          next: copy_wind32
+        - key: copy_wind32
+          type: node
+          name: 拷贝32位安装包
+          server_copy_tree:
+            from: "{{dir_from}}"
+            to: "{{dir_to}}"
+          next: gen_service_template
+          fail: end
+
+        - key: gen_service_template
+          name: 生成服务文件1
+          type: node
+          gen_template:
+            from: "{{service_template_file_from}}"
+            to: "{{service_template_file_to}}"
+          next: gen_service_template2
+          fail: end
+        - key: gen_service_template2
+          name: 生成服务文件2
+          type: node
+          gen_template:
+            from: "{{service_template_file_from}}"
+            to: "{{service_template_file_to2}}"
+          next: end
+          fail: end
+        - key: end
+          type: end
+          name: 结束
+  # 批量生成模板
+  - key: "bulk_gen_template"
+    module: 'bulk_service'
+    must_login: false
+    log: true
+    params:
+      server_id_list:
+        check:
+          template: "{{server_id_list|must_list}}"
+          err_msg: 服务器列表不能为空
+
+    handler_params:
+      - key: service2field
+        service:
+          service: 'server.root_users'
+          server_id_list: "server_id_list"
+        save_field: 'monitor_server_list'
+    batch:
+      foreach: monitor_server_list
+      item: item
+      service:
+        service: "server.gen_template"
+        server_ip: "{{item.server_ip}}"
+        folder: "{{folder}}"
+      save_field: 'bulk_result'
+    result_handler:
+      - key: param2result
+        params:
+          field: bulk_result
+
+
+  # 下载探针文件
+  - key: "download_windows_monitor"
+    module: 'service_flow'
+    must_login: false
+    log: true
+    params:
+      server_id_list:
+        check:
+          template: "{{server_id_list|must_list}}"
+          err_msg: 服务器列表不能为空
+      folder:
+        template: "{{'omnis_tmp'|get_key}}/zabbix_target/{{''|current_day}}/{{''|uuid|substr(end=4)}}"
+    flow:
+      services:
+        - key: start
+          type: start
+          name: 开始
+          next: bulk_gen_template
+        - key: bulk_gen_template
+          type: node
+          name: 批量生成配置文件
+          service:
+            service: server.bulk_gen_template
+          save_field: bulk_result
+          next: make_archive
+          fail: end
+        - key: make_archive
+          name: 获取压缩包
+          type: node
+          service:
+            service: server.copy_files
+          save_field: dest
+          next: end
+          fail: end
+        - key: end
+          type: end
+          name: 结束
+    result_handler:
+      - key: file_response
+        params:
+          path: dest
+          filename: 'windows.zip'
+
+
+
+
+

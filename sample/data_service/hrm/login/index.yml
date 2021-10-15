@@ -1,0 +1,36 @@
+service:
+  # 登陆
+  - key: "user_login"
+    name: 用户登陆
+    must_login: false
+    module: 'session'# 执行mysql 查询
+    params:
+      user_id:
+        check:
+          template: "{{user_id|must}}"
+          err_msg: 用户不能为空
+    session:
+      - key: add_key
+        name: user_id
+        template: "{{user_id}}"
+
+
+
+
+
+  # 注销
+  - key: "user_logout"
+    name: 用户注销
+    must_login: false
+    module: 'session'# 执行mysql 查询
+    session:
+      - key: remove_key
+        name: user_id
+    result_handler:
+      - key: result_msg
+        params:
+          template: "注销成功！"
+
+
+
+

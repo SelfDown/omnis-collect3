@@ -1,0 +1,161 @@
+service:
+  # 登陆
+  - key: "ldap_search"
+    name: ldap 用户搜索
+    must_login: false
+    params:
+      username:
+        check:
+          template: "{{username|must}}"
+          err_msg: "用户名不能为空"
+      ldap_host:
+        template: "{{'ldap_host'|get_key}}"
+    module: 'ldap'# 执行mysql 查询
+    data_json: search.json
+
+
+  # 登陆
+  - key: "ldap_search_user_all_group"
+    name: ldap 用户搜索
+    must_login: false
+    params:
+      username:
+        check:
+          template: "{{username|must}}"
+          err_msg: "用户名不能为空"
+      ldap_host:
+        template: "{{'ldap_host'|get_key}}"
+    module: 'ldap'# 执行mysql 查询
+    data_json: search_user_all_group.json
+    result_handler:
+      - key: value_arr
+        params:
+          template: "{{cn}}"
+
+  - key: ldap_user_add_group
+    name: ldap 添加用户组
+    module: 'ldap'
+    log: true
+    params:
+      username:
+        check:
+          template: "{{username|must}}"
+          err_msg: "用户不能为空"
+      group:
+        check:
+          template: "{{group|must}}"
+          err_msg: "分组不能为空"
+      user_dn:
+        template: "cn={{username}},{{'ou'|get_key}},{{'base_dn'|get_key}}"
+      group_dn:
+        template: "ou={{group}},ou=groups,{{'base_dn'|get_key}}"
+    data_json: user_add_group.json
+
+  - key: ldap_user_delete_group
+    name: ldap 删除用户组
+    module: 'ldap'
+    params:
+      username:
+        check:
+          template: "{{username|must}}"
+          err_msg: "用户不能为空"
+      group:
+        check:
+          template: "{{group|must}}"
+          err_msg: "分组不能为空"
+      user_dn:
+        template: "cn={{username}},{{'ou'|get_key}},{{'base_dn'|get_key}}"
+      group_dn:
+        template: "ou={{group}},ou=groups,{{'base_dn'|get_key}}"
+    data_json: user_delete_group.json
+
+
+  - key: ldap_modify_user
+    name: ldap 修改用户
+    params:
+      username:
+        check:
+          template: "{{username|must}}"
+          err_msg: "用户不能为空"
+      password:
+        check:
+          template: "{{password|must}}"
+          err_msg: "密码不能为空"
+      dn:
+        template: "cn={{username}},{{'ou'|get_key}},{{'base_dn'|get_key}}"
+    module: 'ldap'
+    data_json: modify_user.json
+    result_handler:
+      - key: result_msg
+        params:
+          template: "【{{username}}】修改成功！"
+
+
+  # 删除用户
+  - key: ldap_delete_user
+    name: ldap 删除用户
+    params:
+      username:
+        check:
+          template: "{{username|must}}"
+          err_msg: "用户不能为空"
+      dn:
+        template: "cn={{username}},{{'ou'|get_key}},{{'base_dn'|get_key}}"
+    module: 'ldap'
+    data_json: delete_user.json
+    result_handler:
+      - key: result_msg
+        params:
+          template: "【{{username}}】删除成功！"
+
+  - key: "ldap_add_user"
+    name: ldap 添加用户
+    params:
+      username:
+        check:
+          template: "{{username|must}}"
+          err_msg: "用户不能为空"
+      nick:
+        check:
+          template: "{{nick|must}}"
+          err_msg: "昵称不能为空"
+      password:
+        check:
+          template: "{{password|must}}"
+          err_msg: "密码不能为空"
+      email:
+        check:
+          template: "{{email|must}}"
+          err_msg: "邮箱不能为空"
+      dn:
+        template: "cn={{username}},{{'ou'|get_key}},{{'base_dn'|get_key}}"
+    module: 'ldap'
+    data_json: add_user.json
+    result_handler:
+      - key: result_msg
+        params:
+          template: "【{{username}}】创建成功！"
+
+  # 登陆
+  - key: "ldap_login"
+    name: ldap 用户搜索
+    must_login: false
+    params:
+      username:
+        check:
+          template: "{{username|must}}"
+          err_msg: "用户名不能为空"
+      password:
+        check:
+          template: "{{password|must}}"
+          err_msg: "密码不能为空"
+      entry_dn:
+        template: "cn={{username}},{% if username != 'Manager'%}{{'ou'|get_key}},{% endif %} {{'base_dn'|get_key}}"
+      ldap_host:
+        template: "{{'ldap_host'|get_key}}"
+    module: 'ldap'# 执行mysql 查询
+    data_json: login.json
+    result_handler:
+      - key: result_msg
+        params:
+          template: "【{{username}}】登录成功！"

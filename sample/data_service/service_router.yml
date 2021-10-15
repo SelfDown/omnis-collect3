@@ -1,0 +1,410 @@
+# 系统总路由
+services:
+
+
+  - key: 'hrm'
+    name: '人资服务'
+    path: 'hrm/service.yml'
+  - key: 'system'
+    name: '人资服务'
+    path: 'system/service.yml'
+
+
+
+# 返回结果转换规则
+rules:
+  excel:
+    path: "collect.service_imp.rules.data_2_excel_rule"
+    class_name: "Data2ExcelRule"
+# SQL 模板关键字规则
+key_word_rules:
+  require:
+    path: collect.service_imp.key_word_rules.require
+    class_name: Require
+    reg: require[(](.*?)[)]
+
+
+# 请求参数处理规则
+request_rules:
+
+  # 字符串format
+  - name: format
+    path: collect.service_imp.request_rules.format
+    class_name: Format
+  # 表达式
+  - name: exp
+    path: collect.service_imp.request_rules.exp
+    class_name: Expression
+  # 模板渲染
+  - name: template
+    path: collect.service_imp.request_rules.template
+    class_name: TemplateData
+  # 检查数据
+  - name: check
+    path: collect.service_imp.request_rules.check
+    class_name: CheckData
+
+# django 模型配置
+django_model:
+  # django model 文件位置
+  model_file: sample.models.models
+
+
+before_plugin:
+  # 继承参数
+  - name: extend_param
+    path: collect.service_imp.before_plugin.plugin.extend_param
+    class_name: ExtendParam
+    method: handler
+    template: "{% if extend_param %}True{% endif %}"
+  # 处理请求参数
+  - name: handler_req_param
+    path: collect.service_imp.before_plugin.plugin.handler_req_param
+    class_name: HandlerReqParam
+    method: handler
+    template: "True"
+  # 处理count 参数
+  - name: handler_req_count_param
+    path: collect.service_imp.before_plugin.plugin.handler_req_count_param
+    class_name: HandlerReqCountParam
+    method: handler
+    template: "{% if count_params or count_sql %}True{% endif %}"
+  # 处理参数过程
+  - name: handler_params
+    path: collect.service_imp.before_plugin.plugin.handler_params
+    class_name: HandlerParams
+    method: handler
+    template: "{% if handler_params %}True{% endif %}"
+
+
+# 请求处理器
+request_handler:
+  # 字段转数组
+  - key: field2array
+    path: collect.service_imp.request_handlers.handlers.field2array
+    class_name: Field2Array
+    method: handler
+  # 服务转字段
+  - key: service2field
+    path: collect.service_imp.request_handlers.handlers.service2field
+    class_name: Service2Field
+    method: handler
+  # 忽略数据
+  - key: update_data
+    path: collect.service_imp.request_handlers.handlers.update_data
+    class_name: UpdateData
+    method: handler
+  # 更新数据
+  - key: ignore_data
+    path: collect.service_imp.request_handlers.handlers.ignore_data
+    class_name: IgnoreData
+    method: handler
+  # 数组转数组对象
+  - key: arr2arrObj
+    path: collect.service_imp.request_handlers.handlers.arr2arrobj
+    class_name: Arr2ArrObj
+    method: handler
+
+  # 提取数组对象里面的属性，作为数组
+  - key: prop_arr
+    path: collect.service_imp.request_handlers.handlers.prop_arr
+    class_name: PropArr
+    method: handler
+  # 数组乘以数组
+  - key: mul_arr
+    path: collect.service_imp.request_handlers.handlers.mul_arr
+    class_name: MulArr
+    method: handler
+
+  # 提取数组对象里面的属性，作为数组
+  - key: get_array_obj
+    path: collect.service_imp.request_handlers.handlers.get_array_obj
+    class_name: GetArrayObj
+    method: handler
+
+# 结果处理器
+result_handler:
+  # 列转行
+  - key: row2col
+    path: collect.service_imp.result_handlers.handlers.row2col
+    class_name: Row2Col
+    method: handler
+
+  # 合并列
+  - key: combine
+    path: collect.service_imp.result_handlers.handlers.combine
+    class_name: Combine
+    method: handler
+  # 排序
+  - key: arrsort
+    path: collect.service_imp.result_handlers.handlers.array_sort
+    class_name: ArraySort
+    method: handler
+  # 取树形节点，一级节点二级节点名称
+  - key: tree_node_name
+    path: collect.service_imp.result_handlers.handlers.tree_node_name
+    class_name: TreeNodeName
+    method: handler
+
+  # 添加请求参数
+  - key: add_param
+    path: collect.service_imp.result_handlers.handlers.add_param
+    class_name: AddParam
+    method: handler
+  # 结果转对象
+  - key: arr2obj
+    path: collect.service_imp.result_handlers.handlers.array_2_obj
+    class_name: Array2Obj
+    method: handler
+  # 添加新列参数
+  - key: new_col
+    path: collect.service_imp.result_handlers.handlers.new_col
+    class_name: NewCol
+    method: handler
+  # 对象列表转数组
+  - key: value_arr
+    path: collect.service_imp.result_handlers.handlers.value_arr
+    class_name: ValueArr
+    method: handler
+  # 值转参数
+  - key: val2param
+    path: collect.service_imp.result_handlers.handlers.val_2_param
+    class_name: Val2Param
+    method: handler
+  # 结合其他服务
+  - key: combine_service
+    path: collect.service_imp.result_handlers.handlers.combine_service
+    class_name: CombineService
+    method: handler
+  # 列表转树
+  - key: to_tree
+    path: collect.service_imp.result_handlers.handlers.to_tree
+    class_name: ToTree
+    method: handler
+  # 转二级结构
+  - key: level_2
+    path: collect.service_imp.result_handlers.handlers.level_2
+    class_name: Level2
+    method: handler
+  # 参数转结果
+  - key: param2result
+    path: collect.service_imp.result_handlers.handlers.param2result
+    class_name: Param2Result
+    method: handler
+  # 过滤数组
+  - key: filter_arr
+    path: collect.service_imp.result_handlers.handlers.filter_arr
+    class_name: FilterArr
+    method: handler
+  # 字段转json
+  - key: field2json
+    path: collect.service_imp.result_handlers.handlers.field2json
+    class_name: Field2JSONService
+    method: handler
+  # 返回response 对象
+  - key: file_response
+    path: collect.service_imp.result_handlers.handlers.file_response
+    class_name: FileResponse
+    method: handler
+  # 结果转excel
+  - key: result2excel
+    path: collect.service_imp.result_handlers.handlers.result2excel
+    class_name: Result2Excel
+    method: handler
+  # 处理返回消息
+  - key: result_msg
+    path: collect.service_imp.result_handlers.handlers.result_msg
+    class_name: ResultMsg
+    method: handler
+  # 分割
+  - key: split
+    path: collect.service_imp.result_handlers.handlers.split
+    class_name: Split
+    method: handler
+# 模块处理器
+module_handler:
+  # sql 查询
+  - key: sql
+    path: collect.service_imp.sql.sql_service
+    class_name: SqlService
+  # mysql 更新
+  - key: sql_update
+    path: collect.service_imp.sql.sql_update
+    class_name: SqlUpdateService
+  # 模型保存
+  - key: model_save
+    path: collect.service_imp.model.model_save
+    class_name: ModelSaveService
+  #  模型删除
+  - key: model_delete
+    path: collect.service_imp.model.model_delete
+    class_name: ModelDeleteService
+  # 模型保存
+  - key: bulk_create
+    path: collect.service_imp.model.bulk_create
+    class_name: BulkCreateService
+
+  # 服务流程化
+  - key: service_flow
+    path: collect.service_imp.flow.service_flow
+    class_name: ServiceFlowService
+  # ssh
+  - key: ssh
+    path: collect.service_imp.flow.omnis_ssh
+    class_name: OmnisSSHService
+    method: handler
+  # bulk create
+  - key: bulk_service
+    path: collect.service_imp.bulk.bulk_service
+    class_name: ServiceBulkService
+    method: handler
+  # http
+  - key: http
+    path: collect.service_imp.http.http_service
+    class_name: HttpService
+    method: handler
+
+  # empty
+  - key: empty
+    path: collect.service_imp.empty.empty_service
+    class_name: EmptyService
+    method: handler
+  # config
+  - key: config
+    path: collect.service_imp.flow.config_service
+    class_name: ConfigService
+    method: handler
+  # session
+  - key: session
+    path: collect.service_imp.session.session_service
+    class_name: SessionService
+    method: handler
+  # ldap
+  - key: ldap
+    path: collect.service_imp.ldap.ldap_service
+    class_name: LdapService
+    method: handler
+
+
+filter_handler:
+  # uuid
+  - key: uuid
+    path: collect.service_imp.common.filters.template_filters.uuid
+    class_name: UUIDFilter
+    method: filter
+  # md5
+  - key: md5
+    path: collect.service_imp.common.filters.template_filters.md5
+    class_name: Md5Filter
+    method: filter
+  # 创建日期
+  - key: current_date_time
+    path: collect.service_imp.common.filters.template_filters.date_time
+    class_name: CurrentDateTime
+    method: filter
+  # 判断记录是否存在
+  - key: exist
+    path: collect.service_imp.common.filters.template_filters.exist
+    class_name: ExistFilter
+    method: filter
+  # 必须是数组
+  - key: must_list
+    path: collect.service_imp.common.filters.template_filters.must_list
+    class_name: MustListFilter
+    method: filter
+  # 必传
+  - key: must
+    path: collect.service_imp.common.filters.template_filters.must
+    class_name: MustFilter
+    method: filter
+  #  循环数组，取字符串
+  - key: foreach
+    path: collect.service_imp.common.filters.template_filters.foreach
+    class_name: ForeachFilter
+    method: filter
+  # 判断对象是否在数组里面
+  - key: in_array
+    path: collect.service_imp.common.filters.template_filters.in_array
+    class_name: InArrayFilter
+    method: filter
+
+  # 当天
+  - key: current_day
+    path: collect.service_imp.common.filters.template_filters.current_day
+    class_name: CurrentDay
+    method: filter
+
+  # 获取配置文件get_key
+  - key: get_key
+    path: collect.service_imp.common.filters.template_filters.get_key
+    class_name: GetKey
+    method: filter
+  # 截取字符串
+  - key: substr
+    path: collect.service_imp.common.filters.template_filters.sub_str
+    class_name: SubStr
+    method: filter
+
+  # 对象转json 字符串
+  - key: json_str
+    path: collect.service_imp.common.filters.template_filters.json_str
+    class_name: JsonStr
+    method: filter
+  # 获取目录
+  - key: dirname
+    path: collect.service_imp.common.filters.template_filters.dirname
+    class_name: DirnameFilter
+    method: filter
+  # ldap 密码加密
+  - key: ldap_password
+    path: collect.service_imp.common.filters.template_filters.ldap_password
+    class_name: LdapPasswordFilter
+    method: filter
+
+# 第三方方法
+third_application:
+  ssh:
+    - key: copy
+      path: "collect.service_imp.flow.common.scp_copy"
+      class_name: "SCPCopy"
+      method: "handler"
+    - key: gen_template
+      path: "collect.service_imp.flow.common.gen_template"
+      class_name: "GenTemplate"
+      method: "handler"
+
+    - key: server_copy
+      path: "collect.service_imp.flow.common.server_copy"
+      class_name: "ServerCopy"
+      method: "handler"
+    - key: server_copy_tree
+      path: "collect.service_imp.flow.common.server_copy_tree"
+      class_name: "ServerCopyTree"
+      method: "handler"
+
+    - key: server_archive
+      path: "collect.service_imp.flow.common.server_archive"
+      class_name: "ServerArchive"
+      method: "handler"
+    - key: dir_tree
+      path: "collect.service_imp.flow.common.dir_tree"
+      class_name: "DirTree"
+      method: "handler"
+    - key: file_content
+      path: "collect.service_imp.flow.common.file_content"
+      class_name: "FileContent"
+      method: "handler"
+  config:
+    - key: config_data
+      path: "collect.service_imp.flow.config.config_data"
+      class_name: "ConfigData"
+      method: "handler"
+
+    - key: node_data
+      path: "collect.service_imp.flow.config.node_data"
+      class_name: "NodeData"
+      method: "handler"
+    - key: init_node
+      path: "collect.service_imp.flow.config.init_node"
+      class_name: "InitNode"
+      method: "handler"

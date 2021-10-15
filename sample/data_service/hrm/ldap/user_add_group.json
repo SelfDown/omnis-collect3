@@ -1,0 +1,11 @@
+{
+  "method": "modify",
+  "params": {
+    "dn": "{{group_dn}}",
+    "changes":{
+      "uniqueMember": [["MODIFY_ADD", "{{user_dn}}"]]
+    }
+  },
+  "log": true,
+  require('./common/manage.json')
+}

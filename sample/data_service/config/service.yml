@@ -1,0 +1,6 @@
+# 项目点路由
+service:
+  - name: "配置"
+    path: "config/index.yml"
+
+

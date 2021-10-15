@@ -1,0 +1,9 @@
+{
+
+  "method": "delete",
+  "params": {
+    "dn": "{{dn}}"
+
+  },
+  require('./common/manage.json')
+}
