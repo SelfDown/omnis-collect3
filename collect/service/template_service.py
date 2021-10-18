@@ -10,10 +10,24 @@ from collect.utils.collect_utils import get_safe_data
 
 
 class TemplateService(CollectService):
+    TSConst = {
+        "http_name": "http"
+    }
+
     def __init__(self, op_user=None):
         CollectService.__init__(self, op_user)
         self.op_user = op_user
         self.session = None
+
+    def get_http_name(self):
+        return self.TSConst["http_name"]
+
+    def http_check(self, template):
+        success = get_safe_data(self.get_http_name(), template, False)
+        if success:
+            return self.success([])
+        else:
+            return self.fail("不支持http 访问")
 
     def set_session(self, session):
         self.session = session
@@ -21,19 +35,24 @@ class TemplateService(CollectService):
     def get_session(self):
         return self.session
 
-    def result(self, data):
-
+    def result(self, data, is_http=False):
         service = get_safe_data("service", data)
         if not service:
             return self.fail("服务不能为空")
         collect_service = CollectService(op_user=self.op_user)
         collect_service.set_session(self.get_session())
         result = collect_service.make_service(service)
-
+        # 初始化对象返回结果
         if not collect_service.is_success(result):
             return result
 
         service_obj = collect_service.get_data(result)
+        # 如果是http 直接请求
+        if is_http:
+            http_result = self.http_check(service_obj.get_template())
+            # http 检查返回结果
+            if not collect_service.is_success(http_result):
+                return http_result
         # 查询数据
         params = data
         # 所有接口必须登录检查

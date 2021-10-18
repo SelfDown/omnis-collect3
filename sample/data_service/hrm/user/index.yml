@@ -29,7 +29,9 @@ service:
     name: 系统登陆
     module: service_flow
     must_login: false
+    http: true
     extend_param: hrm.get_user_by_password
+
     params:
       new_user_id:
         template: "{{''|uuid}}"

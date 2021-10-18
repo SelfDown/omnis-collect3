@@ -22,6 +22,7 @@ service:
   - key: "user_logout"
     name: 用户注销
     must_login: false
+    http: true
     module: 'session'# 执行mysql 查询
     session:
       - key: remove_key

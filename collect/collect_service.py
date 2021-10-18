@@ -1216,6 +1216,8 @@ class CollectService:
         :return:
         """
 
+
+
     def login_check(self):
         must_login = True
         if self.get_must_login_name() in self.template:
