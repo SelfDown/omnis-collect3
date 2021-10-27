@@ -88,6 +88,8 @@ class BaseRule(CollectService):
             if service_result:
                 return self.success(service_result)
             else:
+                self.log(json.dumps(node))
+                self.log("没有找到"+self.get_template_name()+"")
                 return self.success(params)
         # 普通模板
         # template_result = self.get_template_result(template_str, params, config_params, template)

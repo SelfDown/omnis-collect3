@@ -32,6 +32,9 @@ module_handler = None
 filter_handler = None
 # 请求插件
 before_plugin = None
+# 结果插件
+after_plugin = None
+
 # 第三方插件
 third_application=None
 
@@ -175,6 +178,18 @@ class ConfigCacheData:
     def get_before_plugin():
         global before_plugin
         return before_plugin
+
+
+    @staticmethod
+    def set_after_plugin(after_plugin_data):
+        global after_plugin
+        after_plugin = after_plugin_data
+
+    @staticmethod
+    def get_after_plugin():
+        global after_plugin
+        return after_plugin
+
     @staticmethod
     def set_third_application(third_application_data):
         global third_application

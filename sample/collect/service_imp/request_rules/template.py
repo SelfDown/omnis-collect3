@@ -22,11 +22,11 @@ class TemplateData(BaseRule):
 
                 value_result = self.get_node_template_result(config_param, params, config_params=config_params,
                                                       template=template)
-                # template_tool = TemplateTool(op_user=self.op_user)
-                # value = template_tool.render(templ, params, config_params, template)
                 if not self.is_success(value_result):
                     return value_result
                 value = self.get_data(value_result)
                 if value is not None:
                     params[key] = value
+            elif self.get_template_name() in config_param:
+                params[key] = config_param[self.get_template_name()]
         return self.success(params)

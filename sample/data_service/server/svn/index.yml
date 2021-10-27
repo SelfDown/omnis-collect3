@@ -1,0 +1,92 @@
+service:
+  - key: svn_authorize
+    name: svn 授权
+    module: ssh
+    params:
+      file:
+        template: "svn/svn_access_file"
+      from:
+        template: "{{'template_dir'|get_key}}{{file}}"
+      to:
+        template: "{{'template_out_dir'|get_key}}{{file}}"
+      dest:
+        template: "{{'svn_access_file'|get_key}}"
+      create_ldap:
+        default: "1"
+      pagination:
+        default: false
+      only_username:
+        default: true
+      development_code:
+        template: development
+      product_code:
+        template: product
+      server_ip:
+        template: "{{'svn_ip'|get_key}}"
+      user:
+        template: "{{'svn_user'|get_key}}"
+      password:
+        template: "{{'svn_password'|get_key}}"
+      backup_file:
+        template: "{{'svn_access_file_backup_dir'|get_key}}{{dest|filename}}.{{''|current_date_time|replace(' ','')|replace(':','')|replace('-','')}}"
+
+    handler_params:
+      - key: service2field
+        service:
+          service: hrm.user_account_query
+          create_ldap: create_ldap
+          pagination: pagination
+          only_username: only_username
+          role_code: development_code
+        save_field: dev_username
+      - key: service2field
+        service:
+          service: hrm.user_account_query
+          create_ldap: create_ldap
+          pagination: pagination
+          only_username: only_username
+          role_code: product_code
+        save_field: prod_username
+    shell:
+      services:
+        - key: start
+          type: start
+          name: 开始
+          next: file_content
+        - key: file_content
+          type: node
+          name: 获取文件
+          gen_template:
+            from: to
+            to: to
+          next: backup
+          fail: end
+
+        - key: backup
+          name: 备份文件
+          type: node
+          shell: "mkdir -p {{backup_file|dirname}} && cp {{dest}} {{backup_file}} "
+          ignore_error: true
+          fail: end
+          next: copy_file
+
+        - key: copy_file
+          type: node
+          name: 替换文件
+          copy:
+            from: to
+            to: "{{dest|dirname}}"
+          next: end
+          fail: end
+
+        - key: end
+          type: end
+          name: 结束
+    result_handler:
+      - key: param2result
+        params:
+          field: dest
+      - key: result_msg
+        params:
+          template: "授权文件上传成功"
+

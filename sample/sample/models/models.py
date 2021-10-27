@@ -161,6 +161,16 @@ class RoleLdapGroup(models.Model):
         db_table = 'role_ldap_group'
 
 
+class RoleMenu(models.Model):
+    role_menu_id = models.CharField(primary_key=True, max_length=50, blank=True, null=True)
+    role_id = models.CharField(max_length=50, blank=True, null=True)
+    menu_id = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'role_menu'
+
+
 class SysCode(models.Model):
     sys_code_id = models.CharField(primary_key=True, blank=True, null=True)
     sys_code_type = models.CharField(blank=True, null=True)
@@ -190,6 +200,23 @@ class SysMenu(models.Model):
         db_table = 'sys_menu'
 
 
+class SysProjects(models.Model):
+    sys_project_id = models.CharField(primary_key=True, max_length=100, blank=True, null=True)
+    project_name = models.CharField(max_length=1000, blank=True, null=True)
+    project_code = models.CharField(max_length=100, blank=True, null=True)
+    create_time = models.TextField(blank=True, null=True)  # This field type is a guess.
+    modify_time = models.TextField(blank=True, null=True)  # This field type is a guess.
+    create_user = models.CharField(max_length=50, blank=True, null=True)
+    modify_user = models.CharField(max_length=50, blank=True, null=True)
+    comments = models.CharField(max_length=225, blank=True, null=True)
+    is_delete = models.CharField(max_length=2, blank=True, null=True)
+    order_index = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'sys_projects'
+
+
 class UserAccount(models.Model):
     user_id = models.CharField(primary_key=True, max_length=50, blank=True, null=True)
     nick = models.CharField(max_length=200, blank=True, null=True)
@@ -207,6 +234,10 @@ class UserAccount(models.Model):
     modify_time = models.CharField(max_length=50, blank=True, null=True)
     work_code = models.CharField(max_length=200, blank=True, null=True)
     create_ldap = models.CharField(max_length=50, blank=True, null=True)
+    ldap_success = models.CharField(max_length=2, blank=True, null=True)
+    ldap_msg = models.CharField(max_length=500, blank=True, null=True)
+    svn_success = models.CharField(max_length=2, blank=True, null=True)
+    svn_msg = models.CharField(max_length=500, blank=True, null=True)
 
     class Meta:
         managed = False

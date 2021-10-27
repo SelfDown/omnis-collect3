@@ -2,6 +2,7 @@ service:
   # 项目
   - key: "user_account_query"
     name: 用户查询
+    http: true
     params:
       pagination:
         default: true
@@ -11,6 +12,8 @@ service:
         default: 20
       start:
         template: "{{(page|int-1) * size|int}}"
+      only_username:
+        default: false
     count_params:
       pagination:
         default: false
@@ -27,6 +30,10 @@ service:
           to_field:
             - field: 'password'
               template: "******"
+      - key: value_arr
+        enable: "{{only_username}}"
+        params:
+          template: "{{username}}"
 
   - key: "user_account_save"
     name: 用户保存
@@ -99,13 +106,14 @@ service:
           template: "{{password|must}}"
           err_msg: "密码不能为空"
         template: "{{password|md5}}"
+
     exclude_save_field:
       - user_id
       - username
 
   - key: "user_account_update"
     name: 用户修改
-    module: model_save
+    module: model_update
     model: UserAccount
     params:
       user_id:
@@ -129,6 +137,8 @@ service:
 
       modify_time:
         template: "{{''|current_date_time}}"
+    filter:
+      user_id: user_id
     exclude_save_field:
       - user_id
       - create_time
@@ -185,7 +195,7 @@ service:
       to_obj:
         default: false
     sql_file: get_user.sql
-    log: true
+
     result_handler:
       - key: arr2obj
         enable: "{{to_obj}}"

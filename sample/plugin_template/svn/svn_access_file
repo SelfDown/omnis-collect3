@@ -1,0 +1,42 @@
+[groups]
+admin = lanxiong,limao,zhangzhi
+dev-group = {{dev_username|join(d=",")}}
+prod-group = {{prod_username|join(d=",")}}
+sre-group = lanxiong,limao,zhangzhi
+
+[/]
+* = r
+@admin = rw
+
+[wghis:/研发部门]
+* = 
+@admin = rw
+@dev-group = rw
+
+[wghis:/研发部门/SRE运维开发]
+* = 
+@admin = rw
+@sre-group = rw
+
+[wghis:/研发部门/SRE运维开发/重要账号密码]
+* = 
+@admin = rw
+[wghis:/研发部门/SRE运维开发/devops_axure]
+* = 
+@admin = rw
+@dev-group = rw
+
+
+[wghis:/产品部门]
+* = 
+@admin = rw
+@prod-group = rw
+@dev-group = r
+
+[wghis:/实施交付部门]
+* = 
+@admin = rw
+
+[wghis:/综合部门]
+* = 
+@admin = rw

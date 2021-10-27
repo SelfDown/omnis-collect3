@@ -42,6 +42,44 @@
         </el-row>
         <el-col :span="4">
 
+            <div>
+
+                <a href="javascript:void (0)" @click="change('result28_search')">
+                    用户创建事件
+                </a>
+
+            </div>
+            <div>
+
+                <a href="javascript:void (0)" @click="change('result27_search')">
+                    查询当前用户菜单栏
+                </a>
+
+            </div>
+            <hr>
+            <div>
+                <a href="javascript:void (0)" @click="change('search')">
+                    查询项目
+                </a>
+            </div>
+            <div>
+                <a href="javascript:void (0)" @click="change('result24_search')">
+                    修改项目
+                </a>
+            </div>
+            <div>
+                <a href="javascript:void (0)" @click="change('result25_search')">
+                    保存项目
+                </a>
+            </div>
+            <div>
+                <a href="javascript:void (0)" @click="change('result26_search')">
+                    删除项目
+                </a>
+            </div>
+            <hr>
+
+
              <div>
                 <a href="javascript:void (0)" @click="change('result23_search')">
                     [总体]创建用户
@@ -259,7 +297,7 @@
                 result: "",
                 urls: [],
                 test: {
-                    search: '{"service":"project_manage.project"}',
+                    search: '{"service":"project.project_query"}',
                     search_filter: '{"service":"project_manage.plan_task_query","start_date":"2021-01","end_date":"2021-12"}',
                     save: '{"service":"project_manage.plan_task_save","project_id":"cbh","user_id":"503","start_date":"2021-03-01","end_date":"2021-03-31","per":100}',
                     update: '{"service":"project_manage.plan_task_update","plan_task_id":"1","project_id":"cbh","user_id":"503","start_date":"2021-03-01","end_date":"2021-03-31","per":100}',
@@ -288,6 +326,11 @@
                     result21_search: '{"service":"hrm.ldap_delete_user","username":"zz"}',
                     result22_search: '{"service":"hrm.ldap_modify_user","username":"zhangzhi","password":"zhang@888"}',
                     result23_search: '{"service":"hrm.user_create","nick":"张治","username":"z1z","password":"123456","user_status":"0","entry_date":"2021-10-08","phone":"18874948657","email":"18874948657@163.com"}',
+                    result24_search: '{"service":"project.project_update","sys_project_id":"152c2d0e-5651-4419-b35b-fef6a7262298","project_code":"thzk","project_name":"tt","order_index":100}',
+                    result25_search: '{"service":"project.project_save","project_code":"thzk","project_name":"tt","order_index":100}',
+                    result26_search: '{"service":"project.project_delete","sys_project_id_list":["152c2d0e-5651-4419-b35b-fef6a7262298"]}',
+                    result27_search: '{"service":"hrm.get_current_user_menu"}',
+                    result28_search: '{"service":"event.event_user_create","id":"zz"}',
                 }
             }
         },

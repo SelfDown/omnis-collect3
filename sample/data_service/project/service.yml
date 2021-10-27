@@ -1,5 +1,5 @@
 # 项目点路由
 service:
   - name: "项目模块"
-    path: "project/index.yml"
+    path: "sys_projects/index.yml"
 

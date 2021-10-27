@@ -35,8 +35,9 @@ class SCPCopy(OmnisSSHService):
             return self.fail("配置中沒有找到目标文件位置")
         from collect.service_imp.common.filters.template_tool import TemplateTool
         tool = TemplateTool(op_user=self.op_user)
-        if self.is_template_text(from_path):
-            from_path = tool.render(from_path, params)
+        # if self.is_template_text(from_path):
+        #     from_path = tool.render(from_path, params)
+        from_path = self.get_render_data(from_path, params, tool=tool)
         import os
         if not os.path.exists(from_path):
             return self.fail(from_path + "文件不存在")
@@ -44,9 +45,9 @@ class SCPCopy(OmnisSSHService):
         if os.path.isdir(from_path):
             return self.fail(from_path + "是个文件夹，不支持")
 
-        if self.is_template_text(to_path):
-            to_path = tool.render(to_path, params)
-
+        # if self.is_template_text(to_path):
+        #     to_path = tool.render(to_path, params)
+        to_path = self.get_render_data(to_path, params, tool=tool)
         scp_result = self.get_scp_client(template)
         if not self.is_success(scp_result):
             return scp_result

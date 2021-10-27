@@ -110,6 +110,7 @@ service:
 
   - key: "ldap_add_user"
     name: ldap 添加用户
+    http: true
     params:
       username:
         check:
@@ -131,6 +132,9 @@ service:
         template: "cn={{username}},{{'ou'|get_key}},{{'base_dn'|get_key}}"
     module: 'ldap'
     data_json: add_user.json
+    result_tag:
+      - id
+      - service
     result_handler:
       - key: result_msg
         params:

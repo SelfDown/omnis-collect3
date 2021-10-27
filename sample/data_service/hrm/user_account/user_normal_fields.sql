@@ -1,4 +1,4 @@
-username,work_code,nick,user_id,
-create_time,modify_time,user_status,
-entry_date,leave_date,phone,email,
-create_ldap,password
+a.username,a.work_code,a.nick,a.user_id,
+a.create_time,a.modify_time,a.user_status,
+a.entry_date,a.leave_date,a.phone,email,
+a.create_ldap,a.password

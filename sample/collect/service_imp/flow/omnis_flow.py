@@ -123,25 +123,48 @@ class ServiceOmnisFlowService(CollectService):
 
     def get_next_node(self, node, service_dict, node_result=None):
         current_name = get_safe_data(self.get_name_name(), node)
-        if not node_result or self.is_success(node_result):
-            next = get_safe_data(self.get_next_name(), node)
-        else:
-            next = get_safe_data(self.get_fail_name(), node)
-            if not next:
-                self.log("流程结果返回错误，但是" + current_name + "没有配置" + self.get_fail_name())
-                return
+        params = self.get_params_result()
 
-        if not next in service_dict and self.is_template_text(next):
-            from collect.service_imp.common.filters.template_tool import TemplateTool
-            template_tool = TemplateTool(op_user=self.op_user)
-            params = self.get_params_result()
-            try:
-                next = template_tool.render(next, params)
-            except Exception as e:
-                self.log(current_name + "模板渲染获取下个节点失败" + str(e))
-                return
+        if not node_result or self.is_success(node_result): # 运行正常
+            field = self.get_next_name()
+            # 获取下个节点
+            node_result = self.get_node_template_result(node, params, field=field, template=self.get_template())
 
+        else: # 运行错误
+            fail = get_safe_data(self.get_fail_name(),node)
+            if not fail:
+                self.log("流程结果返回错误，但是" + current_name + "没有配置" + self.get_fail_name() )
+            node_result = self.get_template_result(fail, params,template=self.get_template())
+        next = self.get_data(node_result)
+        next_node = get_safe_data(next, service_dict)
+        if not next_node:
+            self.log("流程结果返回错误，但是" + current_name + "没有找到" + next+"节点")
+            return
         return get_safe_data(next, service_dict)
+        # current_name = get_safe_data(self.get_name_name(), node)
+        # if not node_result or self.is_success(node_result):
+        #     next = get_safe_data(self.get_next_name(), node)
+        # else:
+        #     next = get_safe_data(self.get_fail_name(), node)
+        #     if not next:
+        #         self.log("流程结果返回错误，但是" + current_name + "没有配置" + self.get_fail_name())
+        #         return
+        #
+        # if not next in service_dict and self.is_template_text(next):
+        #     # from collect.service_imp.common.filters.template_tool import TemplateTool
+        #     # template_tool = TemplateTool(op_user=self.op_user)
+        #     params = self.get_params_result()
+        #     node_result = self.get_node_template_result(node, params,field="next", template=self.get_template())
+        #     if not self.is_success(node_result):
+        #         return node_result
+        #     next = self.get_data(node_result)
+        #     # try:
+        #     #     next = template_tool.render(next, params)
+        #     # except Exception as e:
+        #     #     self.log(current_name + "模板渲染获取下个节点失败" + str(e))
+        #     #     return
+
+
 
     def flow(self, handler_node):
         services = self.get_services()
@@ -176,7 +199,7 @@ class ServiceOmnisFlowService(CollectService):
 
             node_result = handler_node(current)
             nodes = self.get_data(node_result)
-            if self.can_log() and nodes:
+            if self.can_log() and nodes and isinstance(nodes,list):
                 for n_item in nodes:
                     if isinstance(n_item, dict) and "success" in n_item and not self.is_success(n_item):
                         self.log(n_item)

@@ -1,0 +1,51 @@
+{
+  "from": [
+    "hrm.user_create"
+  ],
+  "before_params_append": [
+    {
+      "field": "group",
+      "template": "user"
+    },
+    {
+      "field": "tag",
+      "template": "user_create"
+    }
+  ],
+  "service_result_field": "service_result",
+
+  "to": [
+    {
+      "enable": "{{ create_ldap =='1'}}",
+      "service": {
+        "id": "{{''|uuid}}",
+        "service": "hrm.ldap_add_user"
+      },
+      "save_field": "ldap_result"
+
+    },
+    {
+
+      "enable": "{{ create_ldap =='1'}}",
+      "service": {
+        "id": "{{''|uuid}}",
+        "service": "server.svn_authorize"
+      },
+      "save_field": "svn_result"
+    }
+  ],
+  "bulk_service": {
+    "service": "hrm.bulk_ldap_svn_save",
+    "create_list":"to"
+  },
+  "bulk_result_field": "bulk_result",
+  "finish_service": {
+    "service": "hrm.user_account_update",
+    "user_id": "user_id",
+    "ldap_success": "{% if ldap_result.success %} 1 {% else %} 0 {% endif %}",
+    "ldap_msg": "{{ldap_result.msg}}",
+    "svn_success": "{% if svn_result.success %} 1 {% else %} 0 {% endif %}",
+    "svn_msg": "{{svn_result.msg}}"
+  },
+  "log": require("../common/log.json")
+}

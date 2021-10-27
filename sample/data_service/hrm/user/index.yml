@@ -30,8 +30,8 @@ service:
     module: service_flow
     must_login: false
     http: true
+    log: true
     extend_param: hrm.get_user_by_password
-
     params:
       new_user_id:
         template: "{{''|uuid}}"
@@ -47,14 +47,24 @@ service:
           with_password: with_password
           to_obj: to_obj
         save_field: user
-        template: "{% if user and user.user_id != '' and user.password != password|md5 %} False {% else %} True {% endif %}"
+        switch:
+          # 如果查询到用户，密码不对
+          - case: "{% if not user.user_id |is_empty and user.password != password|md5 %} True {% endif %}"
+            template: "False"
+          # 没有查询到用户，并且不支持ldap 查询，直接返回
+          - case: "{% if 'ldap_query'|get_key == 'false' and  'user_id'|is_empty(user) %} True {% endif %}"
+            template: "False"
+        template: "True"
         err_msg: "用户或密码错误"
     flow:
       services:
         - key: start
           type: start
           name: 开始
-          next: "{% if user and user.user_id and user.user_id != ''%} user_login {% else %} ldap_login {% endif %}"
+          switch:
+            - case : "{{ not user.user_id|is_empty }}"
+              next: "user_login"
+          next: "ldap_login"
 
         - key: ldap_login
           type: node
@@ -252,6 +262,7 @@ service:
         name: 是否创建ldap
       to_obj:
         defaut: true
+
     handler_params:
       - key: service2field
         service:
@@ -492,6 +503,31 @@ service:
       - key: result_msg
         params:
           template: "密码修改成功！"
+
+  - key: bulk_ldap_svn_save
+    module: "bulk_service"
+    params:
+      create_list:
+        check:
+          template: "{{create_list|must_list}}"
+          err_msg: 创建列表不能为空
+
+    batch:
+      foreach: create_list
+      item: item
+      service:
+        service: "{{item.service}}"
+        username: "{{item.username}}"
+        nick: "{{item.nick}}"
+        password: "{{item.password}}"
+        email: "{{item.email}}"
+        id: "{{item.id}}"
+      save_field: 'bulk_result'
+    result_handler:
+      - key: param2result
+        params:
+          field: bulk_result
+
 
   - key: bulk_user_role_save
     module: "bulk_service"

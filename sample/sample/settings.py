@@ -26,8 +26,6 @@ SECRET_KEY = 'k&8-%57+$k@jmz7j#6bems38qd5g!c3qgu%4_o2syg%!uffuqr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -104,9 +102,13 @@ DATABASES = {
     #     'HOST': get_key("database.host"),
     #     'PORT': get_key("database.port", data_type="int"),
     # }
-    'default':{
-   	 	'ENGINE':  get_key("database.engine"),
-   		'NAME': get_key("database.name"),
+    'default': {
+        'ENGINE': get_key("database.engine"),
+        'NAME': get_key("database.name"),
+        'POOL_OPTIONS': {
+            'POOL_SIZE': 100,
+            'MAX_OVERFLOW': 50
+        }
 
     }
 }
@@ -147,7 +149,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -156,9 +158,6 @@ USE_L10N = True
 USE_TZ = False
 
 ALLOWED_HOSTS = ['*']
-
-
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/

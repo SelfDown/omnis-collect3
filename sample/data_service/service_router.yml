@@ -5,17 +5,30 @@ services:
   - key: 'hrm'
     name: '人资服务'
     path: 'hrm/service.yml'
+
   - key: 'system'
     name: '人资服务'
     path: 'system/service.yml'
 
+  - key: 'project'
+    name: '项目服务'
+    path: 'project/service.yml'
+
+  - key: 'event'
+    name: '事件服务'
+    path: 'event/service.yml'
+
+  - key: 'server'
+    name: '服务器模块'
+    path: 'server/service.yml'
+
 
 
 # 返回结果转换规则
-rules:
-  excel:
-    path: "collect.service_imp.rules.data_2_excel_rule"
-    class_name: "Data2ExcelRule"
+#rules:
+#  excel:
+#    path: "collect.service_imp.rules.data_2_excel_rule"
+#    class_name: "Data2ExcelRule"
 # SQL 模板关键字规则
 key_word_rules:
   require:
@@ -26,15 +39,6 @@ key_word_rules:
 
 # 请求参数处理规则
 request_rules:
-
-  # 字符串format
-  - name: format
-    path: collect.service_imp.request_rules.format
-    class_name: Format
-  # 表达式
-  - name: exp
-    path: collect.service_imp.request_rules.exp
-    class_name: Expression
   # 模板渲染
   - name: template
     path: collect.service_imp.request_rules.template
@@ -48,6 +52,8 @@ request_rules:
 django_model:
   # django model 文件位置
   model_file: sample.models.models
+
+
 
 
 before_plugin:
@@ -76,6 +82,21 @@ before_plugin:
     method: handler
     template: "{% if handler_params %}True{% endif %}"
 
+
+# 结果处理
+after_plugin:
+  # 处理返回结果
+  - key: result_handler
+    path: collect.service_imp.after_plugin.plugin.handler_result
+    class_name: HandlerResult
+    method: handler
+    template: "{% if result_handler %}True{% endif %}"
+  # 处理返回标志
+  - key: result_tag
+    path: collect.service_imp.after_plugin.plugin.handler_tag
+    class_name: HandlerTag
+    method: handler
+    template: "{% if result_tag %}True{% endif %}"
 
 # 请求处理器
 request_handler:
@@ -235,6 +256,10 @@ module_handler:
   - key: model_save
     path: collect.service_imp.model.model_save
     class_name: ModelSaveService
+  # 模型修改
+  - key: model_update
+    path: collect.service_imp.model.model_update
+    class_name: ModelUpdateService
   #  模型删除
   - key: model_delete
     path: collect.service_imp.model.model_delete
@@ -283,6 +308,11 @@ module_handler:
   - key: ldap
     path: collect.service_imp.ldap.ldap_service
     class_name: LdapService
+    method: handler
+  # event
+  - key: event
+    path: collect.service_imp.event.event_service
+    class_name: EventService
     method: handler
 
 
@@ -350,16 +380,31 @@ filter_handler:
     path: collect.service_imp.common.filters.template_filters.json_str
     class_name: JsonStr
     method: filter
+
   # 获取目录
   - key: dirname
     path: collect.service_imp.common.filters.template_filters.dirname
     class_name: DirnameFilter
     method: filter
+  # 获取文件名
+  - key: filename
+    path: collect.service_imp.common.filters.template_filters.filename
+    class_name: FilenameFilter
+    method: filter
+
+
   # ldap 密码加密
   - key: ldap_password
     path: collect.service_imp.common.filters.template_filters.ldap_password
     class_name: LdapPasswordFilter
     method: filter
+
+  # 判断对象是否为空
+  - key: is_empty
+    path: collect.service_imp.common.filters.template_filters.is_empty
+    class_name: IsEmptyFilter
+    method: filter
+
 
 # 第三方方法
 third_application:
