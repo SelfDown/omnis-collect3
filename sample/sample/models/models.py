@@ -118,6 +118,25 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
+class EventLog(models.Model):
+    event_id = models.CharField(primary_key=True, max_length=50, blank=True, null=True)
+    group = models.CharField(max_length=50, blank=True, null=True)
+    tag = models.CharField(max_length=50, blank=True, null=True)
+    from_service = models.CharField(max_length=200)
+    to_service = models.CharField(max_length=200, blank=True, null=True)
+    params = models.CharField(max_length=4000, blank=True, null=True)
+    create_user_id = models.CharField(max_length=50, blank=True, null=True)
+    create_time = models.CharField(max_length=50, blank=True, null=True)
+    finish_time = models.CharField(max_length=50, blank=True, null=True)
+    success = models.CharField(max_length=5, blank=True, null=True)
+    result = models.CharField(max_length=4000, blank=True, null=True)
+    msg = models.CharField(max_length=4000, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'event_log'
+
+
 class LdapGroup(models.Model):
     ldap_group_id = models.CharField(primary_key=True, max_length=50, blank=True, null=True)
     name = models.CharField(max_length=50, blank=True, null=True)

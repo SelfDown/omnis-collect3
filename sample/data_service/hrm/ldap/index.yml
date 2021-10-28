@@ -108,6 +108,23 @@ service:
         params:
           template: "【{{username}}】删除成功！"
 
+  - key: ldap_add_group
+    name: ldap 添加分组
+    http: true
+    params:
+      group_name:
+        check:
+          template: "{{group_name|must}}"
+          err_msg: 分组名称不能为空
+      dn:
+        template: "ou={{group_name}},ou=groups,{{'base_dn'|get_key}}"
+    module: 'ldap'
+    data_json: add_group.json
+    result_handler:
+      - key: result_msg
+        params:
+          template: "【{{group_name}}】创建成功！"
+
   - key: "ldap_add_user"
     name: ldap 添加用户
     http: true

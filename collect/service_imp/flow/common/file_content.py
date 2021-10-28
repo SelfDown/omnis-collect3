@@ -31,6 +31,6 @@ class FileContent(OmnisSSHService):
         if not os.path.exists(file):
             return self.fail(file + "配置的文件路径不存在")
 
-        with open(file) as f:
+        with open(file,encoding="utf-8") as f:
             content = f.read()
         return self.success(content)

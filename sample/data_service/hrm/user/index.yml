@@ -155,6 +155,41 @@ service:
         params:
           template: "{{user.nick}} 登陆成功！"
 
+  - key: user_create_bak
+    name: 创建用户
+    module: empty
+    params:
+      create_ldap:
+        defalut: true
+      user_id:
+        template: "{{''|uuid}}"
+      role_id_list:
+        name: 角色ID 列表
+        default: [ ]
+    handler_params:
+      - key: service2field
+        enable: "{{create_ldap}}"
+        service:
+          service: 'hrm.ldap_search'
+          username: username
+        save_field: 'ldap_user'
+        template: "{%if ldap_user.cn %} False {% else %} True {% endif %}"
+        err_msg: "{{username}} 在ldap 中已经存在，请检查"
+    result_handler:
+      - key: hook
+        params:
+          result_name: service_result
+          service:
+            service: event.event_user_create
+            from_service: "service"
+            result: service_result
+      - key: param2result
+        params:
+          field: user_role_list
+      - key: result_msg
+        params:
+          template: "【{{username}}】创建成功！"
+
   # 项目
   - key: user_create
     name: 创建用户
@@ -177,6 +212,8 @@ service:
         save_field: 'ldap_user'
         template: "{%if ldap_user.cn %} False {% else %} True {% endif %}"
         err_msg: "{{username}} 在ldap 中已经存在，请检查"
+
+
 
 
     flow:

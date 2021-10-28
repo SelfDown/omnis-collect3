@@ -172,6 +172,7 @@ class LdapService(CollectService):
                 if not ignore and not r:
                     return self.fail("ldap 运行失败，请排查错误")
             except Exception as e:
+                raise e
                 msg = str(e)
                 import json
                 return self.fail("ldap运行错误" + msg + ";参数：" + json.dumps(params))

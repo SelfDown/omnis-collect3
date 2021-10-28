@@ -137,7 +137,7 @@ class CollectService:
         if not os.path.exists(config_file):
             self.log(config_file + "不存在", "error")
             return self.fail(config_file + "文件不存在")
-        with open(config_file, 'r') as f:
+        with open(config_file, 'r',encoding="utf-8") as f:
             config_file_content = f.read()
         key_word_rules = self.get_key_word_rules()
         for key_word in key_word_rules:

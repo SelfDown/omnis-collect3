@@ -1,0 +1,15 @@
+{
+
+  "method": "add",
+  "params": {
+    "dn": "{{dn}}",
+    "object_class":["top", "groupOfUniqueNames"],
+    "attributes":{
+      "ou": "{{group_name}}",
+      "cn": "{{group_name}}",
+      "uniqueMember": ["cn=Manager,ou=users,dc=weigao,dc=com"]
+    }
+  },
+  "log": true,
+  require('./common/manage.json')
+}

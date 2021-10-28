@@ -80,4 +80,8 @@ class TemplateService(CollectService):
         after_msg = self.get_msg(after_result)
         if after_msg:
             msg = after_msg
-        return self.success(data, msg=msg, count=count)
+        other = None
+        other_result = self.get_other(after_result)
+        if other_result:
+            other = other_result
+        return self.success(data, msg=msg, count=count,other=other)

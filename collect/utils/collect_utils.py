@@ -95,13 +95,28 @@ class OmnisService:
         pass
 
     @staticmethod
-    def success(data=[], msg="查询成功", count=-1, finish=False):
-        result = {"code": OmnisService.success_code, "success": True, "data": data, "msg": msg}
+    def get_other(result):
+        return get_safe_data("other", result)
+
+
+
+    @staticmethod
+    def success(data=[], msg="查询成功", count=-1, finish=False, other=None):
+        result = {
+            "code": OmnisService.success_code,
+            "success": True,
+            "data": data,
+            "msg": msg
+        }
         if count != -1:
             result["count"] = count
 
+        # 是否结束标志
         if finish:
             result["finish"] = finish
+        # 其他字段标志
+        if other:
+            result["other"] = other
         return result
 
     @staticmethod
@@ -151,13 +166,13 @@ class Result:
         pass
 
     @staticmethod
-    def success(data=[], msg="查询成功", count=-1):
-        result = OmnisService.success(data=data, msg=msg, count=count)
+    def success(data=[], msg="查询成功", count=-1,other=None):
+        result = OmnisService.success(data=data, msg=msg, count=count,other=other)
         return json.dumps(result, cls=DateEncoder)
 
     @staticmethod
-    def success_response(data=[], msg="查询成功", count=-1, cookies={}):
-        result = Result.success(data, msg, count)
+    def success_response(data=[], msg="查询成功", count=-1, cookies={},other=None):
+        result = Result.success(data, msg, count,other)
         response = HttpResponse(result, content_type="application/json;charset=utf-8")
         for item in cookies.keys():
             response.set_cookie(item, cookies[item])

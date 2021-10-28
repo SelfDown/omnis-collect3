@@ -6,6 +6,6 @@
       "uniqueMember": [["MODIFY_ADD", "{{user_dn}}"]]
     }
   },
-  "log": true,
+
   require('./common/manage.json')
 }

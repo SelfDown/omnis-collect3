@@ -1,7 +1,25 @@
-﻿alter table user_account add column ldap_success varchar(2) not null;
+﻿delete  from event_log
+
+alter table user_account add column ldap_success varchar(2) not null;
 alter table user_account add column ldap_msg varchar(500) not null;
 alter table user_account add column svn_success varchar(2) not null;
 alter table user_account add column svn_msg varchar(500) not null;
+
+drop table event_log;
+
+CREATE TABLE [event_log](
+  [event_id] varchar(50) PRIMARY KEY, 
+  [group] varchar(50), 
+  [tag] varchar(50), 
+  [from_service] varchar(200) NOT NULL, 
+  [to_service] varchar(200), 
+  [params] varchar(4000), 
+  [create_user_id] varchar(50), 
+  [create_time] varchar(50), 
+  [finish_time] varchar(50), 
+  [success] varchar(5), 
+  [result] varchar(4000), 
+  [msg] varchar(4000));
 
 
 

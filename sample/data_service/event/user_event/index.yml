@@ -3,25 +3,12 @@ service:
   - key: "event_user_create"
     http: true
     name: 创建用户事件
-    must_login: false
-    log: true
     params:
       from_service:
-        default: 'hrm.user_create'
-      username:
-        default: "zz"
-      nick:
-        default: "zz"
-      user_id:
-        default: "739ade44-7e83-48a2-8c60-9a7c1e9f3d0a"
-      password:
-        default: "123456"
-      create_ldap:
-        default: "1"
-      email:
-        default: "1@163.com"
-      service_result:
-        default: {"user_id":"739ade44-7e83-48a2-8c60-9a7c1e9f3d0a","username":"zz"}
+        check:
+          template: "{{from_service|must}}"
+          err_msg: 来源服务不能为空
+
     module: event
     data_json: user_create_event.json
     result_tag:

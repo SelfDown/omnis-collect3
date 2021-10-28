@@ -1,0 +1,61 @@
+service:
+  - key: "event_log_update"
+    name: 修改日志
+    module: model_update
+    params:
+      event_id:
+        check:
+          template: "{{event_id|must}}"
+          err_msg: 日志不能为空
+    model: EventLog
+    filter:
+      event_id: event_id
+    result_handler:
+      - key: result_msg
+        params:
+          template: "日志保存成功！"
+
+  - key: "event_log_bulk_update"
+    name: 修改用户日志
+    module: bulk_service
+    params:
+      update_log_list:
+        check:
+          template: "{{update_log_list|must_list}}"
+          err_msg: "更新日志列表不能为空"
+    batch:
+      foreach: update_log_list
+      item: item
+      service:
+        service: "event.event_log_update"
+        event_id: "{{item.event_id}}"
+        finish_time: "{{item.finish_time}}"
+        success: "{{item.success}}"
+        result: "{{item.result}}"
+        msg: "{{item.msg}}"
+      save_field: 'bulk_result'
+    result_handler:
+      - key: param2result
+        params:
+          field: bulk_result
+
+
+
+  # 日志保存
+  - key: "event_log_bulk_save"
+    name: 记录用户事件
+
+    params:
+      log_list:
+        check:
+          template: "{{log_list|must}}"
+          err_msg: 日志列表不能为空
+        default: []
+    module: bulk_create
+    model_field: log_list
+    model: EventLog
+    result_handler:
+      - key: result_msg
+        params:
+          template: "日志保存成功！"
+

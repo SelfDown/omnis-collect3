@@ -242,6 +242,13 @@ result_handler:
     path: collect.service_imp.result_handlers.handlers.split
     class_name: Split
     method: handler
+  # hook
+  - key: hook
+    path: collect.service_imp.result_handlers.handlers.hook
+    class_name: Hook
+    method: handler
+
+
 # 模块处理器
 module_handler:
   # sql 查询

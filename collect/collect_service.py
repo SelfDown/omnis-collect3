@@ -92,8 +92,10 @@ class CollectService:
         "switch_default_name": "switch_default",
         "enable_name": "enable",
         "before_plugin_name": "before_plugin",
+        "after_plugin_name": "after_plugin",
         "exclude_name": "exclude",
         "third_application_name": "third_application",
+        "from_service_name": "from_service"
 
     }
     router = {
@@ -120,6 +122,9 @@ class CollectService:
         }
     }
 
+    def get_from_service_name(self):
+        return self.const["from_service_name"]
+
     def get_render_tool(self):
         from collect.service_imp.common.filters.template_tool import TemplateTool
         tool = TemplateTool(op_user=self.op_user)
@@ -132,7 +137,7 @@ class CollectService:
         if not os.path.exists(config_file):
             self.log(config_file + "不存在", "error")
             return self.fail(config_file + "文件不存在")
-        with open(config_file, 'r') as f:
+        with open(config_file, 'r',encoding="utf-8") as f:
             config_file_content = f.read()
         key_word_rules = self.get_key_word_rules()
         for key_word in key_word_rules:
@@ -166,6 +171,9 @@ class CollectService:
 
     def get_before_plugin_name(self):
         return self.const["before_plugin_name"]
+
+    def get_after_plugin_name(self):
+        return self.const["after_plugin_name"]
 
     def get_third_application_name(self):
         return self.const["third_application_name"]
@@ -219,7 +227,11 @@ class CollectService:
         else:
             return tool.render(str(templ), params)
 
-    def get_update_fields(self, model_obj, param_result=None):
+    def get_update_fields(self, model_obj,
+                          param_result=None,
+                          update_fields=None,
+                          exclude_save_field=None,
+                          ):
         if not param_result:
             param_result = self.get_params_result()
         fields_list = []
@@ -231,6 +243,11 @@ class CollectService:
         has = False
         for key in param_result:
             if not can_save_field(key):
+                continue
+
+            if exclude_save_field and key in exclude_save_field:
+                continue
+            if update_fields and key not in update_fields:
                 continue
             has = True
             fields_list.append(key)
@@ -257,7 +274,7 @@ class CollectService:
         if not params:
             params = self.get_params_result()
 
-        if not service:
+        if not service :
             import json
             return self.fail(json.dumps(node, cls=DateEncoder) + "节点没有找到" + self.get_service_name())
         # 处理service 的参数
@@ -447,7 +464,7 @@ class CollectService:
             template = self.template
         return True == get_safe_data(self.get_log_name(), template)
 
-    def get_template_result(self, template_str, params, config_params, template):
+    def get_template_result(self, template_str, params, config_params=None, template=None):
         import copy
         params = copy.copy(params)
         from collect.service_imp.common.filters.template_tool import TemplateTool
@@ -482,9 +499,7 @@ class CollectService:
                 if case_data == self.get_true_value():
                     return self.get_template_result(templ, params, config_params=config_params, template=template)
 
-            if not switch_default:
-                return self.success(None)
-            else:
+            if switch_default:
                 return self.get_template_result(switch_default, params, config_params=config_params, template=template)
 
         if field not in node:
@@ -594,6 +609,10 @@ class CollectService:
         from collect.service_imp.config_data.config_cache_data import ConfigCacheData
         return ConfigCacheData.get_before_plugin()
 
+    def get_after_plugin(self):
+        from collect.service_imp.config_data.config_cache_data import ConfigCacheData
+        return ConfigCacheData.get_after_plugin()
+
     def get_request_handler(self):
         from collect.service_imp.config_data.config_cache_data import ConfigCacheData
         return ConfigCacheData.get_request_handler()
@@ -609,6 +628,11 @@ class CollectService:
         if "{{" in text or "{%" in text:
             return True
         return False
+
+    def is_template_node(self, node):
+        switch = get_safe_data(self.get_switch_name(), node, False)
+        template = get_safe_data(self.get_template_name(), node, False)
+        return switch or template
 
     def get_tmp_result(self):
         if self.is_tmp_data_source():
@@ -700,6 +724,8 @@ class CollectService:
             self.logger.info(msg)
         elif level == "error":
             self.logger.error(msg)
+        elif level == "warn":
+            self.logger.warn(msg)
 
     def get_items_router(self):
         from collect.service_imp.config_data.config_cache_data import ConfigCacheData
@@ -852,6 +878,18 @@ class CollectService:
         filter_handlers = get_safe_data(handler_name, router_all)
         return filter_handlers
 
+    def handler_after_plugin_handler(self, router_all):
+        """
+         加载请求插件
+        :param router_all:
+        :return:
+        """
+        handler_name = self.get_after_plugin_name()
+        if is_empty(handler_name, router_all):
+            return
+        filter_handlers = get_safe_data(handler_name, router_all)
+        return filter_handlers
+
     def handler_third_application_handler(self, router_all):
         """
          加载第三方应用
@@ -892,6 +930,9 @@ class CollectService:
     def get_model_class(self):
         path = self.get_model_file()
         class_name = self.get_model()
+        if not class_name:
+            self.log("没有找到" + self.get_model_name() + "配置")
+            return
         import importlib
         model_factory = importlib.import_module(path)
         model_class = getattr(model_factory, class_name)
@@ -1038,6 +1079,11 @@ class CollectService:
         self.log("加载请求插件")
         before_plugin = self.handler_before_plugin_handler(router_all)
         ConfigCacheData.set_before_plugin(before_plugin)
+
+        self.log("加载结果插件")
+        after_plugin = self.handler_after_plugin_handler(router_all)
+        ConfigCacheData.set_after_plugin(after_plugin)
+
         self.log("加载第三方应用")
         third_application = self.handler_third_application_handler(router_all)
         ConfigCacheData.set_third_application(third_application)
@@ -1045,8 +1091,23 @@ class CollectService:
     def fail(self, msg):
         return OmnisService.fail(msg=msg)
 
-    def success(self, data, count=-1, msg="", finish=False):
-        return OmnisService.success(data=data, msg=msg, count=count, finish=finish)
+    def combine_other(self, other, result):
+        now = OmnisService.get_other(result)
+        if not now and not other:
+            return None
+
+        if not other:
+            other = {}
+        for key in now:
+            if key not in other:
+                other[key] = now[key]
+        return other
+
+    def success(self, data, count=-1, msg="", finish=False, other=None):
+        return OmnisService.success(data=data, msg=msg, count=count, finish=finish, other=other)
+
+    def get_other(self, result):
+        return OmnisService.get_other(result)
 
     def is_success(self, data):
         return OmnisService.is_success(data)
@@ -1216,8 +1277,6 @@ class CollectService:
         :return:
         """
 
-
-
     def login_check(self):
         must_login = True
         if self.get_must_login_name() in self.template:
@@ -1253,26 +1312,25 @@ class CollectService:
         :param result:
         :return:
         """
-        params_result = self.get_params_result()
-        result_handlers = get_safe_data(self.get_result_handler_name(), self.template)
-        # 处理结果
         msg = ""
-        if result_handlers:
-            for result_handler in result_handlers:
-                if not self.is_enable(params_result, result_handler):
-                    continue
-                from collect.service_imp.result_handlers.result_handler import ResultHandler
-                h = ResultHandler(op_user=self.op_user)
-                if self.can_log():
-                    config = get_safe_data(self.get_key_name(), result_handler)
-                    self.log(msg="进入处理器结果" + config)
-                result_data = h.handler(result, result_handler, self.template)
-                if self.is_success(result_data):
-                    result = self.get_data(result_data)
-                    msg = self.get_msg(result_data)
-                else:
-                    return result_data
-        return self.success(result,msg=msg)
+        other = None
+        if self.get_after_plugin():
+            from collect.service_imp.after_plugin.after_plugin import AfterPlugin
+            after_plugin = AfterPlugin(op_user=self.op_user)
+            plugin_result = after_plugin.handler(result, self.template)
+            if not self.is_success(plugin_result) or self.is_finish(plugin_result):
+                return plugin_result
+            # 设置消息
+            plugin_msg = self.get_msg(plugin_result)
+            if plugin_msg:
+                msg = plugin_msg
+            # 设置其他域
+            plugin_other = self.get_other(plugin_result)
+            if plugin_other:
+                other = plugin_other
+            # 设置数据
+            result = self.get_data(plugin_result)
+        return self.success(result, msg=msg, other=other)
 
     def result(self, params):
 

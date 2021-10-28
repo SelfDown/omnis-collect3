@@ -50,3 +50,7 @@ import collect.service_imp.common.filters.template_filters.json_str
 import collect.service_imp.flow.common.scp_copy
 import collect.service_imp.flow.omnis_ssh
 
+import collect.service_imp.ldap.ldap_service
+import collect.service_imp.model.bulk_create
+import collect.service_imp.sql.sql_update
+
