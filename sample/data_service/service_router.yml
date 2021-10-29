@@ -334,6 +334,11 @@ filter_handler:
     path: collect.service_imp.common.filters.template_filters.md5
     class_name: Md5Filter
     method: filter
+  # des
+  - key: des
+    path: collect.service_imp.common.filters.template_filters.des
+    class_name: DESFilter
+    method: filter
   # 创建日期
   - key: current_date_time
     path: collect.service_imp.common.filters.template_filters.date_time

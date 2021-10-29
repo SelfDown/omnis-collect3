@@ -1,9 +1,42 @@
-﻿delete  from event_log
+﻿select * from server_os_users
+
+drop table os_user_group;
+
+CREATE TABLE [os_user_group](
+  [os_user_group_id] varchar(50) PRIMARY KEY, 
+  [user_group_name] varchar(50), 
+  [user_group_code] varchar(50), 
+  [user_group_src] varchar(50), 
+  [comment] VARCHAR(50));
+
+
+alter table server_instance add column cpu_num varchar(255) not null;
+alter table server_instance add column cpu_speed varchar(255) ;
+alter table server_instance add column disk varchar(255)
+alter table server_instance add column memory varchar(255)
+
+select * from server_instance
+
+
+delete  from event_log
 
 alter table user_account add column ldap_success varchar(2) not null;
 alter table user_account add column ldap_msg varchar(500) not null;
 alter table user_account add column svn_success varchar(2) not null;
-alter table user_account add column svn_msg varchar(500) not null;
+alter table server_os_users add column is_default varchar(2) not null;
+
+drop table server_os_users;
+CREATE TABLE [server_os_users](
+  [server_os_users_id] varchar(50) PRIMARY KEY, 
+  [user_name] varchar(50), 
+  [user_pwd] varchar(50), 
+  [server_id] varchar(50), 
+  [user_group_id] varchar(50), 
+  [create_time] varchar(50), 
+  [create_user] varchar(50), 
+  [modify_user] varchar(50), 
+  [modify_time] varchar(50));
+
 
 drop table event_log;
 
