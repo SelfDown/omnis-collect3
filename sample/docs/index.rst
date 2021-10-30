@@ -11,6 +11,9 @@
    :caption: Contents:
 
 
+   begin/index
+
+
 
 Indices and tables
 ==================
