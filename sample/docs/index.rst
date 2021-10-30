@@ -1,16 +1,14 @@
 .. omnis-collect documentation master file, created by
-   sphinx-quickstart on Sat Oct 30 10:37:34 2021.
+   sphinx-quickstart on Sat Oct 30 11:41:12 2021.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-欢迎  omnis-collect's documentation!
+欢迎 omnis-collect's 文档!
 =========================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
-   beginning/index
 
 
 
