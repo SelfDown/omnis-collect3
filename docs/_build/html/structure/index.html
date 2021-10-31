@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="zh-CN" >
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>系统架构 &mdash; omnis-collect 1.0.0 documentation</title>
+  <title>系统架构 &mdash; omnis-collect 1.0.0 文档</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -15,9 +15,10 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
     <script src="../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
     <link rel="prev" title="前言" href="../begin/index.html" /> 
 </head>
 
@@ -30,7 +31,7 @@
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="在文档中搜索" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -66,7 +67,7 @@
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
       <li>系统架构</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/structure/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/structure/index.rst.txt" rel="nofollow"> 查看页面源码</a>
       </li>
   </ul>
   <hr/>
@@ -75,15 +76,15 @@
            <div itemprop="articleBody">
              
   <section id="id1">
-<h1>系统架构<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h1>
+<h1>系统架构<a class="headerlink" href="#id1" title="永久链接至标题"></a></h1>
 <figure class="align-center" id="id6">
 <a class="reference internal image-reference" href="../_images/life.png"><img alt="生命周期" src="../_images/life.png" style="width: 80%;" /></a>
 <figcaption>
-<p><span class="caption-text">接口生命周期</span><a class="headerlink" href="#id6" title="Permalink to this image"></a></p>
+<p><span class="caption-text">接口生命周期</span><a class="headerlink" href="#id6" title="永久链接至图片"></a></p>
 </figcaption>
 </figure>
 <section id="id2">
-<h2>生命周期<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h2>
+<h2>生命周期<a class="headerlink" href="#id2" title="永久链接至标题"></a></h2>
 <p>将一个请求比作流水，分别经过3个罐子处理。从上至下依次往下面流</p>
 <ul class="simple">
 <li><p>执行前</p></li>
@@ -93,7 +94,7 @@
 <p>其中 <cite>【执行前】</cite> 和 <cite>【执行后】</cite> 是公共的处理过程。主要是针对请求处理前数据进行检查和调整。 <cite>【执行中】</cite> 是特别复杂的业务模块处理</p>
 <p>最后拿到数据结果，有可能是数据列表，也可能是个文件。返回结果给前台</p>
 <section id="id3">
-<h3>执行前<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h3>
+<h3>执行前<a class="headerlink" href="#id3" title="永久链接至标题"></a></h3>
 <dl class="simple">
 <dt>before_plugin</dt><dd><ul class="simple">
 <li><p><strong>params</strong> 是针对单个字段进行处理，主要检查字段，</p>
@@ -114,14 +115,14 @@
 </dl>
 </section>
 <section id="id4">
-<h3>执行中<a class="headerlink" href="#id4" title="Permalink to this headline"></a></h3>
+<h3>执行中<a class="headerlink" href="#id4" title="永久链接至标题"></a></h3>
 <p>module
 这里有相当多的业务模块，目前已经实现了15个模块。后续将详细，介绍这里以sql 模块举例</p>
 <blockquote>
 <div><ul>
 <li><p><strong>sql</strong> 处理数据库查询，根据请求参数控制执行不同的sql</p>
 <div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id7" title="Permalink to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id7" title="永久链接至代码"></a></div>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">service</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="s">&quot;project_query&quot;</span>
     <span class="nt">http</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -139,7 +140,7 @@
 <li><p>sql_file 表示执行的sql文件</p></li>
 </ul>
 <div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-text">project.sql</span><a class="headerlink" href="#id8" title="Permalink to this code"></a></div>
+<div class="code-block-caption"><span class="caption-text">project.sql</span><a class="headerlink" href="#id8" title="永久链接至代码"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">sys_projects</span> <span class="n">a</span>
 <span class="n">where</span> <span class="mi">1</span><span class="o">=</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">is_delete</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
@@ -163,7 +164,7 @@
 <p>从这个sql 可以看出，这里动态拼接sql,如果有项目编码，就拼接</p>
 <p>and a.project_code = {{project_code}}。{{project_code}}一个占位符， 是前端传过来的project_code变量值</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
+<p class="admonition-title">注解</p>
 <p>有人可能会问，这个SQL这样拼接，会不会有SQL注入的风险，如果在project_code 里面写“; drop  database xxx”
 会不会删库？</p>
 <p>答案是： 不会。我渲染了2遍，渲染成预编译语句，以占位符代理原值。所以 <strong>if 模板里面的变量不要放在 SQL执行中</strong> 。
@@ -174,7 +175,7 @@
 </div></blockquote>
 </section>
 <section id="id5">
-<h3>执行后<a class="headerlink" href="#id5" title="Permalink to this headline"></a></h3>
+<h3>执行后<a class="headerlink" href="#id5" title="永久链接至标题"></a></h3>
 <dl class="simple">
 <dt>after_plugin</dt><dd><ul class="simple">
 <li><p><strong>result_handler</strong> 针对结果数据进行处理，主要处理msg和data，目前封装了20个数据处理器</p>
@@ -196,18 +197,18 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../begin/index.html" class="btn btn-neutral float-left" title="前言" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../begin/index.html" class="btn btn-neutral float-left" title="前言" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, zhangzhi.</p>
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
   </div>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
    
 
 </footer>
