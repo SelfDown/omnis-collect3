@@ -8,10 +8,11 @@
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: 目录 :
 
 
    begin/index
+   structure/index
 
 
 
