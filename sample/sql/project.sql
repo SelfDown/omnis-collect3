@@ -1,4 +1,9 @@
-﻿select * from server_os_users
+﻿select a.* 
+from server_install_soft a
+where 1=1
+
+
+select * from server_os_users
 
 drop table os_user_group;
 

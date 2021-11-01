@@ -41,7 +41,7 @@ class UpdateData(RequestHandler):
         import copy
         params_copy = copy.deepcopy(params)
         for item in foreach:
-
+            params_copy[item_name] = item
             for field in fields:
                 temp = get_safe_data(self.get_template_name(), field)
                 if not temp:
