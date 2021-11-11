@@ -216,7 +216,14 @@ class SqlService(CollectService):
             self.log(sql)
             self.log(param_data)
         data_source = self.get_data_source()
-        result = connection_sql_to_data(sql, param_data, datasource=data_source)
+        try:
+            result = connection_sql_to_data(sql, param_data, datasource=data_source)
+        except Exception as e:
+            self.log(str(e), "error")
+            self.log(sql, "error")
+            self.log(param_data,"error")
+
+            return self.fail("sql 执行异常:" + sql)
         count = 0
         if not self.is_empty_count_sql():
             count_sql = self.result_count_sql(sql_result)

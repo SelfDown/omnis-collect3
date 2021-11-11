@@ -38,8 +38,8 @@ class BulkCreateService(CollectService):
             model_list.append(self.get_data(model_obj_result))
         model_class = self.get_model_class()
         try:
-            model_class.objects.bulk_create(model_list)
+            result = model_class.objects.bulk_create(model_list)
         except Exception as e:
             return self.fail(str(e) + "创建失败")
 
-        return self.success(params)
+        return self.success(params, count=len(result))

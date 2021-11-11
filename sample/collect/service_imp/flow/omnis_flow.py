@@ -124,12 +124,15 @@ class ServiceOmnisFlowService(CollectService):
     def get_next_node(self, node, service_dict, node_result=None):
         current_name = get_safe_data(self.get_name_name(), node)
         params = self.get_params_result()
-
+        import json
+        if self.can_log():
+            self.log(json.dumps(node_result))
         if not node_result or self.is_success(node_result): # 运行正常
             field = self.get_next_name()
             # 获取下个节点
             node_result = self.get_node_template_result(node, params, field=field, template=self.get_template())
-
+            if self.can_log():
+                self.log(json.dumps(node_result))
         else: # 运行错误
             fail = get_safe_data(self.get_fail_name(),node)
             if not fail:

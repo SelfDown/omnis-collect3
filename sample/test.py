@@ -55,3 +55,6 @@ import collect.service_imp.model.bulk_create
 import collect.service_imp.sql.sql_update
 import collect.service_imp.request_handlers.handlers.update_data
 
+import collect.service_imp.request_handlers.handlers.mul_arr
+import collect.service_imp.request_handlers.handlers.ignore_data
+

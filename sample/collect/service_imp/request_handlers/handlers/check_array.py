@@ -10,8 +10,8 @@ from collect.service_imp.request_handlers.request_handler import RequestHandler
 from collect.utils.collect_utils import get_safe_data
 
 
-class UpdateData(RequestHandler):
-    UDConst = {
+class CheckArray(RequestHandler):
+    CAConst = {
         "fields_name": "fields",
         "item_name": "item",
         "item_order_index_name": "item_order_index"
@@ -19,13 +19,13 @@ class UpdateData(RequestHandler):
     }
 
     def get_item_order_index_name(self):
-        return self.UDConst["item_order_index_name"]
+        return self.CAConst["item_order_index_name"]
 
     def get_fields_name(self):
-        return self.UDConst["fields_name"]
+        return self.CAConst["fields_name"]
 
     def get_item_name(self):
-        return self.UDConst["item_name"]
+        return self.CAConst["item_name"]
 
     def handler(self, params, config, template):
 
@@ -46,14 +46,17 @@ class UpdateData(RequestHandler):
         params_copy = copy.deepcopy(params)
         for item_order_index, item in enumerate(foreach):
             params_copy[item_name] = item
-            params_copy[self.get_item_order_index_name()] = str(item_order_index + 1)
-            for field in fields:
+            params_copy[self.get_item_order_index_name()] = str(item_order_index+1)
+            for field_index, field in enumerate(fields):
                 temp = get_safe_data(self.get_template_name(), field)
                 if not temp:
-                    return self.fail(self.get_fields_name() + "没有配置" + self.get_template_name())
-                field_name = get_safe_data(self.get_field_name(), field)
-                item[field_name] = self.get_render_data(temp, params_copy, template_tool)
+                    return self.fail(" 第 【" + str(field_index + 1) + "】 没有配置" + self.get_template_name())
+                err_msg = get_safe_data(self.get_err_msg_name(), field)
+                if not err_msg:
+                    return self.fail(" 第 【" + str(field_index + 1) + "】 没有配置" + self.get_err_msg_name())
+                success = self.get_render_data(temp, params_copy, template_tool)
+                if success == self.get_false_value():
+                    err = self.get_render_data(err_msg, params_copy, template_tool)
+                    return self.fail(err)
 
-        if self.can_log(template):
-            self.log(params)
         return self.success(params)

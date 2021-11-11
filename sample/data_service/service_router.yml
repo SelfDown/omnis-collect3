@@ -115,6 +115,11 @@ request_handler:
     path: collect.service_imp.request_handlers.handlers.update_data
     class_name: UpdateData
     method: handler
+  # 检查列表
+  - key: check_array
+    path: collect.service_imp.request_handlers.handlers.check_array
+    class_name: CheckArray
+    method: handler
   # 更新数据
   - key: ignore_data
     path: collect.service_imp.request_handlers.handlers.ignore_data
@@ -275,6 +280,10 @@ module_handler:
   - key: bulk_create
     path: collect.service_imp.model.bulk_create
     class_name: BulkCreateService
+  # 模型修改
+  - key: bulk_update
+    path: collect.service_imp.model.bulk_update
+    class_name: BulkUpdateService
 
   # 服务流程化
   - key: service_flow

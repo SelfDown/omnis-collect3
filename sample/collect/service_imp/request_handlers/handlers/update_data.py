@@ -14,8 +14,12 @@ class UpdateData(RequestHandler):
     UDConst = {
         "fields_name": "fields",
         "item_name": "item",
+        "item_order_index_name": "item_order_index"
 
     }
+
+    def get_item_order_index_name(self):
+        return self.UDConst["item_order_index_name"]
 
     def get_fields_name(self):
         return self.UDConst["fields_name"]
@@ -40,8 +44,9 @@ class UpdateData(RequestHandler):
             return self.fail(self.get_fields_name() + "字段配置没有找到")
         import copy
         params_copy = copy.deepcopy(params)
-        for item in foreach:
+        for item_order_index, item in enumerate(foreach):
             params_copy[item_name] = item
+            params_copy[self.get_item_order_index_name()] = str(item_order_index + 1)
             for field in fields:
                 temp = get_safe_data(self.get_template_name(), field)
                 if not temp:
@@ -49,4 +54,6 @@ class UpdateData(RequestHandler):
                 field_name = get_safe_data(self.get_field_name(), field)
                 item[field_name] = self.get_render_data(temp, params_copy, template_tool)
 
+        if self.can_log(template):
+            self.log(params)
         return self.success(params)
