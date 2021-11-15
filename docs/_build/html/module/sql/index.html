@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL 模块 &mdash; omnis-collect 1.0.0 文档</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="prev" title="执行模块" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> omnis-collect
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目录 :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">执行模块</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SQL 模块</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">模块: sql</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">配置参数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#data-source">data_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#log">log</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">sql 参数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#sqlrequire">SQL支持require</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">omnis-collect</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">执行模块</a> &raquo;</li>
+      <li>SQL 模块</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module/sql/index.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sql">
+<h1>SQL 模块<a class="headerlink" href="#sql" title="永久链接至标题"></a></h1>
+<dl class="simple">
+<dt>sql 模块主要处理数据库查询，当然也能处理修改。</dt><dd><ul class="simple">
+<li><p>主要处理各种select 数据库字段。模板语法利用jinja2</p></li>
+<li><p>数据库连接利用当前项目数据库的数据源</p></li>
+</ul>
+</dd>
+</dl>
+<section id="id1">
+<h2>模块: sql<a class="headerlink" href="#id1" title="永久链接至标题"></a></h2>
+<p>配置示例</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id4" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">service</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="s">&quot;project_query&quot;</span>
+    <span class="nt">module</span><span class="p">:</span> <span class="s">&#39;sql&#39;</span><span class="c1"># 执行mysql 查询</span>
+    <span class="nt">sql_file</span><span class="p">:</span> <span class="s">&#39;project.sql&#39;</span>
+</pre></div>
+</div>
+</div>
+<p>sql 文件示例,使用jinja2 语法
+<strong>特别注意</strong> 这里的控制语句的变量，不可以作用于SQL 拼接里面的变量。
+意思是 <strong>if else</strong>  控制语句里面 <strong>变量不能</strong> 显示在 where and 这些 <strong>SQL拼接</strong></p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">project.sql</span><a class="headerlink" href="#id5" title="永久链接至代码"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">sys_projects</span> <span class="n">a</span>
+<span class="n">where</span> <span class="mi">1</span><span class="o">=</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">is_delete</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+<span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">project_code</span> <span class="o">%</span><span class="p">}</span>
+   <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">project_code</span> <span class="o">=</span> <span class="p">{{</span><span class="n">project_code</span><span class="p">}}</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">endif</span>  <span class="o">%</span><span class="p">}</span>
+
+<span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">sys_project_id_list</span> <span class="o">%</span><span class="p">}</span>
+   <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">sys_project_id</span> <span class="ow">in</span> <span class="p">({{</span><span class="n">sys_project_id_list</span><span class="p">}})</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+
+<span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">exclude</span> <span class="o">%</span><span class="p">}</span>
+   <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">sys_project_id</span> <span class="o">!=</span> <span class="p">{{</span><span class="n">exclude</span><span class="p">}}</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+<section id="id2">
+<h2>配置参数<a class="headerlink" href="#id2" title="永久链接至标题"></a></h2>
+<section id="data-source">
+<h3>data_source<a class="headerlink" href="#data-source" title="永久链接至标题"></a></h3>
+<ul>
+<li><p>支持 <strong>data_source</strong> 切换数据源，比如系统连接zabbix 数据库。至于django项目怎么配置多个数据源，可以百度一波</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id6" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">service</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="s">&quot;zabbix_query&quot;</span>
+    <span class="nt">data_source</span><span class="p">:</span> <span class="s">&#39;zabbix&#39;</span>
+    <span class="nt">module</span><span class="p">:</span> <span class="s">&#39;sql&#39;</span><span class="c1"># 执行mysql 查询</span>
+    <span class="nt">sql_file</span><span class="p">:</span> <span class="s">&#39;project.sql&#39;</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="log">
+<h3>log<a class="headerlink" href="#log" title="永久链接至标题"></a></h3>
+<ul>
+<li><p>支持 <strong>log</strong> 输出执行预编译sql 和 参数</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id7" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">service</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="s">&quot;zabbix_query&quot;</span>
+    <span class="nt">log</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">module</span><span class="p">:</span> <span class="s">&#39;sql&#39;</span><span class="c1"># 执行mysql 查询</span>
+    <span class="nt">sql_file</span><span class="p">:</span> <span class="s">&#39;project.sql&#39;</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</section>
+</section>
+<section id="id3">
+<h2>sql 参数<a class="headerlink" href="#id3" title="永久链接至标题"></a></h2>
+<p>module</p>
+<section id="sqlrequire">
+<h3>SQL支持require<a class="headerlink" href="#sqlrequire" title="永久链接至标题"></a></h3>
+<p>可以引入其他SQL文件</p>
+<ul>
+<li><p>比如查看用户字段，查询用户SQL引入一些公共字段，防止有人写  ‘select * from user_account’  将账户密码也查询出来了</p></li>
+<li><p>分页的时候数据的SQL和统计count 的SQL where 条件可以通用</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">user.sql,带require 示例</span><a class="headerlink" href="#id8" title="永久链接至代码"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">require</span><span class="p">(</span><span class="s1">&#39;user_normal_fields.sql&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">user_account</span> <span class="n">a</span>
+<span class="n">where</span> <span class="mi">1</span><span class="o">=</span><span class="mi">1</span>
+
+<span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">user_id_list</span> <span class="o">%</span><span class="p">}</span>
+   <span class="ow">and</span>   <span class="n">user_id</span> <span class="ow">in</span> <span class="p">(</span> <span class="p">{{</span><span class="n">user_id_list</span><span class="p">}})</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+
+<span class="n">order</span> <span class="n">by</span> <span class="n">create_time</span> <span class="n">desc</span>
+<span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">pagination</span> <span class="o">%</span><span class="p">}</span>
+<span class="n">limit</span> <span class="p">{{</span><span class="n">start</span><span class="p">}}</span> <span class="p">,{{</span><span class="n">size</span><span class="p">}}</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">user_normal_fields.sql,带require 示例</span><a class="headerlink" href="#id9" title="永久链接至代码"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="o">.</span><span class="n">username</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">work_code</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">nick</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span>
+<span class="n">a</span><span class="o">.</span><span class="n">create_time</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">modify_time</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">user_status</span><span class="p">,</span>
+<span class="n">a</span><span class="o">.</span><span class="n">entry_date</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">leave_date</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">phone</span><span class="p">,</span><span class="n">email</span><span class="p">,</span>
+<span class="n">a</span><span class="o">.</span><span class="n">create_ldap</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">password</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="执行模块" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
