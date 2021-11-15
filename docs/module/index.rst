@@ -8,6 +8,8 @@
 
    sql/index
    model_save/index
+   model_update/index
+   model_delete/index
 
 
 
