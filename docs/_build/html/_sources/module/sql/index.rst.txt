@@ -1,9 +1,9 @@
 SQL 模块
 =========================================
-
-sql 模块主要处理数据库查询，当然也能处理修改。
-    * 主要处理各种select 数据库字段。模板语法利用jinja2
-    * 数据库连接利用当前项目数据库的数据源
+sql 模块主要处理数据库查询，
+    * 主要处理各种select,join、group by、order 等SQL。你要你能写得出，SQL接口就能构造出来。模板语法利用jinja2 来拼接SQL
+    * 数据库连接利用当前项目的数据源,一般使用django 的默认数据源,也有特殊情况需要连接其他数据库,支持数据源切换
+    * 没有限制执行哪种数据库,可以是mysql、oracle、sqlite等等，主要看django系统配置的什么数据源
 
 模块: sql
 >>>>>>>>>>>>>>>>>>>>>>
@@ -47,7 +47,8 @@ sql 模块主要处理数据库查询，当然也能处理修改。
 
 data_source
 ::::::::::::::::::::
-* 支持 **data_source** 切换数据源，比如系统连接zabbix 数据库。至于django项目怎么配置多个数据源，可以百度一波
+* 支持 **data_source** 切换数据源，比如系统连接zabbix 数据库，查询最新监控项数据。至于django项目怎么配置多个数据源，可以百度一波
+* 默认是 **default** 数据源，data_source 可以不写
 
     .. code-block:: yaml
      :caption: index.yaml
@@ -75,7 +76,21 @@ log
 
 sql 参数
 >>>>>>>>>>>>>>>>>>>>>>
-module
+sql 里面的参数
+
+session_user_id 当前登录用户ID
+:::::::::::::::::::::::::::::::::::::::::::::::::
+
+所以前台不能传此参数
+
+    .. code-block:: python
+     :caption: 查询当前用户信息
+
+     select *
+     from user_account a
+     where 1=1
+     and a.user_id = {{session_user_id}}
+
 
 SQL支持require
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -108,3 +123,71 @@ SQL支持require
          a.create_time,a.modify_time,a.user_status,
          a.entry_date,a.leave_date,a.phone,email,
          a.create_ldap,a.password
+
+
+常用示例
+>>>>>>>>>>>>>>>>>>>>>>
+
+
+1. 用户基础查询
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+    .. code-block:: python
+     :caption: 查询用户列表信息
+
+     select distinct require('user_normal_fields.sql')
+     from user_account a
+     {% if role_code %}
+     left join user_role b on a.user_id = b.user_id
+     left join role c on c.role_id = b.role_id
+     {% endif  %}
+     where 1=1
+
+     {% if user_id_list %}
+        and   a.user_id in ( {{user_id_list}})
+     {% endif %}
+
+     {% if create_ldap %}
+        and a.create_ldap = {{create_ldap}}
+     {% endif %}
+
+     {% if role_code %}
+       and c.role_code = {{role_code}}
+     {% endif %}
+
+
+     {% if pagination %}
+     limit {{start}} ,{{size}}
+     {% endif %}
+
+
+2. 利用【用户基础查询】,查用户分页信息
+:::::::::::::::::::::::::::::::::::::::::::::::::::
+    .. code-block:: python
+     :caption: 查询用户分页
+
+     select b.sys_code_text as user_status_name,
+     (
+        select group_concat( r.role_name)
+        from user_role ur
+        left join role r on ur.role_id = r.role_id
+        where ur.user_id= a.user_id
+     ) as role_names,
+     (
+        select group_concat( ur.role_id)
+        from user_role ur
+        where ur.user_id= a.user_id
+     ) as role_id_list,
+     a.*
+     from ( require("user_base.sql") ) a
+     left join sys_code b on a.user_status = b.sys_code and b.sys_code_type = 'user_job_status'
+     order by create_time desc
+
+
+3. 利用【用户基础查询】，统计用户总数
+:::::::::::::::::::::::::::::::::::::::::::::::::::
+    .. code-block:: sql
+     :caption: 查询用户count
+
+     select count(*) as `count`
+     from ( require("user_base.sql") ) a
