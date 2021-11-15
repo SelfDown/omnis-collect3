@@ -1,229 +1,192 @@
-模型保存
+2. model_save 模型保存
 =========================================
-model_save 主要处理单表数据保存
-    * 主要处理各种select,join、group by、order 等SQL。你要你能写得出，SQL接口就能构造出来。模板语法利用jinja2 来拼接SQL
-    * 数据库连接利用当前项目的数据源,一般使用django 的默认数据源,也有特殊情况需要连接其他数据库,支持数据源切换
-    * 没有限制执行哪种数据库,可以是mysql、oracle、sqlite等等，主要看django系统配置的什么数据源
+model_save 主要处理单表数据单个保存
+    * 主要利用django model save
 
 模块: model_save
 >>>>>>>>>>>>>>>>>>>>>>
 配置示例
 
     .. code-block:: yaml
-     :caption: index.yaml
+     :caption: 用户保存index.yaml
 
-     service:
-       - key: "project_query"
-         module: 'sql'# 执行mysql 查询
-         sql_file: 'project.sql'
+     key: "user_account_save"
+     name: 用户保存
+     module: 'model_save'
+     params:
+       user_id:
+         check:
+           template: "{{user_id|must}}"
+           err_msg: "用户不能为空"
+       username:
+         check:
+           service:
+             service: hrm.get_user
+             username: username
+           template: "{{service_result|length<=0}}"
+           err_msg: "【{{username}}】 用户名已经存在"
+     model: UserAccount
+     result_handler:
+       - key: new_col
+         params:
+           to_field:
+             - field: 'password'
+               template: "******"
 
 
-    sql 文件示例,使用jinja2 语法
-    **特别注意** 这里的控制语句的变量，不可以作用于SQL 拼接里面的变量。
-    意思是 **if else**  控制语句里面 **变量不能** 显示在 where and 这些 **SQL拼接**
+    * params 节点，表示进行参数处理。比如记录编码必须唯一;类型不能为空;年龄必须是数字
+    * result_hanlder 是对返回结果进行处理。比如密码隐藏
 
-    .. code-block:: python
-     :caption: project.sql
+    **params 和result_handler 是公共模块**  这里不过多介绍。
+    这里指定model,表示数据库执行django 模型，在service_roueter.yml 有指定配置。
 
-     select *
-     from sys_projects a
-     where 1=1 and is_delete = '0'
-     {% if project_code %}
-        and a.project_code = {{project_code}}
-     {% endif  %}
+    .. note::
 
-     {% if sys_project_id_list %}
-        and a.sys_project_id in ({{sys_project_id_list}})
-     {% endif %}
+        比如用户表user_account 对应UserAccount。
+        通过 `python manage.py inspectdb > sample/models/models.py` 生成。这里目录位置根据项目调整
+        
+        .. code-block:: python
+         :caption: 在service_roueter.sql
 
-     {% if exclude %}
-        and a.sys_project_id != {{exclude}}
-     {% endif %}
+         # django 模型配置
+         django_model:
+           # django model 文件位置
+           model_file: sample.models.models
+
 
 
 配置参数
 >>>>>>>>>>>>>>>>>>>>>>
 
 
-1. data_source
+1. model
 ::::::::::::::::::::
-* 支持 **data_source** 切换数据源，比如系统连接zabbix 数据库，查询最新监控项数据。至于django项目怎么配置多个数据源，可以百度一波
-* 默认是 **default** 数据源，data_source 可以不写
-
-    .. code-block:: yaml
-     :caption: index.yaml
-
-     service:
-       - key: "zabbix_query"
-         data_source: 'zabbix'
-         module: 'sql'# 执行mysql 查询
-         sql_file: 'project.sql'
+* django 数据库对应模型对象，ORM中的model。
+* 前端传过来的字段必须和model 里面的字段一一对应
 
 
-2. log
-::::::::::::::::::::
-* 支持 **log** 输出执行预编译sql 和 参数
+.. code-block:: yaml
+ :caption: index.yaml
 
-    .. code-block:: yaml
-     :caption: index.yaml
+  key: "user_account_save"
+  name: 用户保存
+  module: 'model_save'
+  model: UserAccount
 
-     service:
-       - key: "zabbix_query"
-         log: true
-         module: 'sql'# 执行mysql 查询
-         sql_file: 'project.sql'
-
-3. sql_file
-::::::::::::::::::::
-* 指定执行sql的文件位置
-
-    .. code-block:: yaml
-     :caption: index.yaml
-
-     service:
-       - key: "zabbix_query"
-         log: true
-         module: 'sql'# 执行mysql 查询
-         sql_file: 'project.sql'
-
-
-sql 参数
->>>>>>>>>>>>>>>>>>>>>>
-sql 拼接里面的参数，这里支持jinja2 的公共语法
-
-1. session_user_id 当前登录用户ID
-:::::::::::::::::::::::::::::::::::::::::::::::::
-
-所以前台不能传此参数
-
-    .. code-block:: python
-     :caption: 查询当前用户信息
-
-     select *
-     from user_account a
-     where 1=1
-     and a.user_id = {{session_user_id}}
-
-
-
-2. 简单数组处理 in 处理
-:::::::::::::::::::::::::::::::::::::::::::::::::
-比如用户ID user_id
-SQL 语法 in 必须是 user_id in ('a','b','c')。
-前台传过来数组{'user_id_list':['a','b','c']}
-在SQL模板 的写法是 user_id in ( {{user_id_list}})
-
-
-        .. code-block:: python
-         :caption: in 语句示例
-
-         select require('user_normal_fields.sql')
-         from user_account a
-         where 1=1
-
-         {% if user_id_list %}
-            and   user_id in ( {{user_id_list}})
-         {% endif %}
-
-**不支持对象数组[{'user_id':'a'},{'user_id':'b'}]**
-
-3. require,引入公共文件
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-可以引入其他SQL文件，路径支持相对路径。
-如果是上级目录下common的xx.sql文件，则是require("../common/xx.sql") **require里面不能空格**
-
-* 比如查看用户字段，查询用户SQL引入一些公共字段，防止有人写  'select * from user_account'  将账户密码也查询出来了
-* 分页的时候数据的SQL和统计count 的SQL where 条件可以通用
-
-        .. code-block:: python
-         :caption: user.sql,带require 示例
-
-         select require('user_normal_fields.sql')
-         from user_account a
-         where 1=1
-
-         {% if user_id_list %}
-            and   user_id in ( {{user_id_list}})
-         {% endif %}
-
-         order by create_time desc
-         {% if pagination %}
-         limit {{start}} ,{{size}}
-         {% endif %}
-
-
-        .. code-block:: python
-         :caption: user_normal_fields.sql,带require 示例
-
-         a.username,a.work_code,a.nick,a.user_id,
-         a.create_time,a.modify_time,a.user_status,
-         a.entry_date,a.leave_date,a.phone,email,
-         a.create_ldap,a.password
 
 
 常用示例
 >>>>>>>>>>>>>>>>>>>>>>
 
 
-1. 用户基础查询
+1. 用户保存
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    .. code-block:: python
-     :caption: 查询用户列表信息
+    .. code-block:: yaml
+     :caption: 保存用户信息
 
-     select distinct require('user_normal_fields.sql')
-     from user_account a
-     {% if role_code %}
-     left join user_role b on a.user_id = b.user_id
-     left join role c on c.role_id = b.role_id
-     {% endif  %}
-     where 1=1
+     key: "user_account_save"
+     name: 用户保存
+     module: 'model_save'
+     must_login: false
 
-     {% if user_id_list %}
-        and   a.user_id in ( {{user_id_list}})
-     {% endif %}
+     params:
+       user_id:
+         check:
+           template: "{{user_id|must}}"
+           err_msg: "用户不能为空"
 
-     {% if create_ldap %}
-        and a.create_ldap = {{create_ldap}}
-     {% endif %}
+       nick:
+         check:
+           template: "{{nick|must}}"
+           err_msg: "昵称不能空"
+       username:
+         check:
+           service:
+             service: hrm.get_user
+             username: username
+           template: "{{service_result|length<=0}}"
+           err_msg: "【{{username}}】 用户名已经存在"
+       password:
+         check:
+           template: "{{password|must}}"
+           err_msg: "密码不能为空"
+         template: "{{password|md5}}"
+       user_status:
+         check:
+           template: "{{user_status|must}}"
+           err_msg: "用户状态不能为空"
+         default: "0"
+       create_user:
+         template: "{{session_user_id}}"
 
-     {% if role_code %}
-       and c.role_code = {{role_code}}
-     {% endif %}
+       create_time:
+         template: "{{''|current_date_time}}"
+
+       modify_user:
+         template: "{{session_user_id}}"
+
+       modify_time:
+         template: "{{''|current_date_time}}"
+
+       create_ldap:
+         default: "0"
+
+       is_delete:
+         default: "0"
+     model: UserAccount
+     result_handler:
+
+       - key: new_col
+         params:
+           to_field:
+             - field: 'password'
+               template: "******"
 
 
-     {% if pagination %}
-     limit {{start}} ,{{size}}
-     {% endif %}
-
-
-2. 利用【用户基础查询】,查用户分页信息
+2. 角色保存
 :::::::::::::::::::::::::::::::::::::::::::::::::::
-    .. code-block:: python
-     :caption: 查询用户分页
+    .. code-block:: yaml
+     :caption: 角色保存
 
-     select b.sys_code_text as user_status_name,
-     (
-        select group_concat( r.role_name)
-        from user_role ur
-        left join role r on ur.role_id = r.role_id
-        where ur.user_id= a.user_id
-     ) as role_names,
-     (
-        select group_concat( ur.role_id)
-        from user_role ur
-        where ur.user_id= a.user_id
-     ) as role_id_list,
-     a.*
-     from ( require("user_base.sql") ) a
-     left join sys_code b on a.user_status = b.sys_code and b.sys_code_type = 'user_job_status'
-     order by create_time desc
+     key: "user_role_save"
+     name: 用户创建角色
+     must_login: false
+     module: 'model_save'
+     params:
+        user_role_id:
+          template: "{{user_role_id|uuid}}"
+        user_id:
+          check:
+            template: "{{user_id|must}}"
+            err_msg: 用户不能为空
+        role_id:
+          check:
+            template: "{{role_id|must}}"
+            err_msg: "角色不能为空"
+     model: UserRole
 
-
-3. 利用【用户基础查询】，统计用户总数
+3. 项目保存
 :::::::::::::::::::::::::::::::::::::::::::::::::::
-    .. code-block:: sql
-     :caption: 查询用户count
 
-     select count(*) as `count`
-     from ( require("user_base.sql") ) a
+
+    .. code-block:: yaml
+     :caption: 项目保存
+
+     key: "project_save"
+     must_login: false
+     module: 'model_save'
+     params:
+       project_id:
+         template: "{{''|uuid}}"
+       code:
+         check:
+           template: "{{code|must}}"
+           err_msg: "项目编码不能为空"
+       create_user:
+         template: "{{session_user_id}}"
+       create_time:
+         template: "{{''|current_date_time}}"
+       is_delete:
+         default: "0"
+     model: Project
