@@ -51,7 +51,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#id3">sql 参数</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#session-user-id-id">session_user_id 当前登录用户ID</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#sqlrequire">SQL支持require</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#in">简单数组处理 in 处理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#require">require,引入公共文件</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#id4">常用示例</a><ul>
@@ -199,15 +200,38 @@
 </div>
 </div></blockquote>
 </section>
-<section id="sqlrequire">
-<h3>SQL支持require<a class="headerlink" href="#sqlrequire" title="永久链接至标题"></a></h3>
-<p>可以引入其他SQL文件</p>
+<section id="in">
+<h3>简单数组处理 in 处理<a class="headerlink" href="#in" title="永久链接至标题"></a></h3>
+<p>比如用户ID user_id
+SQL 语法 in 必须是 user_id in (‘a’,’b’,’c’)</p>
+<p>前台传过来数组[‘a’,’b’,’c’]
+在SQL模板 的写法是 user_id in ( {{user_id_list}})</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text">in 语句示例</span><a class="headerlink" href="#id13" title="永久链接至代码"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">require</span><span class="p">(</span><span class="s1">&#39;user_normal_fields.sql&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">user_account</span> <span class="n">a</span>
+<span class="n">where</span> <span class="mi">1</span><span class="o">=</span><span class="mi">1</span>
+
+<span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">user_id_list</span> <span class="o">%</span><span class="p">}</span>
+   <span class="ow">and</span>   <span class="n">user_id</span> <span class="ow">in</span> <span class="p">(</span> <span class="p">{{</span><span class="n">user_id_list</span><span class="p">}})</span>
+<span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+<p><strong>不支持对象数组[{‘user_id’:’a’},{‘user_id’:’b’}]</strong></p>
+</section>
+<section id="require">
+<h3>require,引入公共文件<a class="headerlink" href="#require" title="永久链接至标题"></a></h3>
+<p>可以引入其他SQL文件，路径支持相对路径。
+如果是上级目录下common的xx.sql文件，则是require(“../common/xx.sql”) <strong>require里面不能空格</strong></p>
 <ul>
 <li><p>比如查看用户字段，查询用户SQL引入一些公共字段，防止有人写  ‘select * from user_account’  将账户密码也查询出来了</p></li>
 <li><p>分页的时候数据的SQL和统计count 的SQL where 条件可以通用</p>
 <blockquote>
-<div><div class="literal-block-wrapper docutils container" id="id13">
-<div class="code-block-caption"><span class="caption-text">user.sql,带require 示例</span><a class="headerlink" href="#id13" title="永久链接至代码"></a></div>
+<div><div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-text">user.sql,带require 示例</span><a class="headerlink" href="#id14" title="永久链接至代码"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">require</span><span class="p">(</span><span class="s1">&#39;user_normal_fields.sql&#39;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">user_account</span> <span class="n">a</span>
 <span class="n">where</span> <span class="mi">1</span><span class="o">=</span><span class="mi">1</span>
@@ -223,8 +247,8 @@
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id14">
-<div class="code-block-caption"><span class="caption-text">user_normal_fields.sql,带require 示例</span><a class="headerlink" href="#id14" title="永久链接至代码"></a></div>
+<div class="literal-block-wrapper docutils container" id="id15">
+<div class="code-block-caption"><span class="caption-text">user_normal_fields.sql,带require 示例</span><a class="headerlink" href="#id15" title="永久链接至代码"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="o">.</span><span class="n">username</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">work_code</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">nick</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span>
 <span class="n">a</span><span class="o">.</span><span class="n">create_time</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">modify_time</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">user_status</span><span class="p">,</span>
 <span class="n">a</span><span class="o">.</span><span class="n">entry_date</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">leave_date</span><span class="p">,</span><span class="n">a</span><span class="o">.</span><span class="n">phone</span><span class="p">,</span><span class="n">email</span><span class="p">,</span>
@@ -242,8 +266,8 @@
 <section id="id5">
 <h3>1. 用户基础查询<a class="headerlink" href="#id5" title="永久链接至标题"></a></h3>
 <blockquote>
-<div><div class="literal-block-wrapper docutils container" id="id15">
-<div class="code-block-caption"><span class="caption-text">查询用户列表信息</span><a class="headerlink" href="#id15" title="永久链接至代码"></a></div>
+<div><div class="literal-block-wrapper docutils container" id="id16">
+<div class="code-block-caption"><span class="caption-text">查询用户列表信息</span><a class="headerlink" href="#id16" title="永久链接至代码"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">distinct</span> <span class="n">require</span><span class="p">(</span><span class="s1">&#39;user_normal_fields.sql&#39;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">user_account</span> <span class="n">a</span>
 <span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">role_code</span> <span class="o">%</span><span class="p">}</span>
@@ -276,8 +300,8 @@
 <section id="id6">
 <h3>2. 利用【用户基础查询】,查用户分页信息<a class="headerlink" href="#id6" title="永久链接至标题"></a></h3>
 <blockquote>
-<div><div class="literal-block-wrapper docutils container" id="id16">
-<div class="code-block-caption"><span class="caption-text">查询用户分页</span><a class="headerlink" href="#id16" title="永久链接至代码"></a></div>
+<div><div class="literal-block-wrapper docutils container" id="id17">
+<div class="code-block-caption"><span class="caption-text">查询用户分页</span><a class="headerlink" href="#id17" title="永久链接至代码"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">b</span><span class="o">.</span><span class="n">sys_code_text</span> <span class="k">as</span> <span class="n">user_status_name</span><span class="p">,</span>
 <span class="p">(</span>
    <span class="n">select</span> <span class="n">group_concat</span><span class="p">(</span> <span class="n">r</span><span class="o">.</span><span class="n">role_name</span><span class="p">)</span>
@@ -302,8 +326,8 @@
 <section id="id7">
 <h3>3. 利用【用户基础查询】，统计用户总数<a class="headerlink" href="#id7" title="永久链接至标题"></a></h3>
 <blockquote>
-<div><div class="literal-block-wrapper docutils container" id="id17">
-<div class="code-block-caption"><span class="caption-text">查询用户count</span><a class="headerlink" href="#id17" title="永久链接至代码"></a></div>
+<div><div class="literal-block-wrapper docutils container" id="id18">
+<div class="code-block-caption"><span class="caption-text">查询用户count</span><a class="headerlink" href="#id18" title="永久链接至代码"></a></div>
 <div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="o">`</span><span class="k">count</span><span class="o">`</span>
 <span class="k">from</span> <span class="p">(</span> <span class="n">require</span><span class="p">(</span><span class="ss">&quot;user_base.sql&quot;</span><span class="p">)</span> <span class="p">)</span> <span class="n">a</span>
 </pre></div>

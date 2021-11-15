@@ -92,9 +92,33 @@ session_user_id 当前登录用户ID
      and a.user_id = {{session_user_id}}
 
 
-SQL支持require
+
+简单数组处理 in 处理
+:::::::::::::::::::::::::::::::::::::::::::::::::
+比如用户ID user_id
+SQL 语法 in 必须是 user_id in ('a','b','c')
+
+前台传过来数组['a','b','c']
+在SQL模板 的写法是 user_id in ( {{user_id_list}})
+
+
+        .. code-block:: python
+         :caption: in 语句示例
+
+         select require('user_normal_fields.sql')
+         from user_account a
+         where 1=1
+
+         {% if user_id_list %}
+            and   user_id in ( {{user_id_list}})
+         {% endif %}
+
+**不支持对象数组[{'user_id':'a'},{'user_id':'b'}]**
+
+require,引入公共文件
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-可以引入其他SQL文件
+可以引入其他SQL文件，路径支持相对路径。
+如果是上级目录下common的xx.sql文件，则是require("../common/xx.sql") **require里面不能空格**
 
 * 比如查看用户字段，查询用户SQL引入一些公共字段，防止有人写  'select * from user_account'  将账户密码也查询出来了
 * 分页的时候数据的SQL和统计count 的SQL where 条件可以通用
