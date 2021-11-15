@@ -13,6 +13,7 @@
 
    begin/index
    structure/index
+   module/index
 
 
 
