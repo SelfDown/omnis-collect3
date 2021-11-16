@@ -57,4 +57,6 @@ import collect.service_imp.request_handlers.handlers.update_data
 
 import collect.service_imp.request_handlers.handlers.mul_arr
 import collect.service_imp.request_handlers.handlers.ignore_data
+import collect.service_imp.common.filters.template_filters.date_time
+import collect.service_imp.common.filters.template_filters.current_day
 

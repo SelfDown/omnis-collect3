@@ -1,5 +1,7 @@
 1. params 处理参数
 =========================================
+这是个非常常用的模块，程序正式执行前一些简单的校验。 **extend_param**  继承参数 和 **handler_params**  处理参数，这个三个大模块，都是来处理参数的，可根据不同情况进行配置。
+
 params 主要处理请求字段和校验字段
 对任何增删改查的请求，进行参数处理，一般校验字段是否为空，字段是否唯一等等
 
@@ -46,6 +48,22 @@ params 下字段，写template 然后写jinja2 模板语句
    怎么获取当前时间、获取配置
 
 
+
+常用的赋值方法
+  .. code-block:: yaml
+     :caption: 角色删除index.yaml
+
+      1. {{session_user_id}} 获取当前登录用户ID 
+      #. {{""|current_date_time}} 获取当前时间 %Y-%m-%d %H:%M:%S ，举例 2021-01-16 09:00:15 
+      #. {{""|current_day}} 获取当前时间 "%Y-%m-%d ，举例 2021-01-16  
+      #. {{password|md5}} 获取md5 值   
+      #. {{""|uuid}} 获取UUID  
+      #. {{password|des}} des 加密  
+      #. {{"xxx"|get_key}} 获取application.properties配置文件的 的配置  
+
+
+
+
 3.default  请求字段填写默认值
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 params 下字段，写default,然后填写值
@@ -83,12 +101,12 @@ params 下字段，写check ,字典进行验证
 check 下支持的标签
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 1. template 进行模板校验，如果值为True 表示通过，为False 表示失败
-#. err_msg 如果返回False，错误信息提示。支持写jinja2 语句
+#. err_msg 如果返回False，错误信息提示。 **支持写jinja2 语句** 
 #. service 请求一个服务，结果为 service_result 判断结果
    示例：
 
    .. code-block:: yaml
-    :caption: 用户ID 列表index.yaml
+    :caption: 检查编码是否存在
     
     key: "project_save"
     http: true

@@ -49,7 +49,7 @@ model_update 主要处理记录修改
 
 
 1. model，修改数据的模型
-::::::::::::::::::::
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 * django 数据库对应模型对象，ORM中的model。
 * 前端传过来的字段必须和model 里面的字段一一对应才能修改
 
@@ -112,7 +112,7 @@ model_update 主要处理记录修改
 
 
 4. update_fields ，只能修改字段，不填可以更新全部字段
-:::::::::::::::::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 * 比如有些重要表，一些过程状态字段不能修改，而只能改页面上显示的基础字段
 
 
@@ -175,9 +175,9 @@ model_update 主要处理记录修改
      model: SysProjects
      filter:
        sys_project_id: sys_project_id
-#     update_fields: # 如果没有就更新全部
-#       - project_code
-#       - project_name
+     update_fields: # 如果没有就更新全部
+       - project_code
+       - project_name
      exclude_save_field: # 更新排除字段
        - sys_project_id
      result_handler:

@@ -19,8 +19,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="索引" href="../../genindex.html" />
     <link rel="search" title="搜索" href="../../search.html" />
-    <link rel="next" title="执行模块" href="../../module/index.html" />
-    <link rel="prev" title="执行前模块" href="../index.html" /> 
+    <link rel="next" title="module 执行模块" href="../../module/index.html" />
+    <link rel="prev" title="before_plugin 执行前模块" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,7 +42,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">执行前模块</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">before_plugin 执行前模块</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">1. params 处理参数</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id1">1.params  公共模块</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#template">2.template  请求字段赋值</a></li>
@@ -55,7 +55,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../module/index.html">执行模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module/index.html">module 执行模块</a></li>
 </ul>
 
         </div>
@@ -72,7 +72,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">执行前模块</a> &raquo;</li>
+          <li><a href="../index.html">before_plugin 执行前模块</a> &raquo;</li>
       <li>1. params 处理参数</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/before/params/index.rst.txt" rel="nofollow"> 查看页面源码</a>
@@ -85,6 +85,7 @@
              
   <section id="params">
 <h1>1. params 处理参数<a class="headerlink" href="#params" title="永久链接至标题"></a></h1>
+<p>这是个非常常用的模块，程序正式执行前一些简单的校验。 <strong>extend_param</strong>  继承参数 和 <strong>handler_params</strong>  处理参数，这个三个大模块，都是来处理参数的，可根据不同情况进行配置。</p>
 <p>params 主要处理请求字段和校验字段
 对任何增删改查的请求，进行参数处理，一般校验字段是否为空，字段是否唯一等等</p>
 <section id="id1">
@@ -130,14 +131,29 @@
 <p><strong>{{‘’|uuid}}</strong> ,其中uuid 自定义jinja2 模板语法。生成uuid 。专门会有一章来介绍模板自定义函数。
 怎么获取当前时间、获取配置</p>
 </div>
+<dl>
+<dt>常用的赋值方法</dt><dd><div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">角色删除index.yaml</span><a class="headerlink" href="#id5" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span> <span class="l l-Scalar l-Scalar-Plain">1. {{session_user_id}} 获取当前登录用户ID</span>
+ <span class="l l-Scalar l-Scalar-Plain">#. {{&quot;&quot;|current_date_time}} 获取当前时间 %Y-%m-%d %H:%M:%S ，举例 2021-01-16 09:00:15</span>
+ <span class="l l-Scalar l-Scalar-Plain">#. {{&quot;&quot;|current_day}} 获取当前时间 &quot;%Y-%m-%d ，举例 2021-01-16</span>
+ <span class="l l-Scalar l-Scalar-Plain">#. {{password|md5}} 获取md5 值</span>
+ <span class="l l-Scalar l-Scalar-Plain">#. {{&quot;&quot;|uuid}} 获取UUID</span>
+ <span class="l l-Scalar l-Scalar-Plain">#. {{password|des}} des 加密</span>
+ <span class="l l-Scalar l-Scalar-Plain">#. {{&quot;xxx&quot;|get_key}} 获取application.properties配置文件的 的配置</span>
+</pre></div>
+</div>
+</div>
+</dd>
+</dl>
 </section>
 <section id="default">
 <h2>3.default  请求字段填写默认值<a class="headerlink" href="#default" title="永久链接至标题"></a></h2>
 <p>params 下字段，写default,然后填写值
 示例：</p>
 <blockquote>
-<div><div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">项目ID 生产UUIDindex.yaml</span><a class="headerlink" href="#id5" title="永久链接至代码"></a></div>
+<div><div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">项目ID 生产UUIDindex.yaml</span><a class="headerlink" href="#id6" title="永久链接至代码"></a></div>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">key</span><span class="p">:</span> <span class="s">&quot;project_save&quot;</span>
 <span class="nt">http</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">module</span><span class="p">:</span> <span class="s">&#39;model_save&#39;</span>
@@ -154,8 +170,8 @@
 <h2>4.check 校验字段<a class="headerlink" href="#check" title="永久链接至标题"></a></h2>
 <p>params 下字段，写check ,字典进行验证
 示例：</p>
-<div class="literal-block-wrapper docutils container" id="id6">
-<div class="code-block-caption"><span class="caption-text">用户ID 列表index.yaml</span><a class="headerlink" href="#id6" title="永久链接至代码"></a></div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">用户ID 列表index.yaml</span><a class="headerlink" href="#id7" title="永久链接至代码"></a></div>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_role_delete</span>
 <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">用户删除角色</span>
 <span class="nt">module</span><span class="p">:</span> <span class="s">&#39;model_delete&#39;</span>
@@ -172,11 +188,11 @@
 <h3>check 下支持的标签<a class="headerlink" href="#id2" title="永久链接至标题"></a></h3>
 <ol class="arabic">
 <li><p>template 进行模板校验，如果值为True 表示通过，为False 表示失败</p></li>
-<li><p>err_msg 如果返回False，错误信息提示。支持写jinja2 语句</p></li>
+<li><p>err_msg 如果返回False，错误信息提示。 <strong>支持写jinja2 语句</strong></p></li>
 <li><p>service 请求一个服务，结果为 service_result 判断结果
 示例：</p>
-<div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text">用户ID 列表index.yaml</span><a class="headerlink" href="#id7" title="永久链接至代码"></a></div>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">检查编码是否存在</span><a class="headerlink" href="#id8" title="永久链接至代码"></a></div>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">key</span><span class="p">:</span> <span class="s">&quot;project_save&quot;</span>
 <span class="nt">http</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">module</span><span class="p">:</span> <span class="s">&#39;model_save&#39;</span>
@@ -201,8 +217,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../index.html" class="btn btn-neutral float-left" title="执行前模块" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
-        <a href="../../module/index.html" class="btn btn-neutral float-right" title="执行模块" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="before_plugin 执行前模块" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../../module/index.html" class="btn btn-neutral float-right" title="module 执行模块" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

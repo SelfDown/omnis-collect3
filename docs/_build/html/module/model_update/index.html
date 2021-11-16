@@ -42,6 +42,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">执行前模块</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">执行模块</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../sql/index.html">1. sql 模块查询</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_save/index.html">2. model_save 模型保存</a></li>
@@ -64,7 +65,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../model_delete/index.html">4. model_delete 模型删除</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../index.html#indices-and-tables">Indices and tables</a></li>
 </ul>
 
         </div>
@@ -268,29 +268,18 @@
 <span class="nt">model</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SysProjects</span>
 <span class="nt">filter</span><span class="p">:</span>
   <span class="nt">sys_project_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sys_project_id</span>
+<span class="nt">update_fields</span><span class="p">:</span> <span class="c1"># 如果没有就更新全部</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">project_code</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">project_name</span>
+<span class="nt">exclude_save_field</span><span class="p">:</span> <span class="c1"># 更新排除字段</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">sys_project_id</span>
+<span class="nt">result_handler</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">result_msg</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;项目修改成功！&quot;</span>
 </pre></div>
 </div>
 </div>
-</div></blockquote>
-<p>#     update_fields: # 如果没有就更新全部
-#       - project_code
-#       - project_name</p>
-<blockquote>
-<div><dl>
-<dt>exclude_save_field: # 更新排除字段</dt><dd><ul class="simple">
-<li><p>sys_project_id</p></li>
-</ul>
-</dd>
-<dt>result_handler:</dt><dd><ul>
-<li><p>key: result_msg
-params:</p>
-<blockquote>
-<div><p>template: “项目修改成功！”</p>
-</div></blockquote>
-</li>
-</ul>
-</dd>
-</dl>
 </div></blockquote>
 </section>
 <section id="id5">
