@@ -20,7 +20,7 @@
     <link rel="index" title="索引" href="../../genindex.html" />
     <link rel="search" title="搜索" href="../../search.html" />
     <link rel="next" title="2. model_save 模型保存" href="../model_save/index.html" />
-    <link rel="prev" title="执行模块" href="../index.html" /> 
+    <link rel="prev" title="module 执行模块" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,8 +42,8 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">执行前模块</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">执行模块</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">before_plugin 执行前模块</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">module 执行模块</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">1. sql 模块查询</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id1">模块: sql</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id2">配置参数</a><ul>
@@ -87,7 +87,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">执行模块</a> &raquo;</li>
+          <li><a href="../index.html">module 执行模块</a> &raquo;</li>
       <li>1. sql 模块查询</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/module/sql/index.rst.txt" rel="nofollow"> 查看页面源码</a>
@@ -122,8 +122,12 @@
 </div>
 </div>
 <p>sql 文件示例,使用jinja2 语法
-<strong>特别注意</strong> 这里的控制语句的变量，不可以作用于SQL 拼接里面的变量。
-意思是 <strong>if else</strong>  控制语句里面 <strong>变量不能</strong> 显示在 where and 这些 <strong>SQL拼接</strong></p>
+<strong>特别注意</strong> 这里的控制语句的变量，不可以作用于SQL 拼接里面的变量。</p>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>意思是 <strong>if else</strong>  控制语句里面 <strong>变量值的字符串操作不能</strong> 显示在 where and 这些 <strong>SQL拼接</strong>
+比如 {%if project_code in [“PM”] %} and project_code = {{project_code}} {% endif %}</p>
+</div>
 <div class="literal-block-wrapper docutils container" id="id9">
 <div class="code-block-caption"><span class="caption-text">project.sql</span><a class="headerlink" href="#id9" title="永久链接至代码"></a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">select</span> <span class="o">*</span>
@@ -366,7 +370,7 @@ SQL 语法 in 必须是 user_id in (‘a’,’b’,’c’)。
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../index.html" class="btn btn-neutral float-left" title="执行模块" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="module 执行模块" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
         <a href="../model_save/index.html" class="btn btn-neutral float-right" title="2. model_save 模型保存" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

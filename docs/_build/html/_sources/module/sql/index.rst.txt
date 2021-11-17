@@ -20,7 +20,10 @@ sql 模块主要处理数据库查询，
 
     sql 文件示例,使用jinja2 语法
     **特别注意** 这里的控制语句的变量，不可以作用于SQL 拼接里面的变量。
-    意思是 **if else**  控制语句里面 **变量不能** 显示在 where and 这些 **SQL拼接**
+
+    .. note::
+       意思是 **if else**  控制语句里面 **变量值的字符串操作不能** 显示在 where and 这些 **SQL拼接**
+       比如 {%if project_code in ["PM"] %} and project_code = {{project_code}} {% endif %}
 
     .. code-block:: python
      :caption: project.sql

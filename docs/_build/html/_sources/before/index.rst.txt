@@ -6,6 +6,7 @@ before_plugin 执行前模块
    :caption: 模块 :
 
    params/index
+   extend_param/index
 
 
 
