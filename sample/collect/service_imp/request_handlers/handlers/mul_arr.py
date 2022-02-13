@@ -21,6 +21,7 @@ class MulArr(RequestHandler):
 
     def get_mul_arr_name(self):
         return self.ma_const["mul_arr_name"]
+
     def get_obj_name(self):
         return self.ma_const["obj_name"]
 
@@ -40,25 +41,28 @@ class MulArr(RequestHandler):
         save_field = get_safe_data(self.get_save_field_name(), config)
         if not save_field:
             return self.fail("数组乘法处理器没有找到 {field} 节点".format(field=self.get_save_field_name()))
-        from_arr = get_safe_data(from_arr_name,params)
+        from_arr = get_safe_data(from_arr_name, params)
         if not from_arr:
-            return self.fail("参数没有找到 {field} 节点".format(field=from_arr))
-        mul_arr = get_safe_data(mul_arr_name,params)
+            return self.fail("参数没有找到 {field} 节点".format(field=from_arr_name))
+        mul_arr = get_safe_data(mul_arr_name, params)
         if not mul_arr:
-            return self.fail("参数没有找到 {field} 节点".format(field=mul_arr))
+            params[save_field] = []
+            return self.success(params)
         result_list = []
         from collect.service_imp.common.filters.template_tool import TemplateTool
         tool = TemplateTool(op_user=self.op_user)
         import copy
         # 数组乘以数组
         for from_item in from_arr:
-            t = {"from_item":from_item}
+            t = copy.deepcopy(params)
+            t["from_item"] = from_item
             for mul_item in mul_arr:
+                t["item"] = mul_item
                 result = copy.deepcopy(mul_item)
                 for key in obj:
                     temp = obj[key]
-                    v = self.get_render_data(temp,t,tool)
-                    result[key]=v
+                    v = self.get_render_data(temp, t, tool)
+                    result[key] = v
                 result_list.append(result)
 
         params[save_field] = result_list

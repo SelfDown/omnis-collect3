@@ -115,6 +115,11 @@ request_handler:
     path: collect.service_imp.request_handlers.handlers.update_data
     class_name: UpdateData
     method: handler
+  # 检查列表
+  - key: check_array
+    path: collect.service_imp.request_handlers.handlers.check_array
+    class_name: CheckArray
+    method: handler
   # 更新数据
   - key: ignore_data
     path: collect.service_imp.request_handlers.handlers.ignore_data
@@ -275,6 +280,10 @@ module_handler:
   - key: bulk_create
     path: collect.service_imp.model.bulk_create
     class_name: BulkCreateService
+  # 模型修改
+  - key: bulk_update
+    path: collect.service_imp.model.bulk_update
+    class_name: BulkUpdateService
 
   # 服务流程化
   - key: service_flow
@@ -333,6 +342,11 @@ filter_handler:
   - key: md5
     path: collect.service_imp.common.filters.template_filters.md5
     class_name: Md5Filter
+    method: filter
+  # des
+  - key: des
+    path: collect.service_imp.common.filters.template_filters.des
+    class_name: DESFilter
     method: filter
   # 创建日期
   - key: current_date_time

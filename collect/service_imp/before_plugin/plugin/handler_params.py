@@ -26,16 +26,17 @@ class HandlerParams(BeforePlugin):
             from collect.service_imp.request_handlers.request_handler import RequestHandler
             h = RequestHandler(op_user=self.op_user)
             result_data = h.req_handler(params_result, handler_config, template)
-            if self.is_success(result_data) and self.is_template_node(handler_config):
+            if self.is_success(result_data):
                 params_result = self.get_data(result_data)
-                node_result = self.get_node_template_result(handler_config, params_result, template=template)
-                if not self.is_success(node_result):
-                    return node_result
-                r = self.get_data(node_result)
-                if self.get_false_value() == r:
-                    err_msg_templ = get_safe_data(self.get_err_msg_name(), handler_config)
-                    r_msg = self.get_render_data(err_msg_templ, params_result, tool)
-                    return self.fail(r_msg)
+                if self.is_template_node(handler_config):
+                    node_result = self.get_node_template_result(handler_config, params_result, template=template)
+                    if not self.is_success(node_result):
+                        return node_result
+                    r = self.get_data(node_result)
+                    if self.get_false_value() == r:
+                        err_msg_templ = get_safe_data(self.get_err_msg_name(), handler_config)
+                        r_msg = self.get_render_data(err_msg_templ, params_result, tool)
+                        return self.fail(r_msg)
             else:
                 return result_data
         self.set_params_result(params_result, template)

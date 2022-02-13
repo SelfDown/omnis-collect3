@@ -6,7 +6,7 @@ with open("README.md", "r",encoding='utf-8') as fh:
 
 setuptools.setup(
     name="omnis-collect",
-    version="3.0.21",
+    version="3.0.34",
     author="zzhang",
     author_email="zzhang@cenboomh.com",
     description="一个web 接口配置工具",

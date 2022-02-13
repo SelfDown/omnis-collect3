@@ -485,8 +485,11 @@ class CollectService:
         name = get_safe_data(self.get_name_name(), node, node_txt)
         switch = get_safe_data(self.get_switch_name(), node)
         switch_default = get_safe_data(self.get_switch_default_name(), node)
-
+        if self.can_log(template):
+            self.log(node_txt)
         if switch and isinstance(switch, list):
+            if self.can_log(template):
+                self.log("获取switch 判断")
             for item in switch:
                 case = get_safe_data(self.get_case_name(), item)
                 templ = get_safe_data(field, item)
@@ -495,6 +498,12 @@ class CollectService:
                 if not templ:
                     return self.fail(name + ":" + self.get_template_name() + "字段不存在")
                 case_result = self.get_template_result(case, params, config_params=config_params, template=template)
+                if self.can_log(template):
+                    self.log(case)
+                    self.log(templ)
+                    self.log(json.dumps(case_result))
+                    self.log(json.dumps(case_result))
+
                 if not self.is_success(case_result):
                     return case_result
                 case_data = self.get_data(case_result)

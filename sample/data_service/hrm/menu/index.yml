@@ -1,9 +1,13 @@
 service:
   - key: get_current_user_menu
+    http: true
     module: sql
     params:
       user_id:
         template: "{{session_user_id}}"
+      test:
+#        template: "{{test|des}}"
+        template: "{{test|des(crypt_type='decrypt')}}"
     sql_file: menu.sql
     result_handler:
       - key: to_tree
@@ -11,3 +15,6 @@ service:
           id_field: menu_id
           parent_id_field: parent_id
           children_field: children
+      - key: param2result
+        params:
+          field: test

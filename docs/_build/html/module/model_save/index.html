@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2. model_save 模型保存 &mdash; omnis-collect 1.0.0 文档</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="3. model_update 模型修改" href="../model_update/index.html" />
+    <link rel="prev" title="1. sql 模块查询" href="../sql/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> omnis-collect
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目录 :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">before_plugin 执行前模块</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">module 执行模块</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../sql/index.html">1. sql 模块查询</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2. model_save 模型保存</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">模块: model_save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">配置参数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#model">1. model</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">常用示例</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">1. 用户保存</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">2. 角色保存</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">3. 项目保存</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../model_update/index.html">3. model_update 模型修改</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_delete/index.html">4. model_delete 模型删除</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">omnis-collect</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">module 执行模块</a> &raquo;</li>
+      <li>2. model_save 模型保存</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module/model_save/index.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="model-save">
+<h1>2. model_save 模型保存<a class="headerlink" href="#model-save" title="永久链接至标题"></a></h1>
+<dl class="simple">
+<dt>model_save 主要处理单表数据单个保存</dt><dd><ul class="simple">
+<li><p>主要利用django model save</p></li>
+</ul>
+</dd>
+</dl>
+<section id="id1">
+<h2>模块: model_save<a class="headerlink" href="#id1" title="永久链接至标题"></a></h2>
+<p>配置示例</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">用户保存index.yaml</span><a class="headerlink" href="#id7" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">key</span><span class="p">:</span> <span class="s">&quot;user_account_save&quot;</span>
+<span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">用户保存</span>
+<span class="nt">module</span><span class="p">:</span> <span class="s">&#39;model_save&#39;</span>
+<span class="nt">params</span><span class="p">:</span>
+  <span class="nt">user_id</span><span class="p">:</span>
+    <span class="nt">check</span><span class="p">:</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{user_id|must}}&quot;</span>
+      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;用户不能为空&quot;</span>
+  <span class="nt">username</span><span class="p">:</span>
+    <span class="nt">check</span><span class="p">:</span>
+      <span class="nt">service</span><span class="p">:</span>
+        <span class="nt">service</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hrm.get_user</span>
+        <span class="nt">username</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">username</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{service_result|length&lt;=0}}&quot;</span>
+      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;【{{username}}】</span><span class="nv"> </span><span class="s">用户名已经存在&quot;</span>
+<span class="nt">model</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UserAccount</span>
+<span class="nt">result_handler</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">new_col</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="nt">to_field</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="nt">field</span><span class="p">:</span> <span class="s">&#39;password&#39;</span>
+          <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;******&quot;</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p>params 节点，表示进行参数处理。比如记录编码必须唯一;类型不能为空;年龄必须是数字</p></li>
+<li><p>result_hanlder 是对返回结果进行处理。比如密码隐藏</p></li>
+</ul>
+<p><strong>params 和result_handler 是公共模块</strong>  这里不过多介绍。
+这里指定model,表示数据库执行django 模型，在service_roueter.yml 有指定配置。</p>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>比如用户表user_account 对应UserAccount。
+通过 <cite>python manage.py inspectdb &gt; sample/models/models.py</cite> 生成。这里目录位置根据项目调整</p>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">在service_roueter.sql</span><a class="headerlink" href="#id8" title="永久链接至代码"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># django 模型配置</span>
+<span class="n">django_model</span><span class="p">:</span>
+  <span class="c1"># django model 文件位置</span>
+  <span class="n">model_file</span><span class="p">:</span> <span class="n">sample</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">models</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div></blockquote>
+</section>
+<section id="id2">
+<h2>配置参数<a class="headerlink" href="#id2" title="永久链接至标题"></a></h2>
+<section id="model">
+<h3>1. model<a class="headerlink" href="#model" title="永久链接至标题"></a></h3>
+<ul class="simple">
+<li><p>django 数据库对应模型对象，ORM中的model。</p></li>
+<li><p>前端传过来的字段必须和model 里面的字段一一对应</p></li>
+<li><p>如果值为空就不保存</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id9" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span> <span class="nt">key</span><span class="p">:</span> <span class="s">&quot;user_account_save&quot;</span>
+ <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">用户保存</span>
+ <span class="nt">module</span><span class="p">:</span> <span class="s">&#39;model_save&#39;</span>
+ <span class="nt">model</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UserAccount</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="id3">
+<h2>常用示例<a class="headerlink" href="#id3" title="永久链接至标题"></a></h2>
+<section id="id4">
+<h3>1. 用户保存<a class="headerlink" href="#id4" title="永久链接至标题"></a></h3>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">保存用户信息</span><a class="headerlink" href="#id10" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">key</span><span class="p">:</span> <span class="s">&quot;user_account_save&quot;</span>
+<span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">用户保存</span>
+<span class="nt">module</span><span class="p">:</span> <span class="s">&#39;model_save&#39;</span>
+<span class="nt">must_login</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">params</span><span class="p">:</span>
+  <span class="nt">user_id</span><span class="p">:</span>
+    <span class="nt">check</span><span class="p">:</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{user_id|must}}&quot;</span>
+      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;用户不能为空&quot;</span>
+
+  <span class="nt">nick</span><span class="p">:</span>
+    <span class="nt">check</span><span class="p">:</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{nick|must}}&quot;</span>
+      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;昵称不能空&quot;</span>
+  <span class="nt">username</span><span class="p">:</span>
+    <span class="nt">check</span><span class="p">:</span>
+      <span class="nt">service</span><span class="p">:</span>
+        <span class="nt">service</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hrm.get_user</span>
+        <span class="nt">username</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">username</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{service_result|length&lt;=0}}&quot;</span>
+      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;【{{username}}】</span><span class="nv"> </span><span class="s">用户名已经存在&quot;</span>
+  <span class="nt">password</span><span class="p">:</span>
+    <span class="nt">check</span><span class="p">:</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{password|must}}&quot;</span>
+      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;密码不能为空&quot;</span>
+    <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{password|md5}}&quot;</span>
+  <span class="nt">user_status</span><span class="p">:</span>
+    <span class="nt">check</span><span class="p">:</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{user_status|must}}&quot;</span>
+      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;用户状态不能为空&quot;</span>
+    <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;0&quot;</span>
+  <span class="nt">create_user</span><span class="p">:</span>
+    <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{session_user_id}}&quot;</span>
+
+  <span class="nt">create_time</span><span class="p">:</span>
+    <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{&#39;&#39;|current_date_time}}&quot;</span>
+
+  <span class="nt">modify_user</span><span class="p">:</span>
+    <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{session_user_id}}&quot;</span>
+
+  <span class="nt">modify_time</span><span class="p">:</span>
+    <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{&#39;&#39;|current_date_time}}&quot;</span>
+
+  <span class="nt">create_ldap</span><span class="p">:</span>
+    <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;0&quot;</span>
+
+  <span class="nt">is_delete</span><span class="p">:</span>
+    <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;0&quot;</span>
+<span class="nt">model</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UserAccount</span>
+<span class="nt">result_handler</span><span class="p">:</span>
+
+  <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">new_col</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="nt">to_field</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="nt">field</span><span class="p">:</span> <span class="s">&#39;password&#39;</span>
+          <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;******&quot;</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+<section id="id5">
+<h3>2. 角色保存<a class="headerlink" href="#id5" title="永久链接至标题"></a></h3>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text">角色保存</span><a class="headerlink" href="#id11" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">key</span><span class="p">:</span> <span class="s">&quot;user_role_save&quot;</span>
+<span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">用户创建角色</span>
+<span class="nt">must_login</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">module</span><span class="p">:</span> <span class="s">&#39;model_save&#39;</span>
+<span class="nt">params</span><span class="p">:</span>
+   <span class="nt">user_role_id</span><span class="p">:</span>
+     <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{user_role_id|uuid}}&quot;</span>
+   <span class="nt">user_id</span><span class="p">:</span>
+     <span class="nt">check</span><span class="p">:</span>
+       <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{user_id|must}}&quot;</span>
+       <span class="nt">err_msg</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">用户不能为空</span>
+   <span class="nt">role_id</span><span class="p">:</span>
+     <span class="nt">check</span><span class="p">:</span>
+       <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{role_id|must}}&quot;</span>
+       <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;角色不能为空&quot;</span>
+<span class="nt">model</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UserRole</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+<section id="id6">
+<h3>3. 项目保存<a class="headerlink" href="#id6" title="永久链接至标题"></a></h3>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-text">项目保存</span><a class="headerlink" href="#id12" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">key</span><span class="p">:</span> <span class="s">&quot;project_save&quot;</span>
+<span class="nt">must_login</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">module</span><span class="p">:</span> <span class="s">&#39;model_save&#39;</span>
+<span class="nt">params</span><span class="p">:</span>
+  <span class="nt">project_id</span><span class="p">:</span>
+    <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{&#39;&#39;|uuid}}&quot;</span>
+  <span class="nt">code</span><span class="p">:</span>
+    <span class="nt">check</span><span class="p">:</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{code|must}}&quot;</span>
+      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;项目编码不能为空&quot;</span>
+  <span class="nt">create_user</span><span class="p">:</span>
+    <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{session_user_id}}&quot;</span>
+  <span class="nt">create_time</span><span class="p">:</span>
+    <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{&#39;&#39;|current_date_time}}&quot;</span>
+  <span class="nt">is_delete</span><span class="p">:</span>
+    <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;0&quot;</span>
+<span class="nt">model</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Project</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../sql/index.html" class="btn btn-neutral float-left" title="1. sql 模块查询" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../model_update/index.html" class="btn btn-neutral float-right" title="3. model_update 模型修改" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

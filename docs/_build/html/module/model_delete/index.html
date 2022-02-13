@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4. model_delete 模型删除 &mdash; omnis-collect 1.0.0 文档</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="prev" title="3. model_update 模型修改" href="../model_update/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> omnis-collect
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目录 :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">执行前模块</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">执行模块</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../sql/index.html">1. sql 模块查询</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_save/index.html">2. model_save 模型保存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_update/index.html">3. model_update 模型修改</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">4. model_delete 模型删除</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">模块: model_delete</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">配置参数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#model">1. model，删除数据的模型</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#filter">2. filter，过滤条件</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">常用示例</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">1. 用户删除</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">2. 角色删除</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">omnis-collect</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">执行模块</a> &raquo;</li>
+      <li>4. model_delete 模型删除</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module/model_delete/index.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="model-delete">
+<h1>4. model_delete 模型删除<a class="headerlink" href="#model-delete" title="永久链接至标题"></a></h1>
+<dl class="simple">
+<dt>model_delete 主要处理记录物理删除</dt><dd><ul class="simple">
+<li><p>主要利用django model delete</p></li>
+</ul>
+</dd>
+</dl>
+<section id="id1">
+<h2>模块: model_delete<a class="headerlink" href="#id1" title="永久链接至标题"></a></h2>
+<p>配置示例</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">角色删除index.yaml</span><a class="headerlink" href="#id6" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_role_delete</span>
+<span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">用户删除角色</span>
+<span class="nt">module</span><span class="p">:</span> <span class="s">&#39;model_delete&#39;</span>
+<span class="nt">model</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UserRole</span>
+<span class="nt">params</span><span class="p">:</span>
+  <span class="nt">user_id_list</span><span class="p">:</span>
+    <span class="nt">check</span><span class="p">:</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{user_id_list|must_list}}&quot;</span>
+      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;用户不能为空&quot;</span>
+<span class="nt">filter</span><span class="p">:</span>
+  <span class="nt">user_id__in</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_id_list</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p>params 节点，表示进行参数处理。比如记录编码必须唯一;类型不能为空;年龄必须是数字</p></li>
+</ul>
+<p><strong>params 和result_handler 是公共模块</strong>  这里不过多介绍。</p>
+<p>有的假 <strong>删除</strong> ，是更新记录的某个字段，也 <strong>用model_update</strong></p>
+</div></blockquote>
+</section>
+<section id="id2">
+<h2>配置参数<a class="headerlink" href="#id2" title="永久链接至标题"></a></h2>
+<section id="model">
+<h3>1. model，删除数据的模型<a class="headerlink" href="#model" title="永久链接至标题"></a></h3>
+<ul class="simple">
+<li><p>django 数据库对应模型对象，ORM中的model。</p></li>
+<li><p>前端传过来的字段必须和model 里面的字段一一对应才能修改</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id7" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_role_delete</span>
+<span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">用户删除角色</span>
+<span class="nt">module</span><span class="p">:</span> <span class="s">&#39;model_delete&#39;</span>
+<span class="nt">model</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UserRole</span>
+<span class="nt">params</span><span class="p">:</span>
+  <span class="nt">user_id_list</span><span class="p">:</span>
+    <span class="nt">check</span><span class="p">:</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{user_id_list|must_list}}&quot;</span>
+      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;用户不能为空&quot;</span>
+<span class="nt">filter</span><span class="p">:</span>
+  <span class="nt">user_id__in</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_id_list</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="filter">
+<h3>2. filter，过滤条件<a class="headerlink" href="#filter" title="永久链接至标题"></a></h3>
+<ul class="simple">
+<li><p>调用django filter 方法,比如 Blog.objects.filter(id__in = [3,6,9])</p></li>
+<li><p>常用filter 方法。删除一般是等于或者in 就可以了</p>
+<ol class="arabic simple">
+<li><p>__contains(包含)</p></li>
+<li><p>__in （其中之一，可以传入一个列表，传多个值。）</p></li>
+<li><p>__range(一个范围，使用元祖)</p></li>
+<li><p>如果是 <strong>等于</strong> ，就直接字段：值,key：value</p></li>
+</ol>
+</li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id8" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_role_delete</span>
+<span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">用户删除角色</span>
+<span class="nt">module</span><span class="p">:</span> <span class="s">&#39;model_delete&#39;</span>
+<span class="nt">model</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UserRole</span>
+<span class="nt">params</span><span class="p">:</span>
+  <span class="nt">user_id_list</span><span class="p">:</span>
+    <span class="nt">check</span><span class="p">:</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{user_id_list|must_list}}&quot;</span>
+      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;用户不能为空&quot;</span>
+<span class="nt">filter</span><span class="p">:</span>
+  <span class="nt">user_id__in</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_id_list</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="id3">
+<h2>常用示例<a class="headerlink" href="#id3" title="永久链接至标题"></a></h2>
+<section id="id4">
+<h3>1. 用户删除<a class="headerlink" href="#id4" title="永久链接至标题"></a></h3>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">保存項目信息</span><a class="headerlink" href="#id9" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">key</span><span class="p">:</span> <span class="s">&quot;user_account_delete&quot;</span>
+<span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">用户删除</span>
+<span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">model_delete</span>
+<span class="nt">model</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UserAccount</span>
+<span class="nt">params</span><span class="p">:</span>
+  <span class="nt">user_id_list</span><span class="p">:</span>
+    <span class="nt">check</span><span class="p">:</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{user_id_list|must_list}}&quot;</span>
+      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;用户列表不能为空&quot;</span>
+<span class="nt">filter</span><span class="p">:</span>
+  <span class="nt">user_id__in</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_id_list</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+<section id="id5">
+<h3>2. 角色删除<a class="headerlink" href="#id5" title="永久链接至标题"></a></h3>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">根据用户删除角色</span><a class="headerlink" href="#id10" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_role_delete</span>
+<span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">用户删除角色</span>
+<span class="nt">module</span><span class="p">:</span> <span class="s">&#39;model_delete&#39;</span>
+<span class="nt">model</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UserRole</span>
+<span class="nt">params</span><span class="p">:</span>
+  <span class="nt">user_id_list</span><span class="p">:</span>
+    <span class="nt">check</span><span class="p">:</span>
+      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{user_id_list|must_list}}&quot;</span>
+      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;用户不能为空&quot;</span>
+<span class="nt">filter</span><span class="p">:</span>
+  <span class="nt">user_id__in</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_id_list</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../model_update/index.html" class="btn btn-neutral float-left" title="3. model_update 模型修改" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
