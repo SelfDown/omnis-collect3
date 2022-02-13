@@ -10,6 +10,9 @@ from jinja2 import Environment
 
 from collect.collect_service import CollectService
 
+# 全局变量缓存模板信息
+_cache = {}
+
 
 class TemplateTool(CollectService):
     filter_config = {
@@ -72,9 +75,15 @@ class TemplateTool(CollectService):
     def render(self, templ, params, config_params=None, template=None):
         if not isinstance(templ, str):
             return templ
-        env = Environment()
+
+        if templ in _cache:
+            t = _cache[templ]["temp"]
+            env = _cache[templ]["env"]
+        else:
+            env = Environment()
+            t = env.from_string(templ)
+            _cache[templ] = {"temp": t, "env": env}
         self.load_filter(env, templ, params, config_params, template)
-        t = env.from_string(templ)
         try:
             result_content = t.render(**params)
         except Exception as e:

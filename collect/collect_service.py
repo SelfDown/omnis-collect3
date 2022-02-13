@@ -703,9 +703,9 @@ class CollectService:
 
     def __init__(self, op_user=None):
 
-        from collect.utils.log import get_collect_log
-        self.logger = get_collect_log()
-        self.load_router()
+        # from collect.utils.log import get_collect_log
+        # self.logger = get_collect_log()
+        # self.load_router()
         self.template = None
         self.finish = True
         self.op_user = op_user
@@ -1125,23 +1125,26 @@ class CollectService:
         return OmnisService.get_count(data)
 
     def make_service(self, service):
-        result = self.get_module(service)
-        if not self.is_success(result):
-            return result
-        data = self.get_data(result)
-        module_name = get_safe_data(self.get_module_name(), data)
-        module_handler = self.get_module_handler()
-        if module_name not in module_handler:
-            return self.fail("没有实现 " + module_name)
-        module = module_handler[module_name]
-        path = module[self.get_path_name()]
-        class_name = module[self.get_class_name()]
-        import importlib
-        collect_factory = importlib.import_module(path)
-        collect_obj = getattr(collect_factory, class_name)(op_user=self.op_user)
-        collect_obj.set_template(data)
-        collect_obj.set_session(self.get_session())
-        return self.success(data=collect_obj)
+        """
+
+        """
+        # result = self.get_module(service)
+        # if not self.is_success(result):
+        #     return result
+        # data = self.get_data(result)
+        # module_name = get_safe_data(self.get_module_name(), data)
+        # module_handler = self.get_module_handler()
+        # if module_name not in module_handler:
+        #     return self.fail("没有实现 " + module_name)
+        # module = module_handler[module_name]
+        # path = module[self.get_path_name()]
+        # class_name = module[self.get_class_name()]
+        # import importlib
+        # collect_factory = importlib.import_module(path)
+        # collect_obj = getattr(collect_factory, class_name)(op_user=self.op_user)
+        # collect_obj.set_template(data)
+        # collect_obj.set_session(self.get_session())
+        # return self.success(data=collect_obj)
 
     def get_default_name(self):
         return self.const["default_name"]
@@ -1372,15 +1375,18 @@ class CollectService:
     #     return []
 
     def get_module(self, service):
-        arr = service.split(".")
-        if len(arr) < 2:
-            return self.fail("服务名称格式有误")
-        collect_project = arr[0]
-        collect_item = arr[1]
-        item_router = self.get_items_router()
-        if collect_project not in item_router:
-            return self.fail(collect_project + "项目不存在")
-        collect_project_config = item_router[collect_project]
-        if collect_item not in collect_project_config:
-            return self.fail(collect_item + "服务不存在")
-        return self.success(collect_project_config[collect_item])
+        """
+
+        """
+        # arr = service.split(".")
+        # if len(arr) < 2:
+        #     return self.fail("服务名称格式有误")
+        # collect_project = arr[0]
+        # collect_item = arr[1]
+        # item_router = self.get_items_router()
+        # if collect_project not in item_router:
+        #     return self.fail(collect_project + "项目不存在")
+        # collect_project_config = item_router[collect_project]
+        # if collect_item not in collect_project_config:
+        #     return self.fail(collect_item + "服务不存在")
+        # return self.success(collect_project_config[collect_item])

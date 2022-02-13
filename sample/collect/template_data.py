@@ -23,7 +23,7 @@ class TemplateData(APIView):
         template = TemplateService(op_user=user_id)
         # 设置session
         template.set_session(request.session)
-        # 获取结果
+        # # 获取结果
         data_result = template.result(data, is_http=True)
         if not template.is_success(data_result):
             return Result.fail_response(msg=template.get_msg(data_result))

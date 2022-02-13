@@ -36,9 +36,17 @@ before_plugin = None
 after_plugin = None
 
 # 第三方插件
-third_application=None
+third_application = None
+class Test:
+    def __init__(self):
+        """
 
-class ConfigCacheData:
+        """
+    def get_router_config(self):
+        return "xxxx"
+
+
+class _ConfigCacheData:
     """
      获取配置缓存数据，可以将这个数据做成缓存，这里使用全局变量
     """
@@ -63,16 +71,16 @@ class ConfigCacheData:
         global router_config
         router_config = router_config_data
 
-    @staticmethod
-    def get_router_config():
+    # @staticmethod
+    def get_router_config(self):
         """
         获取路由规则
         :return:
         """
         global router_config
-        import copy
-        return copy.deepcopy(router_config)
-        # return router_config
+        # import copy
+        # return copy.deepcopy(router_config)
+        return router_config
 
     @staticmethod
     def get_rules():
@@ -159,6 +167,7 @@ class ConfigCacheData:
     def get_module_handler():
         global module_handler
         return module_handler
+
     @staticmethod
     def set_filter_handler(filter_handler_data):
         global filter_handler
@@ -179,7 +188,6 @@ class ConfigCacheData:
         global before_plugin
         return before_plugin
 
-
     @staticmethod
     def set_after_plugin(after_plugin_data):
         global after_plugin
@@ -199,3 +207,6 @@ class ConfigCacheData:
     def get_third_application():
         global third_application
         return third_application
+
+
+ConfigCacheData = _ConfigCacheData()

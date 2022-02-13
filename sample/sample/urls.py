@@ -15,16 +15,21 @@ Including another URLconf
 """
 
 from django.conf.urls import url, include
+from django.http import HttpResponse
 
 
 def index(request):
     from django.shortcuts import redirect
     return redirect("/static/index.html")
 
+def vote(request):
+    return HttpResponse("hello world")
+
 
 urlpatterns = [
     url(r'^template_data/', include("collect.template_urls")),
     url(r'^excel_data/', include("collect.urls")),
+    url(r"vote$", vote),
     url(r"^$", index)
 
 ]

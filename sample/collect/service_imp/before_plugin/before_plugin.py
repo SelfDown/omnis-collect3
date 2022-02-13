@@ -17,6 +17,9 @@ class BeforePlugin(CollectService):
         from collect.service_imp.common.filters.template_tool import TemplateTool
         tool = TemplateTool(self.op_user)
         for plugin in before_plugin:
+            """
+                判断是否有插件
+            """
             templ = get_safe_data(self.get_template_name(), plugin)
             v = tool.render(templ, template)
             if v != self.get_true_value():

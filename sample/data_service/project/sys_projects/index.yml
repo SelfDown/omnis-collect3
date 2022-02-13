@@ -3,11 +3,18 @@ service:
   - key: "project_query"
     http: true
     log: true
+    must_login: false
     params:
       to_obj:
         default: false
+      project_code:
+        default: ""
+    count_params:
+      pagination:
+        default: true
     module: 'sql'# 执行mysql 查询
     sql_file: 'project.sql'
+    count_sql: 'count.sql'
     result_handler:
       - key: arr2obj
         enable: "{{to_obj}}"

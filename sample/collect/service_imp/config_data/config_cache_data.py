@@ -70,9 +70,7 @@ class ConfigCacheData:
         :return:
         """
         global router_config
-        import copy
-        return copy.deepcopy(router_config)
-        # return router_config
+        return router_config
 
     @staticmethod
     def get_rules():

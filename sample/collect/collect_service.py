@@ -12,6 +12,8 @@
 from collect.utils.collect_utils import get_safe_data, is_empty, OmnisService, get_key, DateEncoder
 
 
+
+
 class CollectService:
     # 配置文件，关键字字
     const = {
@@ -137,7 +139,7 @@ class CollectService:
         if not os.path.exists(config_file):
             self.log(config_file + "不存在", "error")
             return self.fail(config_file + "文件不存在")
-        with open(config_file, 'r',encoding="utf-8") as f:
+        with open(config_file, 'r', encoding="utf-8") as f:
             config_file_content = f.read()
         key_word_rules = self.get_key_word_rules()
         for key_word in key_word_rules:
@@ -274,7 +276,7 @@ class CollectService:
         if not params:
             params = self.get_params_result()
 
-        if not service :
+        if not service:
             import json
             return self.fail(json.dumps(node, cls=DateEncoder) + "节点没有找到" + self.get_service_name())
         # 处理service 的参数
@@ -711,6 +713,10 @@ class CollectService:
         self.op_user = op_user
         self.session = None
 
+        # self.ConfigCacheData = ConfigCacheData
+        # from collect.service_imp.config_data.config_cache_data import Test
+        # self.test = Test()
+
         pass
 
     def set_session(self, session):
@@ -728,6 +734,10 @@ class CollectService:
             self.logger.warn(msg)
 
     def get_items_router(self):
+        """
+
+        """
+        # return self.test.get_router_config()
         from collect.service_imp.config_data.config_cache_data import ConfigCacheData
         return ConfigCacheData.get_router_config()
 
@@ -1125,6 +1135,9 @@ class CollectService:
         return OmnisService.get_count(data)
 
     def make_service(self, service):
+        """
+
+        """
         result = self.get_module(service)
         if not self.is_success(result):
             return result

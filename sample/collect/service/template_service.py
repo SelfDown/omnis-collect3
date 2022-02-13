@@ -36,11 +36,15 @@ class TemplateService(CollectService):
         return self.session
 
     def result(self, data, is_http=False):
+        """
+
+        """
         service = get_safe_data("service", data)
         if not service:
             return self.fail("服务不能为空")
-        collect_service = CollectService(op_user=self.op_user)
-        collect_service.set_session(self.get_session())
+        # collect_service = CollectService(op_user=self.op_user)
+        collect_service = self
+        self.set_session(self.get_session())
         result = collect_service.make_service(service)
         # 初始化对象返回结果
         if not collect_service.is_success(result):
