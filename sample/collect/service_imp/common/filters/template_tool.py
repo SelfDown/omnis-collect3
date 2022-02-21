@@ -73,9 +73,9 @@ class TemplateTool(CollectService):
             env.filters[key] = method
 
     def render(self, templ, params, config_params=None, template=None):
-        if not isinstance(templ, str):
-            return templ
-
+        # if not isinstance(templ, str):
+        #     return templ
+        templ = str(templ)
         if templ in _cache:
             t = _cache[templ]["temp"]
             env = _cache[templ]["env"]

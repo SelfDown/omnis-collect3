@@ -52,6 +52,7 @@ import collect.service_imp.flow.omnis_ssh
 
 import collect.service_imp.ldap.ldap_service
 import collect.service_imp.model.bulk_create
+import collect.service_imp.model.bulk_update
 import collect.service_imp.sql.sql_update
 import collect.service_imp.request_handlers.handlers.update_data
 
@@ -59,4 +60,5 @@ import collect.service_imp.request_handlers.handlers.mul_arr
 import collect.service_imp.request_handlers.handlers.ignore_data
 import collect.service_imp.common.filters.template_filters.date_time
 import collect.service_imp.common.filters.template_filters.current_day
+import collect.service_imp.mysql.mysql_service
 

@@ -116,6 +116,8 @@ class HttpApi(CollectService):
             return self.fail(msg=str(e))
         if r.status_code != 200:
             self.log(r.text)
+            return self.fail(r.text)
+
         try:
             result_data = json.loads(r.text)
         except Exception as e:
