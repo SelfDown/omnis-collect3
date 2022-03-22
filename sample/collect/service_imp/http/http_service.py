@@ -120,6 +120,8 @@ class HttpApi(CollectService):
 
         try:
             result_data = json.loads(r.text)
+            r.close()
+            del (r)
         except Exception as e:
             self.log("数据返回错误：" + str(e) + "\n\n" + r.text)
             return self.fail(msg="数据返回格式错误")

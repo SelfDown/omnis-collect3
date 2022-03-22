@@ -7,7 +7,7 @@
 """
 from collect.service_imp.result_handlers.result_handler import ResultHandler
 from collect.utils.collect_utils import get_safe_data
-
+from collect.service_imp.common.filters.template_tool import TemplateTool
 
 class AddParam(ResultHandler):
     def handler(self, result, config, template):
@@ -26,7 +26,8 @@ class AddParam(ResultHandler):
         if from_field in param_result:
             val = param_result[from_field]
         else:
-            val = None
+            t = TemplateTool()
+            val = t.render(from_field, param_result)
         if isinstance(result, object):
             result[to_field] = val
         elif isinstance(result, list):

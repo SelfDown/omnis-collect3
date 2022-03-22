@@ -76,13 +76,13 @@ class TemplateTool(CollectService):
         # if not isinstance(templ, str):
         #     return templ
         templ = str(templ)
-        if templ in _cache:
-            t = _cache[templ]["temp"]
-            env = _cache[templ]["env"]
-        else:
-            env = Environment()
-            t = env.from_string(templ)
-            _cache[templ] = {"temp": t, "env": env}
+        # if templ in _cache:
+        #     t = _cache[templ]["temp"]
+        #     env = _cache[templ]["env"]
+        # else:
+        env = Environment()
+        t = env.from_string(templ)
+            # _cache[templ] = {"temp": t, "env": env}
         self.load_filter(env, templ, params, config_params, template)
         try:
             result_content = t.render(**params)
