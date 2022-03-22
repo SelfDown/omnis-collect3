@@ -99,9 +99,15 @@
 <blockquote>
 <div><div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">角色删除index.yaml</span><a class="headerlink" href="#id2" title="永久链接至代码"></a></div>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># 获取项目信息</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span> <span class="c1"># 服务转字段 实现类</span>
+   <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">service2field</span>
+     <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">collect.service_imp.request_handlers.handlers.service2field</span>
+     <span class="nt">class_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Service2Field</span>
+     <span class="nt">method</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">handler</span>
 
- <span class="nt">handler_params</span><span class="p">:</span>
+<span class="c1"># 获取项目信息</span>
+
+<span class=" -Error"> </span><span class="nt">handler_params</span><span class="p">:</span>
    <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">service2field</span> <span class="c1"># 获取项目信息</span>
      <span class="nt">service</span><span class="p">:</span>
        <span class="nt">service</span><span class="p">:</span> <span class="s">&#39;jira.projectInfo&#39;</span>
@@ -129,6 +135,53 @@
      <span class="nt">save_field</span><span class="p">:</span> <span class="s">&#39;serverLog&#39;</span>
      <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{%if</span><span class="nv"> </span><span class="s">serverLog.path</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">True</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">else</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">False</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
      <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;{{serverUser.server_ip}}</span><span class="nv"> </span><span class="s">没有配置</span><span class="nv"> </span><span class="s">日志路径&quot;</span>
+
+
+   <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="s">&quot;oracle_item_delay_delete&quot;</span>
+     <span class="nt">module</span><span class="p">:</span> <span class="s">&#39;monitor&#39;</span><span class="c1"># 执行监控 查询</span>
+     <span class="nt">params</span><span class="p">:</span>
+       <span class="nt">install_soft_id_list</span><span class="p">:</span>
+         <span class="nt">check</span><span class="p">:</span>
+           <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">install_soft_id_list</span><span class="nv"> </span><span class="s">|must_list</span><span class="nv"> </span><span class="s">}}&quot;</span>
+           <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;软件列表不能为空！&quot;</span>
+           <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">软件列表</span>
+     <span class="nt">handler_params</span><span class="p">:</span>
+       <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">service2field</span> <span class="c1"># 获取天览拨测主机</span>
+         <span class="nt">service</span><span class="p">:</span>
+           <span class="nt">service</span><span class="p">:</span> <span class="s">&#39;monitor.monitor_server_get&#39;</span>
+         <span class="nt">save_field</span><span class="p">:</span> <span class="s">&#39;monitor_server&#39;</span>
+       <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">service2field</span> <span class="c1"># 根据软件ID 转成主机的keys</span>
+         <span class="nt">service</span><span class="p">:</span>
+           <span class="nt">service</span><span class="p">:</span> <span class="s">&#39;server.soft_list&#39;</span>
+           <span class="nt">install_soft_id_list</span><span class="p">:</span> <span class="s">&quot;install_soft_id_list&quot;</span>
+         <span class="nt">save_field</span><span class="p">:</span> <span class="s">&#39;server_keys&#39;</span>
+       <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">service2field</span> <span class="c1"># 根据keys 转items</span>
+         <span class="nt">service</span><span class="p">:</span>
+           <span class="nt">service</span><span class="p">:</span> <span class="s">&#39;monitor.key2item_ids&#39;</span>
+           <span class="nt">hostid</span><span class="p">:</span> <span class="s">&quot;{{monitor_server.hostid}}&quot;</span>
+           <span class="nt">keys</span><span class="p">:</span> <span class="s">&quot;server_keys&quot;</span>
+         <span class="nt">save_field</span><span class="p">:</span> <span class="s">&#39;itemid_list&#39;</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{itemid_list|length</span><span class="nv"> </span><span class="s">&gt;0}}&quot;</span>
+         <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;软件监控项不存在&quot;</span>
+
+     <span class="nt">must_login</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+     <span class="nt">data_json</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">oracle_delay_delete.json</span>
+     <span class="nt">log</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+
+
+   <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stop</span>
+     <span class="nt">http</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+     <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">终止</span>
+     <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http</span>
+     <span class="nt">handler_params</span><span class="p">:</span>
+       <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">service2field</span>
+         <span class="nt">service</span><span class="p">:</span>
+           <span class="nt">service</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hrm.currentUser</span>
+         <span class="nt">save_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">currentUser</span>
+     <span class="nt">data_json</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stop.json</span>
+     <span class="nt">success</span><span class="p">:</span> <span class="s">&quot;{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">statu</span><span class="nv"> </span><span class="s">%}True{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
+     <span class="nt">err_msg</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">msg</span>
 </pre></div>
 </div>
 </div>
