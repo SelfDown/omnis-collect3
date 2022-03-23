@@ -66,7 +66,7 @@ err_msg 结果为False 的错误异常信息
         class_name: HttpService
         method: handler
 
-      # 这里一个创建jira 的http 请求  .params 和handler_params 处理请求参数和验证一些参数，请忽略    
+      # 这里一个创建jira 的http 请求  params 和handler_params 处理请求参数和验证一些参数，请忽略    
       - key: createIssue
         name: 创建Issue
         module: "http"
