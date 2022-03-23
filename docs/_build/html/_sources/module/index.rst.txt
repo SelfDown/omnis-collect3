@@ -10,6 +10,7 @@ module 执行模块
    model_save/index
    model_update/index
    model_delete/index
+   http/index
 
 
 

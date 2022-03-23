@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1. http 模块。服务端发http 请求 &mdash; omnis-collect 1.0.0 文档</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="prev" title="4. model_delete 模型删除" href="../model_delete/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> omnis-collect
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目录 :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">before_plugin 执行前模块</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">module 执行模块</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../sql/index.html">1. sql 模块查询</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_save/index.html">2. model_save 模型保存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_update/index.html">3. model_update 模型修改</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_delete/index.html">4. model_delete 模型删除</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1. http 模块。服务端发http 请求</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#http">模块: http</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#grafana">1. 发grafana 请求</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#jiraissue">2. 创建jira的issue</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">omnis-collect</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">module 执行模块</a> &raquo;</li>
+      <li>1. http 模块。服务端发http 请求</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module/http/index.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="http-http">
+<h1>1. http 模块。服务端发http 请求<a class="headerlink" href="#http-http" title="永久链接至标题"></a></h1>
+<dl class="simple">
+<dt>http 模块主要用于在服务端，发http 请求，有台有需要调用和集成第三方服务</dt><dd><ul class="simple">
+<li><p>基于requests 库，能调用requests,大部分api。一些文件操作还需特殊处理，普通发数据的请求没有一点问题</p></li>
+<li><p>优化BaseAuth,支持传字典</p></li>
+<li><p>优化请求头”Content-Type”: “application/json”,data 字段直接自动json dump</p></li>
+<li><p>支持进入公共文件,参考mybaties 引入文件模式，可以将一些公共模块，比如请求头，请求地址等引入</p></li>
+<li><p>配置化发请求。参考思路ajax 的调用方式，可以通过一段配置，发http的请求。</p></li>
+</ul>
+</dd>
+</dl>
+<section id="http">
+<h2>模块: http<a class="headerlink" href="#http" title="永久链接至标题"></a></h2>
+<p>配置示例</p>
+<p><strong>注意</strong> 根据requests的api GET 请求传params,post请求传data</p>
+<p>success 结果True 表示正常。False 表示错误
+err_msg 结果为False 的错误异常信息</p>
+<section id="grafana">
+<h3>1. 发grafana 请求<a class="headerlink" href="#grafana" title="永久链接至标题"></a></h3>
+<p>查询grafana 面板</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id1" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span> <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">query</span>
+   <span class="nt">module</span><span class="p">:</span> <span class="s">&quot;http&quot;</span>
+   <span class="nt">must_login</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+   <span class="nt">data_json</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dash_query.json</span>
+   <span class="nt">success</span><span class="p">:</span> <span class="s">&quot;{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">message</span><span class="nv"> </span><span class="s">%}False{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
+   <span class="nt">err_msg</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">message</span>
+</pre></div>
+</div>
+</div>
+<p>grafana_server_url 是conf/application.properties的配置里面的配置</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">dash_query.json</span><a class="headerlink" href="#id2" title="永久链接至代码"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>   <span class="p">{</span>
+     <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;{{&#39;grafana_server_url&#39;|get_key}}/api/search/&quot;</span><span class="p">,</span>
+     <span class="nt">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;get&quot;</span><span class="p">,</span>
+     <span class="nt">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+       <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;dash-db&quot;</span>
+     <span class="p">}</span>
+   <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+<section id="jiraissue">
+<h3>2. 创建jira的issue<a class="headerlink" href="#jiraissue" title="永久链接至标题"></a></h3>
+<p>创建jira issue,支持BaseAuth</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id3" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>  <span class="c1"># http 实现类</span>
+ <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http</span>
+   <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">collect.service_imp.http.http_service</span>
+   <span class="nt">class_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HttpService</span>
+   <span class="nt">method</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">handler</span>
+
+ <span class="c1"># 这里一个创建jira 的http 请求  .params 和handler_params 处理请求参数和验证一些参数，请忽略</span>
+ <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">createIssue</span>
+   <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">创建Issue</span>
+   <span class="nt">module</span><span class="p">:</span> <span class="s">&quot;http&quot;</span>
+   <span class="nt">params</span><span class="p">:</span>
+     <span class="nt">projectKey</span><span class="p">:</span>
+       <span class="nt">check</span><span class="p">:</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{projectKey|must}}&quot;</span>
+         <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;项目编码不能为空&quot;</span>
+     <span class="nt">summary</span><span class="p">:</span>
+       <span class="nt">check</span><span class="p">:</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{summary|must}}&quot;</span>
+         <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;标题不能为空&quot;</span>
+     <span class="nt">description</span><span class="p">:</span>
+       <span class="nt">check</span><span class="p">:</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{description|must}}&quot;</span>
+         <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;描述不能为空&quot;</span>
+     <span class="nt">label</span><span class="p">:</span>
+       <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;&quot;</span>
+     <span class="nt">assignee</span><span class="p">:</span>
+       <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;&quot;</span>
+     <span class="nt">componentName</span><span class="p">:</span>
+       <span class="nt">check</span><span class="p">:</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{componentName|must}}&quot;</span>
+         <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;模块不能为空&quot;</span>
+       <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;&quot;</span>
+     <span class="nt">fixVersion</span><span class="p">:</span>
+       <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;&quot;</span>
+     <span class="nt">reporter</span><span class="p">:</span>
+       <span class="nt">check</span><span class="p">:</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{reporter|must}}&quot;</span>
+         <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;报告人不能为空&quot;</span>
+     <span class="nt">priority</span><span class="p">:</span>
+       <span class="nt">check</span><span class="p">:</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{priority|must}}&quot;</span>
+         <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;优先级不能为空&quot;</span>
+     <span class="nt">issueType</span><span class="p">:</span>
+       <span class="nt">check</span><span class="p">:</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{issueType|must}}&quot;</span>
+         <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;问题类型不能为空&quot;</span>
+     <span class="nt">hasScript</span><span class="p">:</span>
+       <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;10122&quot;</span>
+     <span class="nt">duedate</span><span class="p">:</span>
+       <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;&quot;</span>
+     <span class="nt">beans</span><span class="p">:</span>
+       <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;0&quot;</span>
+
+   <span class="nt">handler_params</span><span class="p">:</span>
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">service2field</span> <span class="c1"># 获取项目信息</span>
+       <span class="nt">service</span><span class="p">:</span>
+         <span class="nt">service</span><span class="p">:</span> <span class="s">&#39;jira.projectInfo&#39;</span>
+         <span class="nt">projectKey</span><span class="p">:</span> <span class="s">&quot;projectKey&quot;</span>
+         <span class="nt">username</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">username</span>
+         <span class="nt">password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">password</span>
+       <span class="nt">save_field</span><span class="p">:</span> <span class="s">&#39;projectInfo&#39;</span>
+       <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{projectInfo.id}}&quot;</span>
+       <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;【{{projectKey}}】项目不存在&quot;</span>
+
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arrayValue</span>
+       <span class="nt">foreach</span><span class="p">:</span> <span class="s">&quot;projectInfo.issueTypes&quot;</span>
+       <span class="nt">ifTemplate</span><span class="p">:</span> <span class="s">&quot;{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">item.id</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">issueType</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">True</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
+       <span class="nt">valueTemplate</span><span class="p">:</span> <span class="s">&quot;{{item.id}}&quot;</span>
+       <span class="nt">save_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hasIssueType</span>
+       <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">hasIssueType</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">True</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">else</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">False</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
+       <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;【{{issueType}}】问题类型不存在&quot;</span>
+
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arrayValue</span>
+       <span class="nt">enable</span><span class="p">:</span> <span class="s">&quot;{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">componentName</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">True</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">else</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">False</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
+       <span class="nt">foreach</span><span class="p">:</span> <span class="s">&quot;projectInfo.components&quot;</span>
+       <span class="nt">ifTemplate</span><span class="p">:</span> <span class="s">&quot;{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">item.name</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">componentName</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">True</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
+       <span class="nt">valueTemplate</span><span class="p">:</span> <span class="s">&quot;{{item.id}}&quot;</span>
+       <span class="nt">save_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">componentId</span>
+       <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">componentId</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">True</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">else</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">False</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
+       <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;【{{componentName}}】所属模块不存在&quot;</span>
+
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arrayValue</span>
+       <span class="nt">enable</span><span class="p">:</span> <span class="s">&quot;{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">fixVersion</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">True</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">else</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">False</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
+       <span class="nt">foreach</span><span class="p">:</span> <span class="s">&quot;projectInfo.versions&quot;</span>
+       <span class="nt">ifTemplate</span><span class="p">:</span> <span class="s">&quot;{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">item.name</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">fixVersion</span><span class="nv"> </span><span class="s">%}True</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
+       <span class="nt">valueTemplate</span><span class="p">:</span> <span class="s">&quot;{{item.id}}&quot;</span>
+       <span class="nt">save_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fixVersionId</span>
+       <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">fixVersionId</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">True</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">else</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">False</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
+       <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;【{{fixVersion}}】所属版本不存在&quot;</span>
+   <span class="nt">http</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">data_json</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">create_issue.json</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">create_issue.json
+#  create_issue.json ，require 进入公共文件。url、method、headers、data,都是requests 的api</span><a class="headerlink" href="#id4" title="永久链接至代码"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   <span class="p">{</span>
+     <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;{{&#39;jira_server&#39;|get_key}}/rest/api/2/issue&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;post&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;headers&quot;</span><span class="p">:</span> <span class="p">{</span>
+       <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span>
+     <span class="p">},</span>
+     <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+       <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;{{projectInfo.id}}&quot;</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="p">{{</span><span class="n">summary</span><span class="o">|</span><span class="n">json_str</span><span class="p">}},</span>
+         <span class="s2">&quot;issuetype&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;{{issueType}}&quot;</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="p">{{</span><span class="n">description</span><span class="o">|</span><span class="n">json_str</span><span class="p">}},</span>
+         <span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">assignee</span>  <span class="o">%</span><span class="p">}</span>
+         <span class="s2">&quot;assignee&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;{{assignee}}&quot;</span>
+         <span class="p">},</span>
+         <span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+         <span class="s2">&quot;reporter&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;{{reporter}}&quot;</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;priority&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;{{priority}}&quot;</span>
+         <span class="p">},</span>
+         <span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">fixVersionId</span> <span class="o">%</span><span class="p">}</span>
+         <span class="s2">&quot;fixVersions&quot;</span><span class="p">:</span> <span class="p">[</span>
+           <span class="p">{</span>
+             <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;{{fixVersionId}}&quot;</span>
+           <span class="p">}</span>
+         <span class="p">],</span>
+         <span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+
+         <span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">componentId</span> <span class="o">%</span><span class="p">}</span>
+         <span class="s2">&quot;components&quot;</span><span class="p">:</span> <span class="p">[</span>
+           <span class="p">{</span>
+             <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;{{componentId}}&quot;</span>
+           <span class="p">}</span>
+         <span class="p">],</span>
+         <span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+         <span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">beans</span><span class="o">%</span><span class="p">}</span>
+         <span class="s2">&quot;customfield_10301&quot;</span><span class="p">:</span> <span class="p">{{</span><span class="n">beans</span><span class="p">}},</span>
+         <span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+         <span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">label</span> <span class="o">%</span><span class="p">}</span>
+         <span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;{{label}}&quot;</span><span class="p">],</span>
+         <span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+         <span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">duedate</span> <span class="o">%</span><span class="p">}</span>
+         <span class="s2">&quot;duedate&quot;</span><span class="p">:</span> <span class="s2">&quot;{{duedate}}&quot;</span><span class="p">,</span>
+         <span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+         <span class="p">{</span><span class="o">%</span> <span class="k">if</span> <span class="n">hasScript</span> <span class="o">%</span><span class="p">}</span>
+         <span class="s2">&quot;customfield_10241&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="s2">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;{{hasScript}}&quot;</span>
+         <span class="p">}</span>
+         <span class="p">{</span><span class="o">%</span> <span class="n">endif</span> <span class="o">%</span><span class="p">}</span>
+       <span class="p">}</span>
+     <span class="p">},</span>
+      <span class="n">require</span><span class="p">(</span><span class="s2">&quot;../common/auth.common&quot;</span><span class="p">)</span>
+   <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">auth.common
+#auth.common 公共文件， 处理baseAuth ，输入jira 的账号和密码</span><a class="headerlink" href="#id5" title="永久链接至代码"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>   <span class="nt">&quot;auth&quot;</span><span class="p">:</span> <span class="p">{</span>
+       <span class="nt">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;{{username}}&quot;</span><span class="p">,</span>
+       <span class="nt">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;{{password}}&quot;</span>
+   <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../model_delete/index.html" class="btn btn-neutral float-left" title="4. model_delete 模型删除" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
