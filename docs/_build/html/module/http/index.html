@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>1. http 模块。服务端发http 请求 &mdash; omnis-collect 1.0.0 文档</title>
+  <title>5. http 模块。服务端发http 请求 &mdash; omnis-collect 1.0.0 文档</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -47,7 +47,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../model_save/index.html">2. model_save 模型保存</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_update/index.html">3. model_update 模型修改</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_delete/index.html">4. model_delete 模型删除</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">1. http 模块。服务端发http 请求</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5. http 模块。服务端发http 请求</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#http">模块: http</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#grafana">1. 发grafana 请求</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#jiraissue">2. 创建jira的issue</a></li>
@@ -74,7 +74,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../index.html">module 执行模块</a> &raquo;</li>
-      <li>1. http 模块。服务端发http 请求</li>
+      <li>5. http 模块。服务端发http 请求</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/module/http/index.rst.txt" rel="nofollow"> 查看页面源码</a>
       </li>
@@ -85,9 +85,9 @@
            <div itemprop="articleBody">
              
   <section id="http-http">
-<h1>1. http 模块。服务端发http 请求<a class="headerlink" href="#http-http" title="永久链接至标题"></a></h1>
+<h1>5. http 模块。服务端发http 请求<a class="headerlink" href="#http-http" title="永久链接至标题"></a></h1>
 <dl class="simple">
-<dt>http 模块主要用于在服务端，发http 请求，有台有需要调用和集成第三方服务</dt><dd><ul class="simple">
+<dt>http 模块主要用于在服务端，发http 请求，后台有需要调用和集成第三方服务，比如我调用过zabbix、jira、confluence、grafana、企业微信</dt><dd><ul class="simple">
 <li><p>基于requests 库，能调用requests,大部分api。一些文件操作还需特殊处理，普通发数据的请求没有一点问题</p></li>
 <li><p>优化BaseAuth,支持传字典</p></li>
 <li><p>优化请求头”Content-Type”: “application/json”,data 字段直接自动json dump</p></li>
@@ -144,7 +144,7 @@ err_msg 结果为False 的错误异常信息</p>
    <span class="nt">class_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HttpService</span>
    <span class="nt">method</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">handler</span>
 
- <span class="c1"># 这里一个创建jira 的http 请求  .params 和handler_params 处理请求参数和验证一些参数，请忽略</span>
+ <span class="c1"># 这里一个创建jira 的http 请求  params 和handler_params 处理请求参数和验证一些参数，请忽略</span>
  <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">createIssue</span>
    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">创建Issue</span>
    <span class="nt">module</span><span class="p">:</span> <span class="s">&quot;http&quot;</span>

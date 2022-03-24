@@ -1,6 +1,6 @@
 5. http 模块。服务端发http 请求
 =========================================
-http 模块主要用于在服务端，发http 请求，后台有需要调用和集成第三方服务，比如我调用过zabbix、jira、confluence、grafana
+http 模块主要用于在服务端，发http 请求，后台有需要调用和集成第三方服务，比如我调用过zabbix、jira、confluence、grafana、企业微信
     * 基于requests 库，能调用requests,大部分api。一些文件操作还需特殊处理，普通发数据的请求没有一点问题
     * 优化BaseAuth,支持传字典
     * 优化请求头"Content-Type": "application/json",data 字段直接自动json dump

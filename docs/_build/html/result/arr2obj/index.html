@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1. arr2obj 数组转对象 &mdash; omnis-collect 1.0.0 文档</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="prev" title="result_handler 结果处理" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> omnis-collect
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目录 :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">before_plugin 执行前模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module/index.html">module 执行模块</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">result_handler 结果处理</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1. arr2obj 数组转对象</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">模块: arr2obj</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">omnis-collect</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">result_handler 结果处理</a> &raquo;</li>
+      <li>1. arr2obj 数组转对象</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/result/arr2obj/index.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="arr2obj">
+<h1>1. arr2obj 数组转对象<a class="headerlink" href="#arr2obj" title="永久链接至标题"></a></h1>
+<blockquote>
+<div><ul class="simple">
+<li><p>将整个结果转一个对象，如果有多个取第一个</p></li>
+<li><p>将数组中记录的某个字段（是数组）转对象，一个二级数组</p></li>
+<li><p>如果没有记录就是空对象</p></li>
+</ul>
+</div></blockquote>
+<section id="id1">
+<h2>模块: arr2obj<a class="headerlink" href="#id1" title="永久链接至标题"></a></h2>
+<p>配置示例</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id2" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span> <span class="c1"># 结果转对象</span>
+ <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arr2obj</span>
+   <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">collect.service_imp.result_handlers.handlers.array_2_obj</span>
+   <span class="nt">class_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Array2Obj</span>
+   <span class="nt">method</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">handler</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">zabbix 接口的部分配置</span><a class="headerlink" href="#id3" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>   <span class="nt">result_handler</span><span class="p">:</span>
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filter_arr</span>
+       <span class="nt">params</span><span class="p">:</span>
+         <span class="nt">field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">interfaces</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{type==&#39;4&#39;}}&quot;</span>
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arr2obj</span>
+       <span class="nt">params</span><span class="p">:</span>
+         <span class="nt">field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">interfaces</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>filter_arr 是过滤数组处理器，这里arr2obj 是将结果记录中interfaces数组转对象</p>
+</div>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">查询当前登录用户信息</span><a class="headerlink" href="#id4" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span> <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">currentUser</span>
+   <span class="nt">module</span><span class="p">:</span> <span class="s">&quot;mysql&quot;</span>
+   <span class="nt">http</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">sql_file</span><span class="p">:</span> <span class="s">&#39;currentUser.sql&#39;</span>
+   <span class="nt">result_handler</span><span class="p">:</span>
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arr2obj</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>获取用户信息，数组转对象。从数据库查询出对象列表，然后转成对象</p>
+</div>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="result_handler 结果处理" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

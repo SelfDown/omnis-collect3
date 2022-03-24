@@ -15,6 +15,7 @@
    structure/index
    before/index
    module/index
+   result/index
 
 
 
