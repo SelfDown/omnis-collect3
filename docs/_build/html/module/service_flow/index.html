@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5. service_flow 服务流程化 &mdash; omnis-collect 1.0.0 文档</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="result_handler 结果处理" href="../../result/index.html" />
+    <link rel="prev" title="5. http 模块。服务端发http 请求" href="../http/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> omnis-collect
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目录 :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">before_plugin 执行前模块</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">module 执行模块</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../sql/index.html">1. sql 模块查询</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_save/index.html">2. model_save 模型保存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_update/index.html">3. model_update 模型修改</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_delete/index.html">4. model_delete 模型删除</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../http/index.html">5. http 模块。服务端发http 请求</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5. service_flow 服务流程化</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">模块: service_flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">配置参数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#next">1. next</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fail">2. fail</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ignore-error">3. ignore_error</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../result/index.html">result_handler 结果处理</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">omnis-collect</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">module 执行模块</a> &raquo;</li>
+      <li>5. service_flow 服务流程化</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module/service_flow/index.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="service-flow">
+<h1>5. service_flow 服务流程化<a class="headerlink" href="#service-flow" title="永久链接至标题"></a></h1>
+<p>很多时候我们的接口，不只是单纯操作一张表、或者一种增、删、改、查、的动作。可能需要混合是新增、修改，或者调用其他http接口。
+比如新增一个内部系统用户，同时触发ldap用户新增、企业微信用户新增。</p>
+<p><strong>服务流程化</strong> 最开始这个思路的来源，就是工作流，我们的接口能否像工作流一样，遇到某个节点完成后，会流转到下个节点。
+如果节点返回不正常结束整个流程。</p>
+<p><strong>service_flow</strong> 实际上已经是个小型的工作流，目标对象就是接口，通过控制节点，将一些服务组合起来。也可以用于解析
+一个很大参数，有几个不同的模块，每个模块需要做不同，新增、修改接口。比如我之前遇到的场景，需要：1添加服务器信息，2添加改服务器用户列表信息。这里就相当于有2个模块</p>
+<section id="id1">
+<h2>模块: service_flow<a class="headerlink" href="#id1" title="永久链接至标题"></a></h2>
+<p>配置示例
+这个是调用其他服务的示例，节点upload_file 是上传文件</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id3" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span> <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">genConf</span>
+   <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">service_flow</span>
+   <span class="nt">http</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">log</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">must_token</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">check_ip</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">params</span><span class="p">:</span>
+     <span class="nt">conf_id</span><span class="p">:</span>
+       <span class="nt">check</span><span class="p">:</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{conf_id|must}}&quot;</span>
+         <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;配置文件不能空&quot;</span>
+     <span class="nt">show_detail</span><span class="p">:</span>
+       <span class="nt">default</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+     <span class="nt">to_obj</span><span class="p">:</span>
+       <span class="nt">default</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">handler_params</span><span class="p">:</span>
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">service2field</span>
+       <span class="nt">service</span><span class="p">:</span>
+         <span class="nt">service</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">router.get_router_conf</span>
+         <span class="nt">conf_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf_id</span>
+         <span class="nt">to_obj</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">to_obj</span>
+         <span class="nt">show_detail</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">show_detail</span>
+       <span class="nt">save_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf</span>
+   <span class="nt">flow</span><span class="p">:</span>
+     <span class="nt">services</span><span class="p">:</span>
+       <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start</span>
+         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start</span>
+         <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">开始</span>
+         <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">upload_file</span>
+       <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">upload_file</span>
+         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">node</span>
+         <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">上传配置文件</span>
+         <span class="nt">service</span><span class="p">:</span>
+           <span class="nt">service</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">server.conf_upload</span>
+           <span class="nt">user</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf.username</span>
+           <span class="nt">password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf.password</span>
+           <span class="nt">server_ip</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf.server_ip</span>
+           <span class="nt">port</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf.port</span>
+           <span class="nt">upstream</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf.upstream</span>
+           <span class="nt">router</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf.router</span>
+         <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+         <span class="nt">fail</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+       <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+         <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">结束</span>
+   <span class="nt">result_handler</span><span class="p">:</span>
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">result_msg</span>
+       <span class="nt">params</span><span class="p">:</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;【{{conf.server_ip}}-{{conf.name}}】配置替换成功&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>flow 是整个流程控制节点，下面的services,是流程的流转配置，能完整的构建出一张流程图。未来是支持services节点json引入
+services的每个节点比包含</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>key</strong> 服务节点的唯一标志</p></li>
+<li><p><strong>name</strong> 节点描述</p></li>
+<li><p><strong>type</strong> 表示类型 可选 start 开始，end 结束，node 节点</p></li>
+</ul>
+</div></blockquote>
+</div>
+</div></blockquote>
+</section>
+<section id="id2">
+<h2>配置参数<a class="headerlink" href="#id2" title="永久链接至标题"></a></h2>
+<p>这里解释节点的配置参数</p>
+<section id="next">
+<h3>1. next<a class="headerlink" href="#next" title="永久链接至标题"></a></h3>
+<p>表示下个节点的位置，支持写模板语法，支持switch</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id4" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>  <span class="nt">services</span><span class="p">:</span>
+   <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start</span>
+     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start</span>
+     <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">开始</span>
+     <span class="nt">switch</span><span class="p">:</span>
+       <span class="p p-Indicator">-</span> <span class="nt">case</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">create_ldap</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;1&#39;</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">user.create_ldap</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;0&#39;</span><span class="nv"> </span><span class="s">}}&quot;</span>
+         <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">如果前台创建ldap ，记录时没有创建，则创建ldap</span>
+         <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">create_ldap</span>
+       <span class="p p-Indicator">-</span> <span class="nt">case</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">(create_ldap</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;1&#39;</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">user.create_ldap</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;1&#39;)</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">(email</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">user.email</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">role_change|length</span><span class="nv"> </span><span class="s">&gt;0</span><span class="nv">  </span><span class="s">)</span><span class="nv"> </span><span class="s">}}&quot;</span>
+         <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">如果邮件变化，或者角色变化更新ldap</span>
+         <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">update_ldap</span>
+       <span class="p p-Indicator">-</span> <span class="nt">case</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">(</span><span class="nv"> </span><span class="s">create_ldap</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;0&#39;</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">user.create_ldap</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&#39;1&#39;</span><span class="nv"> </span><span class="s">)</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">(</span><span class="nv"> </span><span class="s">create_ldap==</span><span class="nv"> </span><span class="s">&#39;1&#39;</span><span class="nv"> </span><span class="s">and</span><span class="nv">  </span><span class="s">role_id_list|length</span><span class="nv"> </span><span class="s">&lt;=</span><span class="nv"> </span><span class="s">0)</span><span class="nv"> </span><span class="s">}}&quot;</span>
+         <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">如果前台传删除ldap,记录有ldap 删除ldap。如果是创建ldap,并且角色为0 也删除ldap</span>
+         <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">remove_wechat</span>
+     <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">update_user</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+<section id="fail">
+<h3>2. fail<a class="headerlink" href="#fail" title="永久链接至标题"></a></h3>
+<p>失败的时候节点流转，流程只能失败一次，一般fail 直接指向end,如果需要回退的可以指向自己删除服务节点。
+如果不能保证一定成功，就加上ignore_error: true,就会忽略错误</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id5" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">upload_file</span>
+  <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">node</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">上传配置文件</span>
+  <span class="nt">service</span><span class="p">:</span>
+    <span class="nt">service</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">server.conf_upload</span>
+    <span class="nt">user</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf.username</span>
+    <span class="nt">password</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf.password</span>
+    <span class="nt">server_ip</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf.server_ip</span>
+    <span class="nt">port</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf.port</span>
+    <span class="nt">upstream</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf.upstream</span>
+    <span class="nt">router</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf.router</span>
+  <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+  <span class="nt">fail</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+<section id="ignore-error">
+<h3>3. ignore_error<a class="headerlink" href="#ignore-error" title="永久链接至标题"></a></h3>
+<p>ignore_error: true 表示忽略错误</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id6" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>   <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_delete</span>
+     <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">删除触发器</span>
+     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">node</span>
+     <span class="nt">service</span><span class="p">:</span>
+       <span class="nt">service</span><span class="p">:</span> <span class="s">&quot;monitor.trigger_delete_by_trigger_id_list&quot;</span>
+       <span class="nt">trigger_id_list</span><span class="p">:</span> <span class="s">&quot;trigger_id_list&quot;</span>
+     <span class="nt">fail</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+     <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">item_delete</span>
+     <span class="nt">ignore_error</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../http/index.html" class="btn btn-neutral float-left" title="5. http 模块。服务端发http 请求" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../../result/index.html" class="btn btn-neutral float-right" title="result_handler 结果处理" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
