@@ -79,6 +79,8 @@
          * **name** 节点描述
          * **type** 表示类型 可选 start 开始，end 结束，node 节点
 
+       这里有3个节点，start->upload_file-> end。这个是最简单的流程
+
 
 
 
