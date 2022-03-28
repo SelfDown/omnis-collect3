@@ -1,7 +1,7 @@
 2. excel_data
 =========================================
 实现excel 导入数据。将 excel文件里面数据，转请求数据。
-excel 只是一种传参的形式
+excel 只是一种传参的形式。
 
 
 excel 解析数据
@@ -9,11 +9,15 @@ excel 解析数据
 
 
 * **sheets** 是个数组，可以做支持多个sheet 页解析
+* **file_field**   表示从请求参数中，取的文件字段
 * **sheet_index**  表示取第几个标签页
 * **start_row**    表示从第几行开始读起
 * **start_col**    表示从第几列开始算起
 * **fields**       表示列对应的字段，每一列对应一个字段，key 表示字段，按照顺序来。must 表示必传，否则忽略数据
 * **save_field**   解析后保存的字段
+
+将excel 转成数据请求 **字段** 后，你可以做任何操作，可以是批量更新、批量删除、批量新增，只要的模块能接的上。
+相当于前台直接传个数组过来
 
 
 配置示例
@@ -28,7 +32,7 @@ excel 解析数据
             path: collect.service_imp.request_handlers.handlers.excelData
             class_name: excelData
             method: handler
-
+          # 配置示例
           handler_params:
            - key: excel_data
              file_field: file
