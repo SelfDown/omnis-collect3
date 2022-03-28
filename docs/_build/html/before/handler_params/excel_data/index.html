@@ -95,8 +95,8 @@ excel 只是一种传参的形式。</p>
 <li><p><strong>sheets</strong> 是个数组，可以做支持多个sheet 页解析</p></li>
 <li><p><strong>file_field</strong>   表示从请求参数中，取的文件字段</p></li>
 <li><p><strong>sheet_index</strong>  表示取第几个标签页</p></li>
-<li><p><strong>start_row</strong>    表示从第几行开始读起</p></li>
-<li><p><strong>start_col</strong>    表示从第几列开始算起</p></li>
+<li><p><strong>start_row</strong>    表示从第几行开始读起,从0 开始。2表示从 <strong>第三行</strong> 开始读</p></li>
+<li><p><strong>start_col</strong>    表示从第几列开始算起,从0 开始。0表示从 <strong>第一列</strong> 开始算起</p></li>
 <li><p><strong>fields</strong>       表示列对应的字段，每一列对应一个字段，key 表示字段，按照顺序来。must 表示必传，否则忽略数据</p></li>
 <li><p><strong>save_field</strong>   解析后保存的字段</p></li>
 </ul>
