@@ -69,9 +69,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../model_save/index.html">2. model_save 模型保存</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_update/index.html">3. model_update 模型修改</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_delete/index.html">4. model_delete 模型删除</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../http/index.html">1. http 模块。服务端发http 请求</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../http/index.html">5. http 模块。服务端发http 请求</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../service_flow/index.html">6. service_flow 服务流程化</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../result/index.html">result_handler 结果处理</a></li>
 </ul>
 
         </div>
@@ -103,7 +105,7 @@
 <h1>1. sql 模块查询<a class="headerlink" href="#sql" title="永久链接至标题"></a></h1>
 <dl class="simple">
 <dt>sql 模块主要处理数据库查询，</dt><dd><ul class="simple">
-<li><p>主要处理各种select,join、group by、order 等SQL。你要你能写得出，SQL接口就能构造出来。模板语法利用jinja2 来拼接SQL</p></li>
+<li><p>主要处理各种select,join、group by、order 等SQL。你要你能写得出，SQL接口就能构造出来。模板语法利用jinja2 来拼接SQL。拿着渲染html 引擎，来渲染sql</p></li>
 <li><p>数据库连接利用当前项目的数据源,一般使用django 的默认数据源,也有特殊情况需要连接其他数据库,支持数据源切换</p></li>
 <li><p>没有限制执行哪种数据库,可以是mysql、oracle、sqlite等等，主要看django系统配置的什么数据源</p></li>
 </ul>

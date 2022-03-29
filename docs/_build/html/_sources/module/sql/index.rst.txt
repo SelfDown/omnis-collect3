@@ -1,7 +1,7 @@
 1. sql 模块查询
 =========================================
 sql 模块主要处理数据库查询，
-    * 主要处理各种select,join、group by、order 等SQL。你要你能写得出，SQL接口就能构造出来。模板语法利用jinja2 来拼接SQL
+    * 主要处理各种select,join、group by、order 等SQL。你要你能写得出，SQL接口就能构造出来。模板语法利用jinja2 来拼接SQL。拿着渲染html 引擎，来渲染sql
     * 数据库连接利用当前项目的数据源,一般使用django 的默认数据源,也有特殊情况需要连接其他数据库,支持数据源切换
     * 没有限制执行哪种数据库,可以是mysql、oracle、sqlite等等，主要看django系统配置的什么数据源
 

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2. 结果转excel &mdash; omnis-collect 1.0.0 文档</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="prev" title="1. arr2obj 数组转对象" href="../arr2obj/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> omnis-collect
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目录 :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">before_plugin 执行前模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module/index.html">module 执行模块</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">result_handler 结果处理</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arr2obj/index.html">1. arr2obj 数组转对象</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2. 结果转excel</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#result2excel">模块: result2excel</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#jira">jira 空白模板下载</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">omnis-collect</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">result_handler 结果处理</a> &raquo;</li>
+      <li>2. 结果转excel</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/result/result2excel/index.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="excel">
+<h1>2. 结果转excel<a class="headerlink" href="#excel" title="永久链接至标题"></a></h1>
+<blockquote>
+<div><ul class="simple">
+<li><p>一般是将sql模块的结果转出sql,也可以其他复杂的模块，比如http</p></li>
+<li><p>需要配合file_response,将生成的文件转下载文件对象</p></li>
+<li><p>为empty 模块，可以作为空白模板下载</p></li>
+</ul>
+</div></blockquote>
+<section id="result2excel">
+<h2>模块: result2excel<a class="headerlink" href="#result2excel" title="永久链接至标题"></a></h2>
+<p>配置示例</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id1" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>  <span class="c1"># 结果转excel 实现类</span>
+  <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">result2excel</span>
+    <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">collect.service_imp.result_handlers.handlers.result2excel</span>
+    <span class="nt">class_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Result2Excel</span>
+    <span class="nt">method</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">handler</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+<section id="jira">
+<h3>jira 空白模板下载<a class="headerlink" href="#jira" title="永久链接至标题"></a></h3>
+<ol class="arabic">
+<li><p>excel 表示 excel 的配置</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>excel</strong> 下面0 表示第一个标签</p></li>
+<li><p><strong>title_row</strong> 表示标题行，一般是 0，第一行</p></li>
+<li><p><strong>title_style</strong> 第一行的样式</p></li>
+<li><p><strong>name_row</strong> 列的名称，一般是 1，第二行</p></li>
+<li><p><strong>start_row</strong> 数据填充行，一般是2，第三行</p></li>
+<li><p><strong>frozen_col</strong> 冻结列，一般是1 ，冻结第一列，同时默认冻结name_row 行</p></li>
+<li><p><strong>data</strong> 数据来演，默认是result</p></li>
+<li><p><strong>fields</strong> 列字段信息，name 表示名称，width 表示宽度。和excel 上传保持一致</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><dl>
+<dt>result2excel 是result_handler 的结果处理器</dt><dd><ul class="simple">
+<li><p><strong>excel_path</strong> 文件保持的位置</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">jira 模板下载</span><a class="headerlink" href="#id2" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span> <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">downloadTemplate</span>
+   <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">下载模板</span>
+   <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">empty</span>
+   <span class="nt">http</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">params</span><span class="p">:</span>
+     <span class="nt">excel_path</span><span class="p">:</span>
+       <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;./template/jiraImportTemplate.xls&quot;</span>
+
+   <span class="nt">excel</span><span class="p">:</span>
+     <span class="nt">0</span><span class="p">:</span>
+       <span class="nt">title_row</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+       <span class="nt">title_style</span><span class="p">:</span> <span class="s">&#39;alignment:vert</span><span class="nv"> </span><span class="s">center;font:color</span><span class="nv"> </span><span class="s">white</span><span class="nv"> </span><span class="s">,height</span><span class="nv"> </span><span class="s">240;pattern:</span><span class="nv"> </span><span class="s">pattern</span><span class="nv"> </span><span class="s">solid,</span><span class="nv"> </span><span class="s">fore_colour</span><span class="nv"> </span><span class="s">light_blue;&#39;</span>
+       <span class="nt">name_row</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+       <span class="nt">name_style</span><span class="p">:</span> <span class="s">&#39;font:color</span><span class="nv"> </span><span class="s">white</span><span class="nv"> </span><span class="s">;pattern:</span><span class="nv"> </span><span class="s">pattern</span><span class="nv"> </span><span class="s">solid,</span><span class="nv"> </span><span class="s">fore_colour</span><span class="nv"> </span><span class="s">ocean_blue&#39;</span>
+       <span class="nt">start_row</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+       <span class="nt">frozen_col</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+       <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jira 批量导入(1.【问题类型】：10001(故事),10006(缺陷),10100(需求),10101(优化),10102(设计)。2.【优先级】1-5对应危险、严重、重要、轻微、微小。3【包含脚本】10122(否)10123(是)</span>
+       <span class="nt">data</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">result</span>
+       <span class="nt">fields</span><span class="p">:</span>
+         <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">标题</span>
+           <span class="nt">width</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
+         <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">描述</span>
+           <span class="nt">width</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
+         <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">云豆</span>
+           <span class="nt">width</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">60</span>
+         <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">模块(填写名称)</span>
+           <span class="nt">width</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">80</span>
+         <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">问题类型(详情顶部)</span>
+           <span class="nt">width</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">80</span>
+         <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">到期日</span>
+           <span class="nt">width</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">80</span>
+         <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">报告人(登录名)</span>
+           <span class="nt">width</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">80</span>
+         <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">经办人(登录名)</span>
+           <span class="nt">width</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">80</span>
+         <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">空间</span>
+           <span class="nt">width</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">60</span>
+         <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">优先级(详情顶部)</span>
+           <span class="nt">width</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">80</span>
+         <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">标签</span>
+           <span class="nt">width</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">60</span>
+         <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">包含脚本(详情顶部)</span>
+           <span class="nt">width</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">80</span>
+         <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">修复版本(填写名称)</span>
+           <span class="nt">width</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
+   <span class="nt">result_handler</span><span class="p">:</span>
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">result2excel</span>
+       <span class="nt">params</span><span class="p">:</span>
+         <span class="nt">excel_path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">excel_path</span>
+
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_response</span>
+       <span class="nt">params</span><span class="p">:</span>
+         <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">excel_path</span>
+         <span class="nt">filename</span><span class="p">:</span> <span class="s">&quot;jiraImportTemplate.xls&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>file_response 文件转下载对象处理器</p>
+</div>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/excel_template.png"><img alt="示例" src="../../_images/excel_template.png" style="width: 100%;" /></a>
+</figure>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../arr2obj/index.html" class="btn btn-neutral float-left" title="1. arr2obj 数组转对象" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
