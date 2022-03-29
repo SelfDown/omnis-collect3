@@ -26,7 +26,7 @@ jira 空白模板下载
 1. excel 表示 excel 的配置
 
 
-     * **excel** 下面0 表示第一个标签
+     * **excel** 下面0 表示第一个标签,1 表示第二个标签。后面依次类推
      * **title_row** 表示标题行，一般是 0，第一行
      * **title_style** 第一行的样式
      * **name_row** 列的名称，一般是 1，第二行
@@ -98,7 +98,7 @@ jira 空白模板下载
                filename: "jiraImportTemplate.xls"
 
      .. note::
-       file_response 文件转下载对象处理器
+       file_response 文件转下载对象处理器，如果你需要下载其他文件，这里就是指向其他文件的地址
 
 
      .. figure:: ./excel_template.png
