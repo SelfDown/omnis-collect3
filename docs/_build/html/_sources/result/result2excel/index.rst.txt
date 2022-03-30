@@ -98,7 +98,7 @@ jira 空白模板下载
                filename: "jiraImportTemplate.xls"
 
      .. note::
-       file_response 文件转下载对象处理器
+       file_response 文件转下载对象处理器，如果你需要下载其他文件，这里就是指向其他文件的地址
 
 
      .. figure:: ./excel_template.png
