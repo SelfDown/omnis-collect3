@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>7. ssh 服务器操作 &mdash; omnis-collect 1.0.0 文档</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="result_handler 结果处理" href="../../result/index.html" />
+    <link rel="prev" title="6. service_flow 服务流程化" href="../service_flow/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> omnis-collect
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目录 :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">before_plugin 执行前模块</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">module 执行模块</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../sql/index.html">1. sql 模块查询</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_save/index.html">2. model_save 模型保存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_update/index.html">3. model_update 模型修改</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_delete/index.html">4. model_delete 模型删除</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../http/index.html">5. http 模块。服务端发http 请求</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../service_flow/index.html">6. service_flow 服务流程化</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7. ssh 服务器操作</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">模块: ssh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">配置参数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#shell">1. shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#file-content">2. file_content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#copy">3. copy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../result/index.html">result_handler 结果处理</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">omnis-collect</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">module 执行模块</a> &raquo;</li>
+      <li>7. ssh 服务器操作</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module/ssh/index.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ssh">
+<h1>7. ssh 服务器操作<a class="headerlink" href="#ssh" title="永久链接至标题"></a></h1>
+<p>这个是模仿ansible 通过配置进行执行 shell 命令。然后在此基础上可以进行文件上传，查看服务器本地文件。
+它也是流程，和service_flow 大致相同</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>支持查看服务器本地文件</p></li>
+<li><p>支持远程文件上传</p></li>
+<li><p>支持按模板生成服务器本地文件</p></li>
+<li><p>支持服务器本地拷贝文件</p></li>
+<li><p>支持服务器本地文件夹压缩</p></li>
+<li><p>支持读取服务器本地文件夹目录</p></li>
+<li><p>支持读取服务器本地文件内容</p></li>
+<li><p>支持输入shell 命令</p></li>
+</ul>
+</div></blockquote>
+<p>默认进行ssh 连接，必须传一下配置</p>
+<blockquote>
+<div><blockquote>
+<div><ul class="simple">
+<li><p><strong>server_ip</strong> 服务器ip</p></li>
+<li><p><strong>user</strong> 服务器登录用户</p></li>
+<li><p><strong>password</strong> 服务器登录密码</p></li>
+<li><p><strong>port</strong> 端口默认22</p></li>
+<li><p><strong>timeout</strong> 连接超时，默认15秒</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>如果不要进行ssh 连接 ，可以在模板中设置ssh_connect:False。和params 平级</p>
+</div>
+</div></blockquote>
+<section id="id1">
+<h2>模块: ssh<a class="headerlink" href="#id1" title="永久链接至标题"></a></h2>
+<p>配置示例
+这个是预览服务器本地文件</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id3" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>  <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">target_conf_preview</span>
+    <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssh</span>
+    <span class="nt">http</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">must_token</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">check_ip</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="nt">timeout</span><span class="p">:</span>
+        <span class="nt">default</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+      <span class="nt">password</span><span class="p">:</span>
+        <span class="nt">template</span><span class="p">:</span> <span class="s">&#39;{{password|des(&quot;decrypt&quot;)}}&#39;</span>
+      <span class="nt">target_upstream_path</span><span class="p">:</span>
+        <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{&#39;nginx_path&#39;|get_key}}/{{&#39;upstream_path&#39;|get_key}}&quot;</span>
+      <span class="nt">target_router_path</span><span class="p">:</span>
+        <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{&#39;nginx_path&#39;|get_key}}/{{&#39;router_path&#39;|get_key}}&quot;</span>
+    <span class="nt">shell</span><span class="p">:</span>
+      <span class="nt">services</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start</span>
+          <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start</span>
+          <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">开始</span>
+          <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">upstream_content</span>
+
+        <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">upstream_content</span>
+          <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">node</span>
+          <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">获取upstream 的内容</span>
+          <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">router_content</span>
+          <span class="nt">shell</span><span class="p">:</span> <span class="s">&#39;cat</span><span class="nv"> </span><span class="s">{{target_upstream_path}}&#39;</span>
+          <span class="nt">save_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">upstream_script</span>
+          <span class="nt">ignore_error</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+          <span class="nt">fail</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+        <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">router_content</span>
+          <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">node</span>
+          <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">获取router 的内容</span>
+          <span class="nt">shell</span><span class="p">:</span> <span class="s">&#39;cat</span><span class="nv"> </span><span class="s">{{target_router_path}}&#39;</span>
+          <span class="nt">save_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">router_script</span>
+          <span class="nt">ignore_error</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+          <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+          <span class="nt">fail</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+        <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+          <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+          <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">结束</span>
+
+    <span class="nt">result_handler</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">add_param</span>
+        <span class="nt">params</span><span class="p">:</span>
+          <span class="nt">from_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">router_script</span>
+          <span class="nt">to_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">router_script</span>
+      <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">add_param</span>
+        <span class="nt">params</span><span class="p">:</span>
+          <span class="nt">from_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">upstream_script</span>
+          <span class="nt">to_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">upstream_script</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>shell 是整个流程控制节点，下面的services,是流程的流转配置，能完整的构建出一张流程图。未来是支持services节点json引入
+services的每个节点比包含</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>key</strong> 服务节点的唯一标志</p></li>
+<li><p><strong>name</strong> 节点描述</p></li>
+<li><p><strong>type</strong> 表示类型 可选 start 开始，end 结束，node 节点</p></li>
+</ul>
+</div></blockquote>
+<p>这个和service_flow 一致</p>
+</div>
+</div></blockquote>
+</section>
+<section id="id2">
+<h2>配置参数<a class="headerlink" href="#id2" title="永久链接至标题"></a></h2>
+<p>这里解释节点的配置参数</p>
+<section id="shell">
+<h3>1. shell<a class="headerlink" href="#shell" title="永久链接至标题"></a></h3>
+<p>执行shell 命令，结果保存到save_field 中的字段</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id4" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>   <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">upstream_content</span>
+     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">node</span>
+     <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">获取upstream 的内容</span>
+     <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">router_content</span>
+     <span class="nt">shell</span><span class="p">:</span> <span class="s">&#39;cat</span><span class="nv"> </span><span class="s">{{target_upstream_path}}&#39;</span>
+     <span class="nt">save_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">upstream_script</span>
+     <span class="nt">ignore_error</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+     <span class="nt">fail</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+<section id="file-content">
+<h3>2. file_content<a class="headerlink" href="#file-content" title="永久链接至标题"></a></h3>
+<p>读取服务器文件内容，保存save_field 中 current_router_content</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id5" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>   <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">current_router_content</span>
+     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">node</span>
+     <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">当前router内容</span>
+     <span class="nt">file_content</span><span class="p">:</span>
+       <span class="nt">file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">local_router_path</span>
+     <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">current_upstream_content</span>
+     <span class="nt">fail</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+     <span class="nt">save_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">current_router_content</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+<section id="copy">
+<h3>3. copy<a class="headerlink" href="#copy" title="永久链接至标题"></a></h3>
+<p>上传远程文件，注意to 表示目录，如果目录不存在就创建</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id6" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>   <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">upload_upstream</span>
+     <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">上传路由文件</span>
+     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">node</span>
+     <span class="nt">copy</span><span class="p">:</span>
+       <span class="nt">from</span><span class="p">:</span> <span class="s">&quot;{{local_upstream_path}}&quot;</span>
+       <span class="nt">to</span><span class="p">:</span> <span class="s">&quot;/tmp/conf/&quot;</span>
+     <span class="nt">save_field</span><span class="p">:</span> <span class="s">&#39;upload_upstream_path&#39;</span>
+     <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">change_router_path</span>
+     <span class="nt">fail</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>如果上传文件，为了安全，请先上传到tmp 目录，然后运行cp 拷贝。否则可能文件上传一半
+失败了，服务器上源文件已经破坏，导致文件很难找回</p>
+</div>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../service_flow/index.html" class="btn btn-neutral float-left" title="6. service_flow 服务流程化" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../../result/index.html" class="btn btn-neutral float-right" title="result_handler 结果处理" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
