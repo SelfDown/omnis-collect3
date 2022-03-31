@@ -11,6 +11,7 @@
      * 支持读取服务器本地文件夹目录
      * 支持读取服务器本地文件内容
      * 支持输入shell 命令
+     * 支持配置化显示错误信息，conf/ssh_error_info.yaml 根据shell 命令返回可以，提示错误信息
 
 默认进行ssh 连接，params传一下配置
 
@@ -93,6 +94,24 @@
          * **type** 表示类型 可选 start 开始，end 结束，node 节点
 
        这个和service_flow 一致
+       支持流程结束后，调用一个服务，一般记录日志不管成功还是失败，service_flow 也支持
+
+       结果服务自动添加flow_msg，流程返回结果，flow_success ，流程是否成功
+
+         .. code-block:: yaml
+          :caption: index.yaml
+
+              shell:
+                finish:
+                  service:
+                    service: router.save_conf_log
+                services:
+                  - key: start
+                    type: start
+                    name: 开始
+                    next: backup_router
+
+
 
 
 
