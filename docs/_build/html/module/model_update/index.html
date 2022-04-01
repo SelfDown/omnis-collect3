@@ -63,8 +63,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../model_delete/index.html">4. model_delete 模型删除</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../http/index.html">5. http 模块。服务端发http 请求</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../service_flow/index.html">6. service_flow 服务流程化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ssh/index.html">7. ssh 服务器操作</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../result/index.html">result_handler 结果处理</a></li>
 </ul>
 
         </div>
@@ -322,6 +326,29 @@
   <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">result_msg</span>
     <span class="nt">params</span><span class="p">:</span>
       <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;项目删除成功！&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-text">常用filter</span><a class="headerlink" href="#id13" title="永久链接至代码"></a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>__exact 精确等于 like &#39;aaa&#39;
+__iexact 精确等于 忽略大小写 ilike &#39;aaa&#39;
+__contains 包含 like &#39;%aaa%&#39;
+__icontains 包含 忽略大小写 ilike &#39;%aaa%&#39;，但是对于sqlite来说，contains的作用效果等同于icontains。
+__gt 大于
+__gte 大于等于
+__lt 小于
+__lte 小于等于
+__in 存在于一个list范围内
+__startswith 以...开头
+__istartswith 以...开头 忽略大小写
+__endswith 以...结尾
+__iendswith 以...结尾，忽略大小写
+__range 在...范围内
+__year 日期字段的年份
+__month 日期字段的月份
+__day 日期字段的日
+__isnull=True/False
 </pre></div>
 </div>
 </div>

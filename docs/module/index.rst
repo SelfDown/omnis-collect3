@@ -13,6 +13,7 @@ module 执行模块
    http/index
    service_flow/index
    ssh/index
+   bulk_create/index
 
 
 
