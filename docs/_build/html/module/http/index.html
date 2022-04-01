@@ -19,6 +19,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="索引" href="../../genindex.html" />
     <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="6. service_flow 服务流程化" href="../service_flow/index.html" />
     <link rel="prev" title="4. model_delete 模型删除" href="../model_delete/index.html" /> 
 </head>
 
@@ -55,8 +56,12 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../service_flow/index.html">6. service_flow 服务流程化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ssh/index.html">7. ssh 服务器操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bulk_create/index.html">8. bulk_create 批量新增</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../result/index.html">result_handler 结果处理</a></li>
 </ul>
 
         </div>
@@ -309,6 +314,52 @@ err_msg 结果为False 的错误异常信息</p>
 </pre></div>
 </div>
 </div>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">requests 的api</span><a class="headerlink" href="#id6" title="永久链接至代码"></a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Constructs and sends a :class:`Request &lt;Request&gt;`.</span>
+
+<span class="sd">    :param method: method for the new :class:`Request` object.</span>
+<span class="sd">    :param url: URL for the new :class:`Request` object.</span>
+<span class="sd">    :param params: (optional) Dictionary or bytes to be sent in the query string for the :class:`Request`.</span>
+<span class="sd">    :param data: (optional) Dictionary, bytes, or file-like object to send in the body of the :class:`Request`.</span>
+<span class="sd">    :param json: (optional) json data to send in the body of the :class:`Request`.</span>
+<span class="sd">    :param headers: (optional) Dictionary of HTTP Headers to send with the :class:`Request`.</span>
+<span class="sd">    :param cookies: (optional) Dict or CookieJar object to send with the :class:`Request`.</span>
+<span class="sd">    :param files: (optional) Dictionary of ``&#39;name&#39;: file-like-objects`` (or ``{&#39;name&#39;: file-tuple}``) for multipart encoding upload.</span>
+<span class="sd">        ``file-tuple`` can be a 2-tuple ``(&#39;filename&#39;, fileobj)``, 3-tuple ``(&#39;filename&#39;, fileobj, &#39;content_type&#39;)``</span>
+<span class="sd">        or a 4-tuple ``(&#39;filename&#39;, fileobj, &#39;content_type&#39;, custom_headers)``, where ``&#39;content-type&#39;`` is a string</span>
+<span class="sd">        defining the content type of the given file and ``custom_headers`` a dict-like object containing additional headers</span>
+<span class="sd">        to add for the file.</span>
+<span class="sd">    :param auth: (optional) Auth tuple to enable Basic/Digest/Custom HTTP Auth.</span>
+<span class="sd">    :param timeout: (optional) How long to wait for the server to send data</span>
+<span class="sd">        before giving up, as a float, or a :ref:`(connect timeout, read</span>
+<span class="sd">        timeout) &lt;timeouts&gt;` tuple.</span>
+<span class="sd">    :type timeout: float or tuple</span>
+<span class="sd">    :param allow_redirects: (optional) Boolean. Enable/disable GET/OPTIONS/POST/PUT/PATCH/DELETE/HEAD redirection. Defaults to ``True``.</span>
+<span class="sd">    :type allow_redirects: bool</span>
+<span class="sd">    :param proxies: (optional) Dictionary mapping protocol to the URL of the proxy.</span>
+<span class="sd">    :param verify: (optional) whether the SSL cert will be verified. A CA_BUNDLE path can also be provided. Defaults to ``True``.</span>
+<span class="sd">    :param stream: (optional) if ``False``, the response content will be immediately downloaded.</span>
+<span class="sd">    :param cert: (optional) if String, path to ssl client cert file (.pem). If Tuple, (&#39;cert&#39;, &#39;key&#39;) pair.</span>
+<span class="sd">    :return: :class:`Response &lt;Response&gt;` object</span>
+<span class="sd">    :rtype: requests.Response</span>
+
+<span class="sd">    Usage::</span>
+
+<span class="sd">      &gt;&gt;&gt; import requests</span>
+<span class="sd">      &gt;&gt;&gt; req = requests.request(&#39;GET&#39;, &#39;http://httpbin.org/get&#39;)</span>
+<span class="sd">      &lt;Response [200]&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># By using the &#39;with&#39; statement we are sure the session is closed, thus we</span>
+    <span class="c1"># avoid leaving sockets open which can trigger a ResourceWarning in some</span>
+    <span class="c1"># cases, and look like a memory leak in others.</span>
+    <span class="k">with</span> <span class="n">sessions</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div></blockquote>
 </section>
 </section>
@@ -319,6 +370,7 @@ err_msg 结果为False 的错误异常信息</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../model_delete/index.html" class="btn btn-neutral float-left" title="4. model_delete 模型删除" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../service_flow/index.html" class="btn btn-neutral float-right" title="6. service_flow 服务流程化" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
