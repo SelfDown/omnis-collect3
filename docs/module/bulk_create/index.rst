@@ -7,7 +7,7 @@
 模块: bulk_create
 >>>>>>>>>>>>>>>>>>>>>>
 配置示例
-这个是调用其他服务的示例，节点upload_file 是上传文件
+这个是批量新增jira 操作日志
 
     .. code-block:: yaml
      :caption: index.yaml
