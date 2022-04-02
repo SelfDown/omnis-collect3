@@ -24,5 +24,7 @@ result_handler 对模块处理后的结果进行处理
    arr2obj/index
    result2excel/index
    to_tree/index
+   result_msg/index
+   hook/index
 
 
