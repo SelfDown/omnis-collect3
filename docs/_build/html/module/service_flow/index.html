@@ -19,7 +19,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="索引" href="../../genindex.html" />
     <link rel="search" title="搜索" href="../../search.html" />
-    <link rel="next" title="result_handler 结果处理" href="../../result/index.html" />
+    <link rel="next" title="7. ssh 服务器操作" href="../ssh/index.html" />
     <link rel="prev" title="5. http 模块。服务端发http 请求" href="../http/index.html" /> 
 </head>
 
@@ -42,6 +42,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../common/index.html">公共配置</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../before/index.html">before_plugin 执行前模块</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">module 执行模块</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../sql/index.html">1. sql 模块查询</a></li>
@@ -55,10 +56,13 @@
 <li class="toctree-l4"><a class="reference internal" href="#next">1. next</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#fail">2. fail</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#ignore-error">3. ignore_error</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#strict">4. strict 是否传所有参数</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../ssh/index.html">7. ssh 服务器操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bulk_create/index.html">8. bulk_create 批量新增</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../result/index.html">result_handler 结果处理</a></li>
@@ -245,6 +249,28 @@ services的每个节点比包含</p>
 </div>
 </div></blockquote>
 </section>
+<section id="strict">
+<h3>4. strict 是否传所有参数<a class="headerlink" href="#strict" title="永久链接至标题"></a></h3>
+<dl>
+<dt>strict: true 表示，传指定参数。默认传所有参数</dt><dd><div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id7" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>   <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">update_upstream</span>
+     <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">重新调整配置</span>
+     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">node</span>
+     <span class="nt">strict</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+     <span class="nt">service</span><span class="p">:</span>
+       <span class="nt">service</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">router.update_conf</span>
+       <span class="nt">conf_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conf_id</span>
+       <span class="nt">upstream_script</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">current_script.current_upstream_content</span>
+       <span class="nt">router_script</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">current_script.current_router_content</span>
+     <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+     <span class="nt">fail</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+</pre></div>
+</div>
+</div>
+</dd>
+</dl>
+</section>
 </section>
 </section>
 
@@ -253,7 +279,7 @@ services的每个节点比包含</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../http/index.html" class="btn btn-neutral float-left" title="5. http 模块。服务端发http 请求" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
-        <a href="../../result/index.html" class="btn btn-neutral float-right" title="result_handler 结果处理" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../ssh/index.html" class="btn btn-neutral float-right" title="7. ssh 服务器操作" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

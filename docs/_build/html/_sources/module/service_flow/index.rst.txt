@@ -154,3 +154,22 @@ ignore_error: true 表示忽略错误
           next: item_delete
           ignore_error: true
 
+4. strict 是否传所有参数
+:::::::::::::::::::::::::::::::
+strict: true 表示，传指定参数。默认传所有参数
+    .. code-block:: yaml
+     :caption: index.yaml
+
+        - key: update_upstream
+          name: 重新调整配置
+          type: node
+          strict: true
+          service:
+            service: router.update_conf
+            conf_id: conf_id
+            upstream_script: current_script.current_upstream_content
+            router_script: current_script.current_router_content
+          next: end
+          fail: end
+
+
