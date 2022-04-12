@@ -69,3 +69,17 @@ log_handler_service=config.template_log_save
    :width: 100%
    :align: center
    :alt: 消息处理器
+
+
+.. code-block:: sql
+ :caption: index.yaml
+
+     CREATE TABLE `template_event_log` (
+       `template_event_log_id` varchar(255) NOT NULL,
+       `user_id` varchar(255) DEFAULT NULL,
+       `event_id` varchar(255) DEFAULT NULL,
+       `msg` text,
+       `datetime` varchar(255) DEFAULT NULL,
+       `from_service` varchar(255) DEFAULT NULL,
+       PRIMARY KEY (`template_event_log_id`)
+     ) ENGINE=InnoDB DEFAULT CHARSET=utf8
