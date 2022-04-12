@@ -41,14 +41,6 @@ log
    :alt: 文件日志
 
 
-
-
-
-
-
-
-
-
 配置参数
 >>>>>>>>>>>>>>>>>>>>>>
 这里解释配置文件application.properties 里面的参数
@@ -63,3 +55,10 @@ log
 日志处理模块，如果为空，就不处理。
 log_handler_service=config.template_log_save
 
+注意需要引入config 模块
+
+
+.. figure:: ./log_I.png
+   :width: 100%
+   :align: center
+   :alt: template_log_save 实现
