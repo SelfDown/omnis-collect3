@@ -62,3 +62,10 @@ log_handler_service=config.template_log_save
    :width: 100%
    :align: center
    :alt: template_log_save 实现
+
+以及依赖的消息处理器
+
+.. figure:: ./msg.png
+   :width: 100%
+   :align: center
+   :alt: 消息处理器
