@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>9. bulk_service 批量服务 &mdash; omnis-collect 1.0.0 文档</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="result_handler 结果处理" href="../../result/index.html" />
+    <link rel="prev" title="8. bulk_create 批量新增" href="../bulk_create/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> omnis-collect
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目录 :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../common/index.html">公共配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">before_plugin 执行前模块</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">module 执行模块</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../sql/index.html">1. sql 模块查询</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_save/index.html">2. model_save 模型保存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_update/index.html">3. model_update 模型修改</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../model_delete/index.html">4. model_delete 模型删除</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../http/index.html">5. http 模块。服务端发http 请求</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../service_flow/index.html">6. service_flow 服务流程化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ssh/index.html">7. ssh 服务器操作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bulk_create/index.html">8. bulk_create 批量新增</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">9. bulk_service 批量服务</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bulk-create">模块: bulk_create</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">配置参数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#batch">1. batch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#foreach">2. foreach</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#item">3. item</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#service">4. service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#append-param">5. append_param</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#save-field">6. save_field</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../result/index.html">result_handler 结果处理</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">omnis-collect</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">module 执行模块</a> &raquo;</li>
+      <li>9. bulk_service 批量服务</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module/bulk_service/index.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="bulk-service">
+<h1>9. bulk_service 批量服务<a class="headerlink" href="#bulk-service" title="永久链接至标题"></a></h1>
+<p>多线程执行各个不同的服务</p>
+<section id="bulk-create">
+<h2>模块: bulk_create<a class="headerlink" href="#bulk-create" title="永久链接至标题"></a></h2>
+<p>配置示例</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id2" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>  <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">batch_handler_script</span>
+    <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bulk_service</span>
+    <span class="nt">log</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="nt">elb_list</span><span class="p">:</span>
+        <span class="nt">check</span><span class="p">:</span>
+          <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{elb_list|must}}&quot;</span>
+          <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;elb</span><span class="nv"> </span><span class="s">列表数据不能为空&quot;</span>
+    <span class="nt">batch</span><span class="p">:</span>
+      <span class="nt">foreach</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">elb_list</span>
+      <span class="nt">item</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">item</span>
+      <span class="nt">service</span><span class="p">:</span>
+        <span class="nt">service</span><span class="p">:</span> <span class="s">&quot;nacos.target_server_conf_replace&quot;</span>
+        <span class="nt">conf_id</span><span class="p">:</span> <span class="s">&quot;{{item.conf_id}}&quot;</span>
+
+      <span class="nt">save_field</span><span class="p">:</span> <span class="s">&#39;bulk_result&#39;</span>
+    <span class="nt">result_handler</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">param2result</span>
+        <span class="nt">params</span><span class="p">:</span>
+          <span class="nt">field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bulk_result</span>
+      <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">new_col</span>
+        <span class="nt">params</span><span class="p">:</span>
+          <span class="nt">to_field</span><span class="p">:</span>
+            <span class="p p-Indicator">-</span> <span class="nt">field</span><span class="p">:</span> <span class="s">&quot;name&quot;</span>
+              <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{item.name}}&quot;</span>
+            <span class="p p-Indicator">-</span> <span class="nt">field</span><span class="p">:</span> <span class="s">&quot;server_ip&quot;</span>
+              <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{item.server_ip}}&quot;</span>
+          <span class="nt">remove</span><span class="p">:</span>
+            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">item</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>这个是一个批量发http 请求的示例，nacos.target_server_conf_replace 是一个服务，替换文件
+默认是将params 里面的参数，都传递过来了，实际params 里面发请求的时候，已经传了个upstream_script
+然后根据，conf_id 更新upstream_script</p>
+</div>
+</div></blockquote>
+</section>
+<section id="id1">
+<h2>配置参数<a class="headerlink" href="#id1" title="永久链接至标题"></a></h2>
+<p>这里解释节点的配置参数</p>
+<section id="batch">
+<h3>1. batch<a class="headerlink" href="#batch" title="永久链接至标题"></a></h3>
+<p>批量处理节点的对象，批量处理的配置，都在batch 下面</p>
+</section>
+<section id="foreach">
+<h3>2. foreach<a class="headerlink" href="#foreach" title="永久链接至标题"></a></h3>
+<p>循环列表，指定参数里面，列表取值对象</p>
+</section>
+<section id="item">
+<h3>3. item<a class="headerlink" href="#item" title="永久链接至标题"></a></h3>
+<p>循环之后item 模板，变量取值</p>
+</section>
+<section id="service">
+<h3>4. service<a class="headerlink" href="#service" title="永久链接至标题"></a></h3>
+<p>处理服务名称的对象</p>
+</section>
+<section id="append-param">
+<h3>5. append_param<a class="headerlink" href="#append-param" title="永久链接至标题"></a></h3>
+<p>是否添加全部请求参数，默认True,添加全部请求参数</p>
+</section>
+<section id="save-field">
+<h3>6. save_field<a class="headerlink" href="#save-field" title="永久链接至标题"></a></h3>
+<p>保存字段</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../bulk_create/index.html" class="btn btn-neutral float-left" title="8. bulk_create 批量新增" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../../result/index.html" class="btn btn-neutral float-right" title="result_handler 结果处理" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

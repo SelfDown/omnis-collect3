@@ -22,7 +22,7 @@
      * **timeout** 连接超时，默认15秒
 
     .. note::
-       如果不要进行ssh 连接 ，可以在模板中设置ssh_connect:False。和params 平级
+       如果不要进行ssh 连接 ，可以在模板中设置ssh_connect: false。和params 平级
 
 模块: ssh
 >>>>>>>>>>>>>>>>>>>>>>

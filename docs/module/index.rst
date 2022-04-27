@@ -14,6 +14,7 @@ module 执行模块
    service_flow/index
    ssh/index
    bulk_create/index
+   bulk_service/index
 
 
 

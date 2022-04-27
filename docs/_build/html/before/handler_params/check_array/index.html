@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3. check_array &mdash; omnis-collect 1.0.0 文档</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/translations.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="module 执行模块" href="../../../module/index.html" />
+    <link rel="prev" title="3. update_data 批量参数处理" href="../update_data/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> omnis-collect
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目录 :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../begin/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../common/index.html">公共配置</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">before_plugin 执行前模块</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../params/index.html">1. params 处理参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../extend_param/index.html">2. extend_param 继承参数</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">3.handler_params 处理参数</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../service2field/index.html">1. servic2field</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../excel_data/index.html">2. excel_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../update_data/index.html">3. update_data 批量参数处理</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">3. check_array</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">check_array 检查数组</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module/index.html">module 执行模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../result/index.html">result_handler 结果处理</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">omnis-collect</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">before_plugin 执行前模块</a> &raquo;</li>
+          <li><a href="../index.html">3.handler_params 处理参数</a> &raquo;</li>
+      <li>3. check_array</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/before/handler_params/check_array/index.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="check-array">
+<h1>3. check_array<a class="headerlink" href="#check-array" title="永久链接至标题"></a></h1>
+<p>检查数组，数据是否符合要求</p>
+<section id="id1">
+<h2>check_array 检查数组<a class="headerlink" href="#id1" title="永久链接至标题"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>item_order_index 表示数据的序号，从1开始</p></li>
+</ul>
+</div></blockquote>
+<p>配置示例</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">批量更新upstream 配置</span><a class="headerlink" href="#id2" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>    <span class="nt">handler_params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">check_array</span>
+        <span class="nt">foreach</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">update_list</span>
+        <span class="nt">item</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">item</span>
+        <span class="nt">fields</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{item.name|must}}&quot;</span>
+            <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;第【{{item_order_index}}】记录【负载均衡】名称不能为空&quot;</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../update_data/index.html" class="btn btn-neutral float-left" title="3. update_data 批量参数处理" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../../../module/index.html" class="btn btn-neutral float-right" title="module 执行模块" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
