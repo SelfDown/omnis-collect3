@@ -57,11 +57,13 @@
 <li class="toctree-l4"><a class="reference internal" href="#shell">1. shell</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#file-content">2. file_content</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#copy">3. copy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#template">4. template</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../bulk_create/index.html">8. bulk_create 批量新增</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bulk_service/index.html">9. bulk_service 批量服务</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../result/index.html">result_handler 结果处理</a></li>
@@ -281,6 +283,50 @@ services的每个节点比包含</p>
 <p class="admonition-title">注解</p>
 <p>如果上传文件，为了安全，请先上传到tmp 目录，然后运行cp 拷贝。否则可能文件上传一半
 失败了，服务器上源文件已经破坏，导致文件很难找回</p>
+</div>
+</div></blockquote>
+</section>
+<section id="template">
+<h3>4. template<a class="headerlink" href="#template" title="永久链接至标题"></a></h3>
+<p>运行节点后判断是否正常，能用于所有流程</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id8" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span>     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssh_test</span>
+       <span class="nt">http</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+       <span class="nt">must_login</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+       <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssh</span>
+       <span class="nt">params</span><span class="p">:</span>
+         <span class="nt">server_ip</span><span class="p">:</span>
+           <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;172.26.0.13&quot;</span>
+         <span class="nt">user</span><span class="p">:</span>
+           <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;root&quot;</span>
+         <span class="nt">password</span><span class="p">:</span>
+           <span class="nt">default</span><span class="p">:</span> <span class="s">&quot;******&quot;</span>
+       <span class="nt">shell</span><span class="p">:</span>
+         <span class="nt">services</span><span class="p">:</span>
+           <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start</span>
+             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start</span>
+             <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">开始</span>
+             <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test</span>
+           <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">test</span>
+             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">node</span>
+             <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">测试</span>
+             <span class="nt">shell</span><span class="p">:</span> <span class="s">&quot;ls&quot;</span>
+             <span class="nt">save_field</span><span class="p">:</span> <span class="s">&quot;content&quot;</span>
+             <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{%</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">content</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">False</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">else</span><span class="nv"> </span><span class="s">%}</span><span class="nv"> </span><span class="s">True</span><span class="nv"> </span><span class="s">{%</span><span class="nv"> </span><span class="s">endif</span><span class="nv"> </span><span class="s">%}&quot;</span>
+             <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;错误测试:{{content}}&quot;</span>
+             <span class="nt">next</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+             <span class="nt">fail</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+           <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+             <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">结束</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>template 的结果为True 表示正常,False 异常。err_msg 错误提示消息</p>
 </div>
 </div></blockquote>
 </section>

@@ -179,3 +179,44 @@
           如果上传文件，为了安全，请先上传到tmp 目录，然后运行cp 拷贝。否则可能文件上传一半
           失败了，服务器上源文件已经破坏，导致文件很难找回
 
+4. template
+::::::::::::::::::::
+运行节点后判断是否正常，能用于所有流程
+
+
+    .. code-block:: yaml
+     :caption: index.yaml
+
+          - key: ssh_test
+            http: true
+            must_login: false
+            module: ssh
+            params:
+              server_ip:
+                default: "172.26.0.13"
+              user:
+                default: "root"
+              password:
+                default: "******"
+            shell:
+              services:
+                - key: start
+                  type: start
+                  name: 开始
+                  next: test
+                - key: test
+                  type: node
+                  name: 测试
+                  shell: "ls"
+                  save_field: "content"
+                  template: "{% if content %} False {% else %} True {% endif %}"
+                  err_msg: "错误测试:{{content}}"
+                  next: end
+                  fail: end
+                - key: end
+                  type: end
+                  name: 结束
+
+    .. note::
+          template 的结果为True 表示正常,False 异常。err_msg 错误提示消息
+
