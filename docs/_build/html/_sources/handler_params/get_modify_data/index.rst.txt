@@ -1,0 +1,314 @@
+5. get_modify_data
+=========================================
+获取调整的数据，
+
+* 支持获取普通字段
+* 数组的新增和删除
+* 数组中某个字段调整
+
+场景，我做运维平台，经常需要记录哪个人，对某条数据进来进行修改，主要进来从什么值，改到什么值，哪个人操作的，选后画个界面展示。
+
+比如我录入一个发布的升级单，包含名称、版本、问题issue还有一些部署包。后续有调整需要记录名称，版本、issue和部署包整个的调整记录
+方便问题跟踪，如果有个部署包被删除了，然后展示什么时候节点被谁删除的。
+
+诸如此类问题，还有服务器记录有调整，被谁改过值；参数调整记录，哪个key 的值被人改过；以及实时同步jira 的issue 和本地数据同步，对比差异数据
+甚至我想要提交升级单前，比较出我改了那些字段，列出我的修改记录
+
+
+获取调整的数据
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+规则主要在data_json 中
+
+* data_json 规则路径
+* save_field  保存字段
+
+
+
+配置示例
+
+    .. code-block:: yaml
+     :caption: 角色删除index.yaml
+
+
+      # 服务转字段 实现类
+      - key: get_modify_data
+        name: 生成改变日志
+        data_json: req_modify.json
+        save_field: change_list
+
+
+
+    .. code-block:: json
+     :caption: req_modify.json
+
+
+      {
+       "desc": "替换前和替换后，概念调整下，方便对比，从左往右，传过来的数据，是前段的数据，left。已有的后台数据是right",
+       "left_save_field": "after",
+       "right_save_field": "before",
+       "fields": [
+         {
+           "rule": "compare_field_value",
+           "field": "req_summary",
+           "operation": "modify",
+           "desc": "普通字段比较，如果值相同则没有变化，template =True",
+           "name": "名称",
+           "left": "",
+           "right": "planning_detail"
+
+         },
+         {
+           "rule": "compare_field_value",
+           "field": "dev_user",
+           "operation": "modify",
+           "name": "开发负责",
+           "desc": "查询一个服务获取比较值",
+           "left": "",
+           "right": "planning_detail",
+           "transfer": {
+             "current_value_field": "compare_field_value",
+             "service": {
+               "service": "hrm.get_user",
+               "userid": "compare_field_value",
+               "to_obj": true
+             },
+             "save_field": "userInfo",
+             "value": "userInfo.nick"
+           }
+         },
+         {
+           "key": "{{array_item.war_groupid}}#{{array_item.war_artifactid}}",
+           "rule": "compare_array_add_delete",
+           "desc": "数组比较部署包的新增和删除",
+           "name": "部署包新增和删除",
+           "field": "war_list",
+           "left": "",
+           "right": "planning_detail",
+           "item_field": "array_item",
+           "value": "{{war_artifactid}}|{{war_groupid}}|{{war_version}}"
+         },
+         {
+           "key": "{{array_item.war_groupid}}#{{array_item.war_artifactid}}",
+           "rule": "compare_array_modify",
+           "name": "数组中部署版本调整",
+           "field": "war_list",
+           "left": "",
+           "right": "planning_detail",
+           "item_field": "array_item",
+           "left_array_item": "left_item",
+           "right_array_item": "right_item",
+           "fields": [
+             {
+               "template": "{{left_item.war_version==right_item.war_version}}",
+               "name": "部署版本",
+               "field": "war_version",
+               "value": "{{war_version}}({{war_artifactid}})"
+             }
+           ]
+         }
+       ]
+     }
+
+1.rule
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+compare_field_value 简单字段比较
+compare_array_add_delete 比较数组新增和修改
+compare_array_modify 比较数组的比较
+
+2.field 字段
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+在单个规则中，直接字段比较，field 如果不同，则表示
+数据不同
+
+3.left 从左边取的数据
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+表示前台传过来的数据，在数组比较规则中， **如果field不存在，则直接取left 里面的值** 为空表示取整个参数
+
+4.right 从右边取的数据
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+本地取值，**如果field不存在，则直接取right 里面的值**，
+
+5.value 表示取值规则，模板渲染
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+主要针对复杂取值规则
+
+5.operation 操作
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+单条记录和数组值比较一般设置modify
+数组的新增和删除不用设置，程序字段判断add 和remove
+
+6.name 名称
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+记录字段名称
+
+
+7.append_right_fields 拼接右边的数据
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+拼接右边的数据
+
+8.append_original_item 拼接左边的数据、原始数据
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+拼接左边的数据、原始数据
+
+9.fields 针对数组compare_array_modify规则,里面设置简单规则
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+ 针对数组compare_array_modify规则,里面设置简单规则
+
+10.template 判断数值规则，True 表示一致
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+ 判断数值规则，True 表示一致
+
+
+11.transfer 数据转换规则，支持调用一个服务，获取里面值
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+current_value_field 表示当前的值，
+调用一个服务换另外一个显示值
+
+
+12. left_save_field 和right_save_field 表示对比前后保存字段
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+left_save_field   一般 before
+right_save_field  一般 after
+
+
+
+
+
+其他示例
+
+    .. code-block:: json
+     :caption: 结果
+
+       {
+           "server_id": "241f8dc6-47b9-4da8-998e-0f2d82ec29a5",
+           "name": "内存",
+           "after": null,
+           "field": "memory_size",
+           "operation": "modify",
+           "before": "5G"
+       }
+
+    .. code-block:: json
+     :caption: user_modify.json
+
+     {
+       "desc": "替换前和替换后，概念调整下，方便对比，从左往右，传过来的数据，是前段的数据，left。已有的后台数据是right",
+       "left_save_field": "after",
+       "right_save_field": "before",
+       "fields": [
+         {
+           "rule": "compare_field_value",
+           "field": "server_ip",
+           "operation": "modify",
+           "desc": "普通字段比较，如果值相同则没有变化，template =True",
+           "name": "服务器IP",
+           "left": "",
+           "right": "server_info",
+           "append_right_fields": ["server_id"]
+         },
+         {
+           "rule": "compare_field_value",
+           "field": "server_busi_name",
+           "operation": "modify",
+           "desc": "普通字段比较，如果值相同则没有变化，template =True",
+           "name": "资源名称",
+           "left": "",
+           "right": "server_info",
+           "append_right_fields": ["server_id"]
+         },
+         {
+           "rule": "compare_field_value",
+           "field": "server_name",
+           "operation": "modify",
+           "desc": "普通字段比较，如果值相同则没有变化，template =True",
+           "name": "主机名称",
+           "left": "",
+           "right": "server_info",
+           "append_right_fields": ["server_id"]
+         },
+         {
+           "rule": "compare_field_value",
+           "field": "server_port",
+           "operation": "modify",
+           "desc": "普通字段比较，如果值相同则没有变化，template =True",
+           "name": "主机端口",
+           "left": "",
+           "right": "server_info",
+           "append_right_fields": ["server_id"]
+         },
+         {
+           "rule": "compare_field_value",
+           "field": "server_service_type",
+           "operation": "modify",
+           "desc": "普通字段比较，如果值相同则没有变化，template =True",
+           "name": "软件分类",
+           "left": "",
+           "right": "server_info",
+           "append_right_fields": ["server_id"]
+         },
+         {
+           "rule": "compare_field_value",
+           "field": "disk_total_size",
+           "operation": "modify",
+           "desc": "普通字段比较，如果值相同则没有变化，template =True",
+           "name": "硬盘",
+           "left": "",
+           "right": "server_info",
+           "append_right_fields": ["server_id"]
+         }, {
+           "rule": "compare_field_value",
+           "field": "memory_size",
+           "operation": "modify",
+           "desc": "普通字段比较，如果值相同则没有变化，template =True",
+           "name": "内存",
+           "left": "",
+           "right": "server_info",
+           "append_right_fields": ["server_id"]
+         },{
+           "rule": "compare_field_value",
+           "field": "cpu_cores",
+           "operation": "modify",
+           "desc": "普通字段比较，如果值相同则没有变化，template =True",
+           "name": "CPU",
+           "left": "",
+           "right": "server_info",
+           "append_right_fields": ["server_id"]
+         },
+         {
+           "key": "array_item.user_name",
+           "rule": "compare_array_add_delete",
+           "desc": "比较数组新增+删除",
+           "name": "主机用户新增和删除",
+           "field": "server_os_users",
+           "left": "",
+           "right": "server_info",
+           "item_field": "array_item",
+           "value": "user_name",
+           "append_original_item": true
+         },
+         {
+           "key": "array_item.user_name",
+           "rule": "compare_array_modify",
+           "name": "主机用户调整",
+           "field": "server_os_users",
+           "left": "",
+           "right": "server_info",
+           "item_field": "array_item",
+           "left_array_item": "left_item",
+           "right_array_item": "right_item",
+           "fields": [
+             {
+
+               "name": "用户信息",
+               "field": "user_name",
+               "value": "{{'主机用户信息调整'}}",
+               "template": "{{ left_item.ossoft_user_group_id == right_item.ossoft_user_group_id and left_item.user_name == right_item.user_name and left_item.user_pwd == right_item.user_pwd  }}",
+               "append_original_item": true,
+               "append_right_fields": ["server_os_users_id","server_os_user_id"]
+             }
+           ]
+         }
+
+       ]
+     }
+

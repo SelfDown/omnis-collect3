@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5. get_modify_data &mdash; omnis-collect 1.0.0 文档</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="module 执行模块" href="../../module/index.html" />
+    <link rel="prev" title="3. check_array" href="../check_array/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> omnis-collect
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目录 :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../common/index.html">公共配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">before_plugin 执行前模块</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">3.handler_params 处理参数</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../service2field/index.html">1. servic2field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../excel_data/index.html">2. excel_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../update_data/index.html">3. update_data 批量参数处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../check_array/index.html">3. check_array</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5. get_modify_data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">获取调整的数据</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rule">1.rule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#field">2.field 字段</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#left">3.left 从左边取的数据</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#right">4.right 从右边取的数据</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#value">5.value 表示取值规则，模板渲染</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operation">5.operation 操作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#name">6.name 名称</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#append-right-fields">7.append_right_fields 拼接右边的数据</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#append-original-item">8.append_original_item 拼接左边的数据、原始数据</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fields-compare-array-modify">9.fields 针对数组compare_array_modify规则,里面设置简单规则</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#template-true">10.template 判断数值规则，True 表示一致</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#transfer">11.transfer 数据转换规则，支持调用一个服务，获取里面值</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#left-save-field-right-save-field">12. left_save_field 和right_save_field 表示对比前后保存字段</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../module/index.html">module 执行模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../result/index.html">result_handler 结果处理</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">omnis-collect</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">3.handler_params 处理参数</a> &raquo;</li>
+      <li>5. get_modify_data</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/handler_params/get_modify_data/index.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="get-modify-data">
+<h1>5. get_modify_data<a class="headerlink" href="#get-modify-data" title="永久链接至标题"></a></h1>
+<p>获取调整的数据，</p>
+<ul class="simple">
+<li><p>支持获取普通字段</p></li>
+<li><p>数组的新增和删除</p></li>
+<li><p>数组中某个字段调整</p></li>
+</ul>
+<p>场景，我做运维平台，经常需要记录哪个人，对某条数据进来进行修改，主要进来从什么值，改到什么值，哪个人操作的，选后画个界面展示。</p>
+<p>比如我录入一个发布的升级单，包含名称、版本、问题issue还有一些部署包。后续有调整需要记录名称，版本、issue和部署包整个的调整记录
+方便问题跟踪，如果有个部署包被删除了，然后展示什么时候节点被谁删除的。</p>
+<p>诸如此类问题，还有服务器记录有调整，被谁改过值；参数调整记录，哪个key 的值被人改过；以及实时同步jira 的issue 和本地数据同步，对比差异数据
+甚至我想要提交升级单前，比较出我改了那些字段，列出我的修改记录</p>
+<section id="id1">
+<h2>获取调整的数据<a class="headerlink" href="#id1" title="永久链接至标题"></a></h2>
+<p>规则主要在data_json 中</p>
+<ul class="simple">
+<li><p>data_json 规则路径</p></li>
+<li><p>save_field  保存字段</p></li>
+</ul>
+<p>配置示例</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">角色删除index.yaml</span><a class="headerlink" href="#id2" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span> <span class="c1"># 服务转字段 实现类</span>
+ <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">get_modify_data</span>
+   <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">生成改变日志</span>
+   <span class="nt">data_json</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">req_modify.json</span>
+   <span class="nt">save_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">change_list</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">req_modify.json</span><a class="headerlink" href="#id3" title="永久链接至代码"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span> <span class="p">{</span>
+  <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;替换前和替换后，概念调整下，方便对比，从左往右，传过来的数据，是前段的数据，left。已有的后台数据是right&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;left_save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;after&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;right_save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;before&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_field_value&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;req_summary&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;普通字段比较，如果值相同则没有变化，template =True&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;名称&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;planning_detail&quot;</span>
+
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_field_value&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;dev_user&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;开发负责&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;查询一个服务获取比较值&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;planning_detail&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;transfer&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;current_value_field&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_field_value&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;service&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;service&quot;</span><span class="p">:</span> <span class="s2">&quot;hrm.get_user&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;userid&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_field_value&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;to_obj&quot;</span><span class="p">:</span> <span class="kc">true</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;userInfo&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;userInfo.nick&quot;</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;{{array_item.war_groupid}}#{{array_item.war_artifactid}}&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_array_add_delete&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;数组比较部署包的新增和删除&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;部署包新增和删除&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;war_list&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;planning_detail&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;item_field&quot;</span><span class="p">:</span> <span class="s2">&quot;array_item&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;{{war_artifactid}}|{{war_groupid}}|{{war_version}}&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;{{array_item.war_groupid}}#{{array_item.war_artifactid}}&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_array_modify&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;数组中部署版本调整&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;war_list&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;planning_detail&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;item_field&quot;</span><span class="p">:</span> <span class="s2">&quot;array_item&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left_array_item&quot;</span><span class="p">:</span> <span class="s2">&quot;left_item&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right_array_item&quot;</span><span class="p">:</span> <span class="s2">&quot;right_item&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;template&quot;</span><span class="p">:</span> <span class="s2">&quot;{{left_item.war_version==right_item.war_version}}&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;部署版本&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;war_version&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;{{war_version}}({{war_artifactid}})&quot;</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+<section id="rule">
+<h2>1.rule<a class="headerlink" href="#rule" title="永久链接至标题"></a></h2>
+<p>compare_field_value 简单字段比较
+compare_array_add_delete 比较数组新增和修改
+compare_array_modify 比较数组的比较</p>
+</section>
+<section id="field">
+<h2>2.field 字段<a class="headerlink" href="#field" title="永久链接至标题"></a></h2>
+<p>在单个规则中，直接字段比较，field 如果不同，则表示
+数据不同</p>
+</section>
+<section id="left">
+<h2>3.left 从左边取的数据<a class="headerlink" href="#left" title="永久链接至标题"></a></h2>
+<p>表示前台传过来的数据，在数组比较规则中， <strong>如果field不存在，则直接取left 里面的值</strong> 为空表示取整个参数</p>
+</section>
+<section id="right">
+<h2>4.right 从右边取的数据<a class="headerlink" href="#right" title="永久链接至标题"></a></h2>
+<p>本地取值，<strong>如果field不存在，则直接取right 里面的值</strong>，</p>
+</section>
+<section id="value">
+<h2>5.value 表示取值规则，模板渲染<a class="headerlink" href="#value" title="永久链接至标题"></a></h2>
+<p>主要针对复杂取值规则</p>
+</section>
+<section id="operation">
+<h2>5.operation 操作<a class="headerlink" href="#operation" title="永久链接至标题"></a></h2>
+<p>单条记录和数组值比较一般设置modify
+数组的新增和删除不用设置，程序字段判断add 和remove</p>
+</section>
+<section id="name">
+<h2>6.name 名称<a class="headerlink" href="#name" title="永久链接至标题"></a></h2>
+<p>记录字段名称</p>
+</section>
+<section id="append-right-fields">
+<h2>7.append_right_fields 拼接右边的数据<a class="headerlink" href="#append-right-fields" title="永久链接至标题"></a></h2>
+<p>拼接右边的数据</p>
+</section>
+<section id="append-original-item">
+<h2>8.append_original_item 拼接左边的数据、原始数据<a class="headerlink" href="#append-original-item" title="永久链接至标题"></a></h2>
+<p>拼接左边的数据、原始数据</p>
+</section>
+<section id="fields-compare-array-modify">
+<h2>9.fields 针对数组compare_array_modify规则,里面设置简单规则<a class="headerlink" href="#fields-compare-array-modify" title="永久链接至标题"></a></h2>
+<blockquote>
+<div><p>针对数组compare_array_modify规则,里面设置简单规则</p>
+</div></blockquote>
+</section>
+<section id="template-true">
+<h2>10.template 判断数值规则，True 表示一致<a class="headerlink" href="#template-true" title="永久链接至标题"></a></h2>
+<blockquote>
+<div><p>判断数值规则，True 表示一致</p>
+</div></blockquote>
+</section>
+<section id="transfer">
+<h2>11.transfer 数据转换规则，支持调用一个服务，获取里面值<a class="headerlink" href="#transfer" title="永久链接至标题"></a></h2>
+<p>current_value_field 表示当前的值，
+调用一个服务换另外一个显示值</p>
+</section>
+<section id="left-save-field-right-save-field">
+<h2>12. left_save_field 和right_save_field 表示对比前后保存字段<a class="headerlink" href="#left-save-field-right-save-field" title="永久链接至标题"></a></h2>
+<p>left_save_field   一般 before
+right_save_field  一般 after</p>
+<p>其他示例</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">结果</span><a class="headerlink" href="#id4" title="永久链接至代码"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>  <span class="p">{</span>
+      <span class="nt">&quot;server_id&quot;</span><span class="p">:</span> <span class="s2">&quot;241f8dc6-47b9-4da8-998e-0f2d82ec29a5&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;内存&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;after&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;memory_size&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;before&quot;</span><span class="p">:</span> <span class="s2">&quot;5G&quot;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">user_modify.json</span><a class="headerlink" href="#id5" title="永久链接至代码"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;替换前和替换后，概念调整下，方便对比，从左往右，传过来的数据，是前段的数据，left。已有的后台数据是right&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;left_save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;after&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;right_save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;before&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_field_value&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;server_ip&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;普通字段比较，如果值相同则没有变化，template =True&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;服务器IP&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;server_info&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;append_right_fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;server_id&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_field_value&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;server_busi_name&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;普通字段比较，如果值相同则没有变化，template =True&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;资源名称&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;server_info&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;append_right_fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;server_id&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_field_value&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;server_name&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;普通字段比较，如果值相同则没有变化，template =True&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;主机名称&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;server_info&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;append_right_fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;server_id&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_field_value&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;server_port&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;普通字段比较，如果值相同则没有变化，template =True&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;主机端口&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;server_info&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;append_right_fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;server_id&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_field_value&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;server_service_type&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;普通字段比较，如果值相同则没有变化，template =True&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;软件分类&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;server_info&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;append_right_fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;server_id&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_field_value&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;disk_total_size&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;普通字段比较，如果值相同则没有变化，template =True&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;硬盘&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;server_info&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;append_right_fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;server_id&quot;</span><span class="p">]</span>
+    <span class="p">},</span> <span class="p">{</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_field_value&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;memory_size&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;普通字段比较，如果值相同则没有变化，template =True&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;内存&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;server_info&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;append_right_fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;server_id&quot;</span><span class="p">]</span>
+    <span class="p">},{</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_field_value&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu_cores&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;普通字段比较，如果值相同则没有变化，template =True&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;CPU&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;server_info&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;append_right_fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;server_id&quot;</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;array_item.user_name&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_array_add_delete&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;desc&quot;</span><span class="p">:</span> <span class="s2">&quot;比较数组新增+删除&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;主机用户新增和删除&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;server_os_users&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;server_info&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;item_field&quot;</span><span class="p">:</span> <span class="s2">&quot;array_item&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;user_name&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;append_original_item&quot;</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;array_item.user_name&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;rule&quot;</span><span class="p">:</span> <span class="s2">&quot;compare_array_modify&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;主机用户调整&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;server_os_users&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right&quot;</span><span class="p">:</span> <span class="s2">&quot;server_info&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;item_field&quot;</span><span class="p">:</span> <span class="s2">&quot;array_item&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;left_array_item&quot;</span><span class="p">:</span> <span class="s2">&quot;left_item&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;right_array_item&quot;</span><span class="p">:</span> <span class="s2">&quot;right_item&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+
+          <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;用户信息&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;user_name&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;{{&#39;主机用户信息调整&#39;}}&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;template&quot;</span><span class="p">:</span> <span class="s2">&quot;{{ left_item.ossoft_user_group_id == right_item.ossoft_user_group_id and left_item.user_name == right_item.user_name and left_item.user_pwd == right_item.user_pwd  }}&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;append_original_item&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+          <span class="nt">&quot;append_right_fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;server_os_users_id&quot;</span><span class="p">,</span><span class="s2">&quot;server_os_user_id&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../check_array/index.html" class="btn btn-neutral float-left" title="3. check_array" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../../module/index.html" class="btn btn-neutral float-right" title="module 执行模块" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

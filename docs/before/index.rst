@@ -7,7 +7,7 @@ before_plugin 执行前模块
 
    params/index
    extend_param/index
-   handler_params/index
+
 
 
 

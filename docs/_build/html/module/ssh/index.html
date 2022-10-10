@@ -44,6 +44,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../common/index.html">公共配置</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../before/index.html">before_plugin 执行前模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../handler_params/index.html">3.handler_params 处理参数</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">module 执行模块</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../sql/index.html">1. sql 模块查询</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../model_save/index.html">2. model_save 模型保存</a></li>
@@ -58,6 +59,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#file-content">2. file_content</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#copy">3. copy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#template">4. template</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#shell-list">5. shell_list</a></li>
 </ul>
 </li>
 </ul>
@@ -109,6 +111,7 @@
 <li><p>支持读取服务器本地文件内容</p></li>
 <li><p>支持输入shell 命令</p></li>
 <li><p>支持配置化显示错误信息，conf/ssh_error_info.yaml 根据shell 命令返回可以，提示错误信息</p></li>
+<li><p>支持将shell 命令单独抽取一个文件</p></li>
 </ul>
 </div></blockquote>
 <p>默认进行ssh 连接，params传一下配置</p>
@@ -327,6 +330,94 @@ services的每个节点比包含</p>
 <div class="admonition note">
 <p class="admonition-title">注解</p>
 <p>template 的结果为True 表示正常,False 异常。err_msg 错误提示消息</p>
+</div>
+</div></blockquote>
+</section>
+<section id="shell-list">
+<h3>5. shell_list<a class="headerlink" href="#shell-list" title="永久链接至标题"></a></h3>
+<p>批量执行一批shell,单个返回结果不能有换行。然后批量设置字段</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id9" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">service</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">get_hard</span>
+    <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssh</span>
+    <span class="nt">http</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">log</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="nt">server_ip</span><span class="p">:</span>
+        <span class="nt">check</span><span class="p">:</span>
+          <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{server_ip|must}}&quot;</span>
+          <span class="nt">err_msg</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">服务ip不能为空</span>
+      <span class="nt">user</span><span class="p">:</span>
+        <span class="nt">check</span><span class="p">:</span>
+          <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{user|must}}&quot;</span>
+          <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;用户不能为空&quot;</span>
+      <span class="nt">password</span><span class="p">:</span>
+        <span class="nt">check</span><span class="p">:</span>
+          <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{password|must}}&quot;</span>
+          <span class="nt">err_msg</span><span class="p">:</span> <span class="s">&quot;【{{server_ip}}】</span><span class="nv"> </span><span class="s">root</span><span class="nv"> </span><span class="s">密码不能为空&quot;</span>
+      <span class="nt">port</span><span class="p">:</span>
+        <span class="nt">default</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">22</span>
+      <span class="nt">timeout</span><span class="p">:</span>
+        <span class="nt">default</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+    <span class="nt">data_json</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">get_hard.json</span>
+    <span class="nt">result_handler</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">add_param</span>
+        <span class="nt">params</span><span class="p">:</span>
+          <span class="nt">from_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">server_name</span>
+          <span class="nt">to_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">server_name</span>
+      <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">add_param</span>
+        <span class="nt">params</span><span class="p">:</span>
+          <span class="nt">from_field</span><span class="p">:</span> <span class="s">&#39;system-release&#39;</span>
+          <span class="nt">to_field</span><span class="p">:</span> <span class="s">&#39;system-release&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">get_hard.json,批量执行shell ,设置参数字段</span><a class="headerlink" href="#id10" title="永久链接至代码"></a></div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span>     <span class="p">{</span>
+       <span class="nt">&quot;services&quot;</span><span class="p">:</span> <span class="p">[</span>
+         <span class="p">{</span>
+           <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;开始&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;next&quot;</span><span class="p">:</span> <span class="s2">&quot;N-hostname&quot;</span>
+         <span class="p">},</span>
+         <span class="p">{</span>
+           <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;N-hostname&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;shell_list 获取所有服务，shell_list 执行结果不能有换行&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;node&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;shell_list&quot;</span><span class="p">:</span> <span class="p">[</span>
+             <span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;主机名&quot;</span><span class="p">,</span><span class="nt">&quot;save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;server_name&quot;</span><span class="p">,</span><span class="nt">&quot;shell&quot;</span><span class="p">:</span> <span class="s2">&quot;hostname&quot;</span><span class="p">},</span>
+             <span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;系统版本&quot;</span><span class="p">,</span><span class="nt">&quot;save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;system-release&quot;</span><span class="p">,</span><span class="nt">&quot;shell&quot;</span><span class="p">:</span> <span class="s2">&quot;cat /etc/redhat-release&quot;</span><span class="p">},</span>
+             <span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;内核版本&quot;</span><span class="p">,</span><span class="nt">&quot;save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;kernel-release&quot;</span><span class="p">,</span><span class="nt">&quot;shell&quot;</span><span class="p">:</span> <span class="s2">&quot;uname -a|awk &#39;{print $1,$3}&#39;&quot;</span><span class="p">},</span>
+             <span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;模型&quot;</span><span class="p">,</span><span class="nt">&quot;save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;server-model&quot;</span><span class="p">,</span><span class="nt">&quot;shell&quot;</span><span class="p">:</span> <span class="s2">&quot;dmidecode | grep &#39;Product Name:&#39;|sed -n &#39;1p&#39;|awk -F&#39;: &#39; &#39;{print $2}&#39;&quot;</span><span class="p">},</span>
+             <span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu频率&quot;</span><span class="p">,</span><span class="nt">&quot;save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu_frequency&quot;</span><span class="p">,</span><span class="nt">&quot;shell&quot;</span><span class="p">:</span> <span class="s2">&quot;cat /proc/cpuinfo | grep &#39;model name&#39; | uniq |awk -F&#39;: &#39; &#39;{print $2}&#39;&quot;</span><span class="p">},</span>
+             <span class="p">{</span> <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;cpu核数&quot;</span><span class="p">,</span><span class="nt">&quot;save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu_cores&quot;</span><span class="p">,</span><span class="nt">&quot;shell&quot;</span><span class="p">:</span> <span class="s2">&quot;cat /proc/cpuinfo | grep &#39;cpu cores&#39; | uniq |awk -F&#39;: &#39; &#39;{print $2}&#39;&quot;</span><span class="p">},</span>
+             <span class="p">{</span> <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;cpu总数&quot;</span><span class="p">,</span><span class="nt">&quot;save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu_count&quot;</span><span class="p">,</span> <span class="nt">&quot;shell&quot;</span><span class="p">:</span> <span class="s2">&quot;cat /proc/cpuinfo | grep &#39;physical id&#39; | sort | uniq| wc -l &quot;</span><span class="p">},</span>
+             <span class="p">{</span> <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;cpu逻辑数&quot;</span><span class="p">,</span><span class="nt">&quot;save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu_logic_count&quot;</span><span class="p">,</span><span class="nt">&quot;shell&quot;</span><span class="p">:</span> <span class="s2">&quot;cat /proc/cpuinfo | grep &#39;processor&#39; | sort -u| wc -l &quot;</span><span class="p">},</span>
+             <span class="p">{</span> <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;cpu物理数&quot;</span><span class="p">,</span><span class="nt">&quot;save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu_physical_count&quot;</span><span class="p">,</span><span class="nt">&quot;shell&quot;</span><span class="p">:</span> <span class="s2">&quot;cat /proc/cpuinfo | grep &#39;physical id&#39; | sort -u| wc -l &quot;</span><span class="p">},</span>
+             <span class="p">{</span> <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu缓存数&quot;</span><span class="p">,</span><span class="nt">&quot;save_field&quot;</span><span class="p">:</span><span class="s2">&quot;cpu_cache&quot;</span><span class="p">,</span><span class="nt">&quot;shell&quot;</span><span class="p">:</span> <span class="s2">&quot;cat /proc/cpuinfo| grep &#39;cache size&#39;|uniq|awk &#39;{print $4}&#39;&quot;</span><span class="p">},</span>
+             <span class="p">{</span> <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;磁盘数&quot;</span><span class="p">,</span><span class="nt">&quot;save_field&quot;</span><span class="p">:</span><span class="s2">&quot;disk_count&quot;</span><span class="p">,</span><span class="nt">&quot;shell&quot;</span><span class="p">:</span> <span class="s2">&quot;lsblk -o TYPE | grep -i disk | wc -l&quot;</span><span class="p">},</span>
+             <span class="p">{</span> <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;磁盘大小&quot;</span><span class="p">,</span><span class="nt">&quot;save_field&quot;</span><span class="p">:</span><span class="s2">&quot;disk_total_size&quot;</span><span class="p">,</span><span class="nt">&quot;shell&quot;</span><span class="p">:</span> <span class="s2">&quot;lsblk -db|grep disk |awk &#39;{print $4}&#39; |awk &#39;{sum+=$1};END{print sum/1000/1000/1000}&#39;&quot;</span><span class="p">},</span>
+             <span class="p">{</span> <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;内存大小&quot;</span><span class="p">,</span><span class="nt">&quot;save_field&quot;</span><span class="p">:</span><span class="s2">&quot;memory_size&quot;</span><span class="p">,</span><span class="nt">&quot;shell&quot;</span><span class="p">:</span> <span class="s2">&quot;cat /proc/meminfo | grep MemTotal | awk &#39;{printf(\&quot;%d\&quot;,$2/1000/1000)}&#39;&quot;</span><span class="p">}</span>
+           <span class="p">],</span>
+           <span class="nt">&quot;save_field&quot;</span><span class="p">:</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;ignore_error&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+           <span class="nt">&quot;fail&quot;</span><span class="p">:</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;next&quot;</span><span class="p">:</span> <span class="s2">&quot;end&quot;</span>
+         <span class="p">},</span>
+
+         <span class="p">{</span>
+           <span class="nt">&quot;key&quot;</span><span class="p">:</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;结束&quot;</span>
+         <span class="p">}</span>
+       <span class="p">]</span>
+     <span class="p">}</span>
+</pre></div>
+</div>
 </div>
 </div></blockquote>
 </section>

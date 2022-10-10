@@ -15,6 +15,7 @@
    structure/index
    common/index
    before/index
+   handler_params/index
    module/index
    result/index
 

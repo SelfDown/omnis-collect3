@@ -12,6 +12,8 @@
      * 支持读取服务器本地文件内容
      * 支持输入shell 命令
      * 支持配置化显示错误信息，conf/ssh_error_info.yaml 根据shell 命令返回可以，提示错误信息
+     * 支持将shell 命令单独抽取一个文件
+
 
 默认进行ssh 连接，params传一下配置
 
@@ -220,3 +222,90 @@
     .. note::
           template 的结果为True 表示正常,False 异常。err_msg 错误提示消息
 
+5. shell_list
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+批量执行一批shell,单个返回结果不能有换行。然后批量设置字段
+
+
+
+
+    .. code-block:: yaml
+     :caption: index.yaml
+
+     service:
+       - key: get_hard
+         module: ssh
+         http: true
+         log: true
+         params:
+           server_ip:
+             check:
+               template: "{{server_ip|must}}"
+               err_msg: 服务ip不能为空
+           user:
+             check:
+               template: "{{user|must}}"
+               err_msg: "用户不能为空"
+           password:
+             check:
+               template: "{{password|must}}"
+               err_msg: "【{{server_ip}}】 root 密码不能为空"
+           port:
+             default: 22
+           timeout:
+             default: 1
+         data_json: get_hard.json
+         result_handler:
+           - key: add_param
+             params:
+               from_field: server_name
+               to_field: server_name
+           - key: add_param
+             params:
+               from_field: 'system-release'
+               to_field: 'system-release'
+
+
+    .. code-block:: json
+     :caption: get_hard.json,批量执行shell ,设置参数字段
+
+          {
+            "services": [
+              {
+                "key": "start",
+                "type": "start",
+                "name": "开始",
+                "next": "N-hostname"
+              },
+              {
+                "key": "N-hostname",
+                "name": "shell_list 获取所有服务，shell_list 执行结果不能有换行",
+                "type": "node",
+                "shell_list": [
+                  {"name": "主机名","save_field": "server_name","shell": "hostname"},
+                  {"name": "系统版本","save_field": "system-release","shell": "cat /etc/redhat-release"},
+                  {"name": "内核版本","save_field": "kernel-release","shell": "uname -a|awk '{print $1,$3}'"},
+                  {"name": "模型","save_field": "server-model","shell": "dmidecode | grep 'Product Name:'|sed -n '1p'|awk -F': ' '{print $2}'"},
+                  {"name": "cpu频率","save_field": "cpu_frequency","shell": "cat /proc/cpuinfo | grep 'model name' | uniq |awk -F': ' '{print $2}'"},
+                  { "name":"cpu核数","save_field": "cpu_cores","shell": "cat /proc/cpuinfo | grep 'cpu cores' | uniq |awk -F': ' '{print $2}'"},
+                  { "name":"cpu总数","save_field": "cpu_count", "shell": "cat /proc/cpuinfo | grep 'physical id' | sort | uniq| wc -l "},
+                  { "name":"cpu逻辑数","save_field": "cpu_logic_count","shell": "cat /proc/cpuinfo | grep 'processor' | sort -u| wc -l "},
+                  { "name":"cpu物理数","save_field": "cpu_physical_count","shell": "cat /proc/cpuinfo | grep 'physical id' | sort -u| wc -l "},
+                  { "name": "cpu缓存数","save_field":"cpu_cache","shell": "cat /proc/cpuinfo| grep 'cache size'|uniq|awk '{print $4}'"},
+                  { "name": "磁盘数","save_field":"disk_count","shell": "lsblk -o TYPE | grep -i disk | wc -l"},
+                  { "name": "磁盘大小","save_field":"disk_total_size","shell": "lsblk -db|grep disk |awk '{print $4}' |awk '{sum+=$1};END{print sum/1000/1000/1000}'"},
+                  { "name": "内存大小","save_field":"memory_size","shell": "cat /proc/meminfo | grep MemTotal | awk '{printf(\"%d\",$2/1000/1000)}'"}
+                ],
+                "save_field": "all",
+                "ignore_error": true,
+                "fail": "end",
+                "next": "end"
+              },
+
+              {
+                "key": "end",
+                "type": "end",
+                "name": "结束"
+              }
+            ]
+          }
