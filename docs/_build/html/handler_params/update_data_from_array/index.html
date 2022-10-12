@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>7. update_data_from_array 根据数组更新数组 &mdash; omnis-collect 1.0.0 文档</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="module 执行模块" href="../../module/index.html" />
+    <link rel="prev" title="6. field2array,数组转列表" href="../field2array/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> omnis-collect
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目录 :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../common/index.html">公共配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">before_plugin 执行前模块</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">handler_params 处理参数</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../service2field/index.html">1. servic2field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../excel_data/index.html">2. excel_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../update_data/index.html">3. update_data 批量参数处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../check_array/index.html">3. check_array</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../get_modify_data/index.html">5. get_modify_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../field2array/index.html">6. field2array,数组转列表</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7. update_data_from_array 根据数组更新数组</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../module/index.html">module 执行模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../result/index.html">result_handler 结果处理</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">omnis-collect</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">handler_params 处理参数</a> &raquo;</li>
+      <li>7. update_data_from_array 根据数组更新数组</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/handler_params/update_data_from_array/index.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="update-data-from-array">
+<h1>7. update_data_from_array 根据数组更新数组<a class="headerlink" href="#update-data-from-array" title="永久链接至标题"></a></h1>
+<dl class="simple">
+<dt>更新数组字段</dt><dd><ul class="simple">
+<li><p><strong>foreach</strong> 循环参数中的变量</p></li>
+<li><p><strong>item</strong> 循环中item 名称</p></li>
+<li><p><strong>fields</strong> 新增、修改字段列表</p></li>
+<li><p><strong>from_list</strong> 来源数组</p></li>
+<li><p><strong>from_item</strong> 来源数组的名称</p></li>
+<li><p><strong>ifTemplate</strong> 2个数组中匹配的表达式</p></li>
+</ul>
+</dd>
+</dl>
+<p>配置示例</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id1" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span> <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">update_data_from_array</span>
+   <span class="nt">params</span><span class="p">:</span>
+     <span class="nt">foreach</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">local_user_list</span>
+     <span class="nt">item</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">item</span>
+     <span class="nt">fields</span><span class="p">:</span>
+       <span class="p p-Indicator">-</span> <span class="nt">field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tel</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;second_item.mobile&quot;</span>
+       <span class="p p-Indicator">-</span> <span class="nt">field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wechat_userid</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;second_item.userid&quot;</span>
+     <span class="nt">from_list</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">remote_user_list</span>
+     <span class="nt">from_item</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">second_item</span>
+     <span class="nt">ifTemplate</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">item.nick</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">second_item.name</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">item.username+&#39;@&#39;</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">second_item.biz_mail</span><span class="nv"> </span><span class="s">}}&quot;</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../field2array/index.html" class="btn btn-neutral float-left" title="6. field2array,数组转列表" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../../module/index.html" class="btn btn-neutral float-right" title="module 执行模块" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
