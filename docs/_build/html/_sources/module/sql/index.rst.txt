@@ -230,3 +230,22 @@ SQL 语法 in 必须是 user_id in ('a','b','c')。
 
      select count(*) as `count`
      from ( require("user_base.sql") ) a
+
+
+4. for 循环2个字段以上，in 多个字段
+:::::::::::::::::::::::::::::::::::::::::::::::::::
+组合字段查询
+
+    .. code-block:: python
+     :caption: 根据项目名称+编码查询项目
+
+     select *
+     from sys_projects a
+     where 1=1
+     {% if project_list %}
+       and (a.project_name,a.project_code) in(
+          {% for project in project_list %}({{project.project_name}},{{project.project_code}}) {% if not loop.last  %},{% endif %}
+          {% endfor %}
+       )
+     {% endif %}
+
