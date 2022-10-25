@@ -4,7 +4,7 @@
 
 
 
-模块: bulk_create
+模块: bulk_service
 >>>>>>>>>>>>>>>>>>>>>>
 配置示例
 
@@ -93,3 +93,34 @@
 单次执行线程的数，默认30。防止有些服务请求，做了限制比如钉钉就限制，每秒只能请求1000个
 
 
+
+8. append_item_param
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+将循环item的参数一次性传给服务
+
+配置示例
+
+
+    .. code-block:: yaml
+     :caption: index.yaml
+
+       - key: planning_add_bulk
+         name: 批量新增发布计划
+         module: bulk_service
+         http: true
+         params:
+           planning_list:
+             check:
+               template: "{{planning_list|must}}"
+               err_msg: 发布计划列表不能为空
+         batch:
+           foreach: planning_list
+           item: item
+           append_item_param: true
+           service:
+             service: release.planning_add_flow
+           save_field: 'bulk_result'
+         result_handler:
+           - key: param2result
+             params:
+               field: bulk_result
