@@ -70,6 +70,7 @@ params 下字段，写template 然后写jinja2 模板语句
       5. {{""|uuid}} 获取UUID  
       6. {{password|des}} des 加密  
       7. {{"xxx"|get_key}} 获取application.properties配置文件的 的配置  
+      9. {{"value"|reg(pattern)}} pattern 正则表达式
 
 
 

@@ -10,7 +10,7 @@
 一般用于批量新增，或者修改，比如新增ID,添加修改人，新增人
 
 
-配置示例
+配置示例1
 
     .. code-block:: yaml
      :caption: index.yaml
@@ -80,3 +80,26 @@
 
 
          model_field: 'bulk_result' # 模型字段保存位置
+
+
+
+配置示例2
+没有配置item,直接取数组变量
+配置了item带上参数
+
+    .. code-block:: yaml
+     :caption: index.yaml
+
+      - key: update_data
+        foreach: issues
+        fields:
+          - field: fixVersions
+            template: fields.fixVersions
+          - field: status
+            template: fields.status
+          - field: issuetype
+            template: fields.issuetype
+          - field: assignee
+            template: fields.assignee
+          - field: issuelinks
+            template: fields.issuelinks
