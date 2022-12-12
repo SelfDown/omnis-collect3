@@ -19,7 +19,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="索引" href="../genindex.html" />
     <link rel="search" title="搜索" href="../search.html" />
-    <link rel="next" title="执行前模块" href="../before/index.html" />
+    <link rel="next" title="公共配置" href="../common/index.html" />
     <link rel="prev" title="前言" href="../begin/index.html" /> 
 </head>
 
@@ -50,8 +50,11 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../before/index.html">执行前模块</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module/index.html">执行模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../common/index.html">公共配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../before/index.html">before_plugin 执行前模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../handler_params/index.html">handler_params 处理参数</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module/index.html">module 执行模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../result/index.html">result_handler 结果处理</a></li>
 </ul>
 
         </div>
@@ -172,6 +175,9 @@
 会不会删库？</p>
 <p>答案是： 不会。我渲染了2遍，渲染成预编译语句，以占位符代理原值。所以 <strong>if 模板里面的变量不要放在 SQL执行中</strong> 。
 为了安全，执行SQL语句的变量我都换成了占位符。可以通过params 来创造个新的变量，if控制结构就用 新变量</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/sql_flow.png"><img alt="生命周期" src="../_images/sql_flow.png" style="width: 80%;" /></a>
+</figure>
 </div>
 </li>
 </ul>
@@ -201,7 +207,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../begin/index.html" class="btn btn-neutral float-left" title="前言" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
-        <a href="../before/index.html" class="btn btn-neutral float-right" title="执行前模块" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../common/index.html" class="btn btn-neutral float-right" title="公共配置" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

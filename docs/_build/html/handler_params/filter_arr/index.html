@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>8. filter_arr &mdash; omnis-collect 1.0.0 文档</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="module 执行模块" href="../../module/index.html" />
+    <link rel="prev" title="7. update_data_from_array 根据数组更新数组" href="../update_data_from_array/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> omnis-collect
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">目录 :</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../begin/index.html">前言</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure/index.html">系统架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../common/index.html">公共配置</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../before/index.html">before_plugin 执行前模块</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">handler_params 处理参数</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../service2field/index.html">1. servic2field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../excel_data/index.html">2. excel_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../update_data/index.html">3. update_data 批量参数处理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../check_array/index.html">3. check_array</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../get_modify_data/index.html">5. get_modify_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../field2array/index.html">6. field2array,数组转列表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../update_data_from_array/index.html">7. update_data_from_array 根据数组更新数组</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">8. filter_arr</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#foreach">1.foreach</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#item">2.item</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#iftemplate">3.ifTemplate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#field">4.field</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#itemsavename">5.itemSaveName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#itemiftemplate">6.itemIfTemplate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fields">7.fields 二级字段对象生成规则</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../module/index.html">module 执行模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../result/index.html">result_handler 结果处理</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">omnis-collect</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">handler_params 处理参数</a> &raquo;</li>
+      <li>8. filter_arr</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/handler_params/filter_arr/index.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="filter-arr">
+<h1>8. filter_arr<a class="headerlink" href="#filter-arr" title="永久链接至标题"></a></h1>
+<p>过滤数组</p>
+<p>配置示例</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">过滤简单数组</span><a class="headerlink" href="#id1" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span> <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filter_arr</span>
+   <span class="nt">enable</span><span class="p">:</span> <span class="s">&quot;{{build_list|length</span><span class="nv"> </span><span class="s">&gt;0}}&quot;</span>
+   <span class="nt">foreach</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_list</span>
+   <span class="nt">item</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">item</span>
+   <span class="nt">ifTemplate</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv">  </span><span class="s">&#39;build_flow_id&#39;</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}&quot;</span>
+   <span class="nt">save_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">update_list</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+<section id="foreach">
+<h2>1.foreach<a class="headerlink" href="#foreach" title="永久链接至标题"></a></h2>
+<p>循环的数组</p>
+</section>
+<section id="item">
+<h2>2.item<a class="headerlink" href="#item" title="永久链接至标题"></a></h2>
+<p>item 表示子对象的字段</p>
+</section>
+<section id="iftemplate">
+<h2>3.ifTemplate<a class="headerlink" href="#iftemplate" title="永久链接至标题"></a></h2>
+<p>取值规则</p>
+</section>
+<section id="field">
+<h2>4.field<a class="headerlink" href="#field" title="永久链接至标题"></a></h2>
+<p>二级数组取值字段</p>
+</section>
+<section id="itemsavename">
+<h2>5.itemSaveName<a class="headerlink" href="#itemsavename" title="永久链接至标题"></a></h2>
+<p>二级数组转存字段</p>
+</section>
+<section id="itemiftemplate">
+<h2>6.itemIfTemplate<a class="headerlink" href="#itemiftemplate" title="永久链接至标题"></a></h2>
+<p>二级数组符合条件则保存</p>
+</section>
+<section id="fields">
+<h2>7.fields 二级字段对象生成规则<a class="headerlink" href="#fields" title="永久链接至标题"></a></h2>
+<p>template + field</p>
+<p>配置示例.
+在jira里面，从一个数组中，对象有个comments 备注列表字段，
+根据一些正则规则提取，里面gitlab 地址和branch 分支，存储到对象里面gitlab_link</p>
+<blockquote>
+<div><div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">过滤数组中的数组</span><a class="headerlink" href="#id2" title="永久链接至代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span> <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">issues_by_version_with_gitlab</span>
+   <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">根据版本号查询issue的gitlab 地址</span>
+   <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">empty</span>
+   <span class="nt">http</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">log</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+   <span class="nt">params</span><span class="p">:</span>
+     <span class="nt">fix_version</span><span class="p">:</span>
+       <span class="nt">check</span><span class="p">:</span>
+         <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{fix_version|must}}&quot;</span>
+         <span class="nt">err_msg</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">版本不能为空</span>
+     <span class="nt">jira_addr_reg</span><span class="p">:</span>
+       <span class="nt">default</span><span class="p">:</span> <span class="s">&#39;a</span><span class="nv"> </span><span class="s">commit\|(.*)/-/commit/&#39;</span>
+     <span class="nt">jira_branch_reg</span><span class="p">:</span>
+       <span class="nt">default</span><span class="p">:</span> <span class="s">&#39;on</span><span class="nv"> </span><span class="s">branch</span><span class="nv"> </span><span class="s">\[(.*)\|http&#39;</span>
+
+   <span class="nt">handler_params</span><span class="p">:</span>
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">service2field</span>
+       <span class="nt">service</span><span class="p">:</span>
+         <span class="nt">service</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jira.search_issue_by_fix_version</span>
+         <span class="nt">fix_versions</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fix_version</span>
+         <span class="nt">with_history</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+         <span class="nt">with_team</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+       <span class="nt">save_field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">issues</span>
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filter_arr</span>
+       <span class="nt">enable</span><span class="p">:</span>  <span class="s">&quot;{{issues|length</span><span class="nv"> </span><span class="s">&gt;0}}&quot;</span>
+       <span class="nt">foreach</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">issues</span>
+       <span class="nt">item</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">item</span>
+       <span class="nt">ifTemplate</span><span class="p">:</span> <span class="s">&quot;{{item.comments|length</span><span class="nv"> </span><span class="s">&gt;0}}&quot;</span>
+       <span class="nt">field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">comments</span>
+       <span class="nt">itemSaveName</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gitlab_link_list</span>
+       <span class="nt">itemIfTemplate</span><span class="p">:</span> <span class="s">&quot;{{&#39;gitlab_url&#39;|get_key</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">body}}&quot;</span>
+       <span class="nt">fields</span><span class="p">:</span>
+         <span class="p p-Indicator">-</span> <span class="nt">field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gitlab_url</span>
+           <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{body|reg(jira_addr_reg)}}&quot;</span>
+         <span class="p p-Indicator">-</span> <span class="nt">field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gitlab_branch</span>
+           <span class="nt">template</span><span class="p">:</span> <span class="s">&quot;{{body|reg(jira_branch_reg)}}&quot;</span>
+   <span class="nt">result_handler</span><span class="p">:</span>
+     <span class="p p-Indicator">-</span> <span class="nt">key</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">param2result</span>
+       <span class="nt">params</span><span class="p">:</span>
+         <span class="nt">field</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">issues</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../update_data_from_array/index.html" class="btn btn-neutral float-left" title="7. update_data_from_array 根据数组更新数组" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="../../module/index.html" class="btn btn-neutral float-right" title="module 执行模块" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, zhangzhi.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
