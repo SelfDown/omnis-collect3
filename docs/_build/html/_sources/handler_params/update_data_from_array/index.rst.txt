@@ -20,7 +20,7 @@
 实际是渲染一次模板，模板渲染多了，这比较耗时。
 
 
-如果能精确匹配到字段，尽量用户foreach_key_fields+from_list_fields。只能模糊匹配，
+如果能精确匹配到字段，尽量用foreach_key_fields+from_list_fields。只能模糊匹配，
 者算法匹配就只能用ifTemplate
 
 2. foreach_key_fields+from_list_fields 表示2个数组，列出关键字段进行比较
@@ -43,7 +43,7 @@
           ifTemplate: "{{ item.nick == second_item.name or item.username+'@' in second_item.biz_mail }}"
 
 
-配置示例2
+foreach_key_fields+from_list_fields配置示例2
 
     .. code-block:: yaml
      :caption: index.yaml

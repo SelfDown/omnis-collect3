@@ -104,7 +104,7 @@
 </dl>
 <p>1.ifTemplate 不适合大批量数据场景，如果数据达到几千条，可能需要几分钟，因为每比较一次
 实际是渲染一次模板，模板渲染多了，这比较耗时。</p>
-<p>如果能精确匹配到字段，尽量用户foreach_key_fields+from_list_fields。只能模糊匹配，
+<p>如果能精确匹配到字段，尽量用foreach_key_fields+from_list_fields。只能模糊匹配，
 者算法匹配就只能用ifTemplate</p>
 <p>2. foreach_key_fields+from_list_fields 表示2个数组，列出关键字段进行比较
 配置示例1</p>
@@ -127,7 +127,7 @@
 </div>
 </div>
 </div></blockquote>
-<p>配置示例2</p>
+<p>foreach_key_fields+from_list_fields配置示例2</p>
 <blockquote>
 <div><div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">index.yaml</span><a class="headerlink" href="#id2" title="永久链接至代码"></a></div>
